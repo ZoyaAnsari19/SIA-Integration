@@ -1,0 +1,362 @@
+Goal:
+Build a scalable Fastify + PostgreSQL backend for an MLM (Multi-Level Marketing) platform that sells courses and manages multi-level commission distributions (Self, Global Helping, Spot, Monthly).
+
+The system must handle automatic commission calculation, daily payouts, multi-level eligibility checks, and wallet reconciliation — all in a fault-tolerant, idempotent, and auditable way.
+
+⚙️ Project Overview
+
+We are developing a backend that handles:
+
+User registration & referral tracking (up to 9 levels deep).
+
+Course (package) purchases with validity (in months).
+
+Daily and instant commission calculations.
+
+Dynamic eligibility-based multi-level commission release.
+
+Wallet, ledger, and reconciliation systems for full transparency.
+
+All money movements must be fully auditable, idempotent, and traceable between:
+
+source_user_id → who triggered the earning
+
+receiver_user_id → who earned it
+
+🏗️ Tech Stack
+
+Node.js + Fastify (for performance and modularity)
+
+PostgreSQL (core database)
+
+PgBoss (for async background workers — no Redis required)
+
+TypeScript (for strict typing)
+
+Docker Compose (for Postgres + PgBoss + Fastify container)
+
+Jest (for automated tests)
+
+🧩 Core Features
+1️⃣ Users & Referrals
+
+Users can register with a referrer.
+
+Maintain a closure table (user_tree_paths) for up to 9 levels of referrals.
+
+Automatically update referral paths when a user joins.
+
+2️⃣ Packages / Courses
+
+Each package defines:
+
+price
+
+validity_months
+
+self_monthly
+
+global_ids
+
+global_monthly_per_id
+
+recurring_rate_percent
+
+3️⃣ Purchases
+
+When a user purchases a package:
+
+Save purchase with active_until = purchase_date + validity_months
+
+Mark user active until that date.
+
+Trigger the commission generation pipeline asynchronously (via PgBoss job).
+
+4️⃣ Commission Types
+
+Unified four commission types:
+
+Type	Description	Frequency
+SELF	Daily credit based on user’s own purchase	Daily
+GLOBAL_HELPING	Daily global helping income	Daily
+SPOT	One-time direct 5% commission	Immediate
+MONTHLY	0.5% recurring monthly income (paid daily)	Daily
+
+Each record must link:
+
+receiver_user_id
+
+source_user_id
+
+purchase_id
+
+commission_type
+
+amount
+
+metadata.level
+
+⚙️ Eligibility
+
+Level-based commissions (1–9 levels) depend on leg business volume.
+
+Rules are stored in commission_rules.
+
+PgBoss background workers recalculate eligibility dynamically.
+
+Pending commissions are released when eligibility is achieved.
+
+🕒 Validity
+
+A user is active if they have at least one valid purchase where
+active_until >= CURRENT_DATE.
+
+Before adding any commission to a wallet:
+
+Check if both source and receiver are active.
+
+💰 Wallet & Ledger System
+
+ledger_entries — immutable financial record.
+
+wallet_transactions — mirror wallet-level operations from ledger.
+
+user_balances — cached total wallet balance per user.
+
+Every credit/debit must use an idempotency_key and DB transaction.
+
+🗃️ Database Schema
+
+Cursor should generate models (or Prisma schema) with the following tables:
+
+1. users
+2. packages
+3. purchases
+4. user_tree_paths (closure table)
+5. ledger_entries
+6. wallet_transactions
+7. pending_commissions
+8. scheduled_commissions
+9. level_eligibility
+10. commission_rules
+11. user_balances
+
+All definitions as finalized (receiver/source linkage, dynamic validity check, no static source_active_until).
+
+📦 API Endpoints
+
+Create REST routes under /api/v1 with Zod schema validation:
+
+Method	Route	Description
+POST	/users/register	Register new user (optional referrer)
+POST	/packages	Create new course package (admin)
+GET	/packages	List all packages
+POST	/purchases	User purchases a package
+GET	/users/:id/wallet	Wallet balance + recent ledger
+GET	/users/:id/pending	Pending commissions
+GET	/users/:id/eligibility	Eligibility snapshot
+POST	/admin/release-pending	Admin manual release
+GET	/reports/reconciliation	Ledger vs wallet check
+⚙️ Commission Logic Implementation
+💰 Purchase Flow
+
+When /purchases is called:
+
+Insert purchase record.
+
+Create scheduled SELF + GLOBAL_HELPING commissions.
+
+Credit 5% SPOT to direct referrer.
+
+Schedule 0.5% MONTHLY recurring for referrer.
+
+Traverse up to 9 uplines using user_tree_paths:
+
+If eligible → create commission.
+
+If not → insert into pending_commissions.
+
+All of this runs via a PgBoss job (purchase-commission).
+
+🔁 PgBoss Workers
+
+PgBoss replaces Redis and BullMQ.
+All async work, scheduling, and retries use PostgreSQL only.
+
+Define queues:
+
+Queue Name	Schedule	Description
+purchase-commission	Event-driven	Triggered when purchase completes
+daily-commission	Cron: 5 0 * * *	Credit daily SELF / GLOBAL / MONTHLY
+eligibility-check	Cron: */10 * * * *	Update leg business + release pending
+reconcile-ledger	Cron: 0 1 * * *	Verify ledger vs wallet totals
+🔹 Example Worker Registration
+import PgBoss from 'pg-boss';
+import { CommissionService } from '../modules/commissions/commission.service.js';
+
+const boss = new PgBoss(process.env.DATABASE_URL);
+await boss.start();
+
+// Purchase event worker
+await boss.work('purchase-commission', async job => {
+  const { purchaseId } = job.data;
+  await CommissionService.handlePurchase(purchaseId);
+});
+
+// Daily cron jobs
+await boss.schedule('daily-commission', '5 0 * * *');
+await boss.work('daily-commission', async () => {
+  await CommissionService.creditDailyCommissions();
+});
+
+await boss.schedule('eligibility-check', '*/10 * * * *');
+await boss.work('eligibility-check', async () => {
+  await CommissionService.recalculateEligibility();
+});
+
+
+✅ Jobs are persistent and resilient —
+If the server crashes, PgBoss re-delivers uncompleted jobs automatically.
+
+🧱 Folder Structure
+src/
+  ├── app.ts               # Fastify bootstrap
+  ├── config/              # Env, DB, PgBoss setup
+  ├── db/
+  │   ├── migrations/
+  │   ├── prisma/schema.prisma
+  ├── modules/
+  │   ├── users/
+  │   │   ├── user.controller.ts
+  │   │   ├── user.service.ts
+  │   ├── packages/
+  │   │   ├── package.controller.ts
+  │   ├── purchases/
+  │   │   ├── purchase.controller.ts
+  │   │   ├── purchase.service.ts
+  │   ├── commissions/
+  │   │   ├── commission.service.ts
+  │   │   ├── eligibility.worker.ts
+  │   │   ├── daily.worker.ts
+  │   │   ├── release.worker.ts
+  ├── jobs/
+  │   ├── index.ts         # PgBoss job registry
+  │   ├── daily-commission.ts
+  │   ├── eligibility-check.ts
+  │   ├── reconcile-ledger.ts
+  ├── utils/
+  │   ├── dateUtils.ts
+  │   ├── eligibilityUtils.ts
+  │   ├── idempotency.ts
+  ├── tests/
+
+🧮 Utility Functions
+
+Implement key helpers:
+
+isUserActive(userId) — Check active purchases.
+
+calculateDailyAmount(monthlyAmount) — monthly / days_in_month.
+
+addLedgerAndWallet(receiverId, sourceId, amount, type, meta) — atomic DB op.
+
+getUplines(userId, depth=9) — Query user_tree_paths.
+
+checkEligibility(userId, level) — Read from level_eligibility.
+
+🔐 Security & Safety
+
+Use JWT authentication for secure routes.
+
+Validate all inputs with Zod.
+
+Always include an idempotency_key on commission inserts.
+
+Use database transactions for wallet updates.
+
+Use Postgres advisory locks for per-user wallet concurrency.
+
+Log every job and worker execution with timestamps.
+
+🧾 Testing
+
+Implement Jest test suites for:
+
+Commission math correctness (daily/monthly)
+
+Purchase flow → wallet updates
+
+Eligibility unlock + pending release
+
+Idempotency (no double credits)
+
+Ledger vs wallet reconciliation
+
+🧠 PgBoss Advantages in This Project
+
+✅ Fully persistent jobs stored in PostgreSQL
+✅ Survives crashes and redeploys
+✅ No Redis dependency
+✅ Supports cron syntax (schedule)
+✅ Supports retries and backoff for failed jobs
+✅ Perfect for financial systems needing “exactly-once” execution
+
+🧩 Expected Deliverables
+
+Cursor should generate:
+
+Fastify app (with modular structure & Zod validation)
+
+PostgreSQL migrations / Prisma schema
+
+PgBoss job setup & workers
+
+Commission services & logic
+
+Wallet and ledger transactional functions
+
+Comprehensive Jest test coverage
+
+Swagger API documentation
+
+🧭 Example Business Rule (Eligibility Release)
+if (eligibility[level] && pendingCommissions.length) {
+  for (const pending of pendingCommissions) {
+    const isSourceActive = await isUserActive(pending.source_user_id);
+    const isReceiverActive = await isUserActive(pending.receiver_user_id);
+
+    if (isSourceActive && isReceiverActive) {
+      await addLedgerAndWallet({
+        receiverId: pending.receiver_user_id,
+        sourceId: pending.source_user_id,
+        amount: pending.amount,
+        type: pending.commission_type,
+        meta: pending.metadata,
+      });
+    }
+
+    await db.query(`DELETE FROM pending_commissions WHERE id = $1`, [pending.id]);
+  }
+}
+
+✅ Deliverable Summary
+
+Cursor must generate a Fastify + PostgreSQL + PgBoss backend that includes:
+
+Course sales & referral management
+
+9-level commission system
+
+Daily and instant payouts
+
+Dynamic eligibility unlocks
+
+Persistent, retry-safe workers (PgBoss)
+
+Immutable ledger + wallet system
+
+Idempotent, transaction-safe operations
+
+Fully modular TypeScript architecture
+
+Auto tests & API docs

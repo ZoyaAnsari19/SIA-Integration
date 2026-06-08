@@ -1,0 +1,267 @@
+@import "tailwindcss";
+
+/* 3D Perspective Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Gamification Effects */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(30px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+:root {
+  /* Light mode colors */
+  --background: #ffffff;
+  --foreground: #171717;
+  --brand-blue: #2563eb;
+  --text-strong: #0f172a;
+  --text-body: rgba(24, 24, 27, 0.9);
+  --text-muted: #64748b;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+  --sidebar-bg: #ffffff;
+  --sidebar-hover: #f4f4f5;
+  --sidebar-active-bg: #eff6ff;
+  --sidebar-active-text: #2563eb;
+  --topbar-bg: #ffffff;
+  --content-bg: #fafafa;
+  --radius: 12px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 1px rgba(0, 0, 0, 0.02);
+
+  /* Hover and interactive states */
+  --hover-bg: #eff6ff;
+  --hover-border: #bfdbfe;
+  --hover-text: #2563eb;
+  --ring-color: rgba(37, 99, 235, 0.2);
+  --tooltip-bg: #1f2937;
+  --tooltip-text: #ffffff;
+
+  /* Tab active state (light mode) */
+  --tab-active-bg: #ffffff;
+
+  /* Accent colors for stat cards */
+  --accent-blue-bg: #eff6ff;
+  --accent-blue-text: #2563eb;
+  --accent-green-bg: #d1fae5;
+  --accent-green-text: #059669;
+  --accent-amber-bg: #fef3c7;
+  --accent-amber-text: #f59e0b;
+  --accent-red-bg: #fee2e2;
+  --accent-red-text: #dc2626;
+
+  /* Chart Colors */
+  --chart-grid: #e5e7eb;
+  --chart-axis: #64748b;
+  --chart-tooltip-bg: #ffffff;
+  --chart-tooltip-border: #e5e7eb;
+  --chart-tooltip-text: #1e293b;
+}
+
+[data-theme="dark"] {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --brand-blue: #60a5fa;
+  --text-strong: #f8fafc;
+  --text-body: #e2e8f0;
+  --text-muted: #94a3b8;
+  --card-bg: #1e293b;
+  --border: #334155;
+  --sidebar-bg: #0f172a;
+  --sidebar-hover: #1e293b;
+  --sidebar-active-bg: #1e3a8a;
+  --sidebar-active-text: #60a5fa;
+  --topbar-bg: #0f172a;
+  --content-bg: #0b1220;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.2);
+
+  /* Hover and interactive states */
+  --hover-bg: #1e3a8a;
+  --hover-border: #3b82f6;
+  --hover-text: #60a5fa;
+  --ring-color: rgba(96, 165, 250, 0.3);
+  --tooltip-bg: #1e293b;
+  --tooltip-text: #f8fafc;
+
+  /* Tab active state (dark mode) */
+  --tab-active-bg: #253548;
+
+  /* Accent colors for stat cards (dark mode) */
+  --accent-blue-bg: #1e3a8a;
+  --accent-blue-text: #60a5fa;
+  --accent-green-bg: #065f46;
+  --accent-green-text: #34d399;
+  --accent-amber-bg: #78350f;
+  --accent-amber-text: #fbbf24;
+  --accent-red-bg: #7f1d1d;
+  --accent-red-text: #f87171;
+
+  /* Chart Colors - Dark Mode */
+  --chart-grid: #334155;
+  --chart-axis: #94a3b8;
+  --chart-tooltip-bg: #1e293b;
+  --chart-tooltip-border: #334155;
+  --chart-tooltip-text: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--content-bg);
+  color: var(--text-body);
+  font-family:
+    var(--font-geist-sans),
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji";
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Base typography scale (consistent across pages) */
+@layer base {
+  html {
+    line-height: 1.5;
+  }
+  h1 {
+    @apply text-[28px] font-extrabold text-(--text-strong);
+  }
+  h2 {
+    @apply text-[22px] font-extrabold text-(--text-strong);
+  }
+  h3 {
+    @apply text-[18px] font-semibold text-(--text-strong);
+  }
+  p {
+    @apply leading-6;
+  }
+  small {
+    @apply text-xs text-(--text-muted);
+  }
+}
+
+/* Shared components/utilities */
+@layer components {
+  .card {
+    @apply rounded-xl border border-(--border) bg-(--card-bg) shadow-sm transition-colors duration-200;
+  }
+  .section-title {
+    @apply m-0 text-[18px] font-semibold text-(--text-strong);
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar Styling */
+/* Light Theme Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--content-bg);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid var(--content-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Firefox Scrollbar (Light Theme) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 var(--content-bg);
+}
+
+/* Dark Theme Scrollbar */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--content-bg);
+  border-radius: 5px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #1e3a8a;
+  border-radius: 5px;
+  border: 2px solid var(--content-bg);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
+}
+
+/* Firefox Scrollbar (Dark Theme) */
+[data-theme="dark"] * {
+  scrollbar-width: thin;
+  scrollbar-color: #1e3a8a var(--content-bg);
+}

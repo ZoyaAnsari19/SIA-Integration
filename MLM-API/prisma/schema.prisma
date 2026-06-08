@@ -1,0 +1,805 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id                  BigInt                   @id @default(autoincrement())
+  uuid                String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  display_id          String?                  @unique
+  name                String?
+  display_title       String?                  // Admin-set display-only title (e.g. Manager); no role change
+  display_title_icon_url String?               // CDN URL of icon image (PNG) shown next to title on dashboard
+  email               String?
+  phone               String?
+  password_hash       String?
+  transaction_pin     String?
+  referrer_user_id    BigInt?
+  role                UserRole                 @default(STUDENT)
+  kyc_status          KYCStatusEnum            @default(pending)
+  kyc_verified_at     DateTime?                @db.Timestamptz(6)
+  status              String                   @default("active")
+  withdrawal_blocked  Boolean                  @default(false) @map("withdrawal_blocked")
+  is_disqualified     Boolean                  @default(false)
+  disqualified_at     DateTime?                @db.Timestamptz(6)
+  created_at          DateTime                 @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime                 @default(now()) @db.Timestamptz(6)
+  password_plain      String?
+  
+  // Sub-admin action PIN fields
+  action_pin                  String?   @map("action_pin")
+  action_pin_failed_attempts  Int       @default(0) @map("action_pin_failed_attempts")
+  action_pin_locked_until     DateTime? @map("action_pin_locked_until") @db.Timestamptz(6)
+  action_pin_set_at           DateTime? @map("action_pin_set_at") @db.Timestamptz(6)
+  action_pin_set_by           BigInt?   @map("action_pin_set_by")
+  
+  admin_permissions   admin_user_permissions[]
+  admin_activity_logs admin_activity_logs[]
+  support_tickets_created  support_tickets[] @relation("TicketOwner")
+  support_tickets_assigned support_tickets[] @relation("TicketAssigned")
+
+  @@map("users")
+}
+
+model packages {
+  id                             Int      @id @default(autoincrement())
+  name                           String
+  price                          Decimal  @db.Decimal(18, 2)
+  min_amount                     Decimal? @db.Decimal(18, 2)
+  max_amount                     Decimal? @db.Decimal(18, 2)
+  self_monthly                   Decimal? @db.Decimal(18, 2)
+  self_roi_percent               Decimal? @db.Decimal(6, 4)
+  global_ids                     Int?
+  global_monthly_per_id          Decimal? @db.Decimal(18, 2)
+  recurring_rate_percent         Decimal? @db.Decimal(6, 4)
+  direct_spot_percent            Decimal? @db.Decimal(6, 4)
+  direct_monthly_royalty_percent Decimal? @db.Decimal(6, 4)
+  validity_months                Int      @default(12)
+  validity_days                  Int?
+  status                         String   @default("active")
+  course_id                      Int?
+  created_at                     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at                     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("packages")
+}
+
+model purchases {
+  id                   BigInt       @id @default(autoincrement())
+  user_id              BigInt
+  package_id           Int
+  purchase_type        PurchaseType @default(DIRECT_PACKAGE)
+  course_id            String?
+  amount               Decimal      @db.Decimal(18, 2)
+  purchased_at         DateTime     @default(now()) @db.Timestamptz(6)
+  status               String       @default("completed")
+  txn_id               String?
+  razorpay_order_id    String?
+  razorpay_payment_id  String?
+  merchant_txn_no      String?
+  icici_txn_id         String?
+  icici_payment_id     String?
+  payment_proof_url    String?
+  payment_type         String?
+  is_manual            Boolean      @default(false)
+  is_renewal           Boolean      @default(false)
+  previous_package_id  Int?
+  previous_purchase_id BigInt?
+  effective_global_ids Int?
+  income               Decimal      @default(0) @db.Decimal(18, 2)
+  renewed_at           DateTime?    @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([package_id])
+  @@index([purchase_type])
+  @@index([course_id])
+  @@index([previous_purchase_id])
+  @@map("purchases")
+}
+
+model admin_permissions_master {
+  id               Int                      @id @default(autoincrement())
+  key              String                   @unique
+  label            String
+  group            String                   @map("group")
+  created_at       DateTime                 @default(now()) @db.Timestamptz(6)
+  user_permissions admin_user_permissions[]
+
+  @@map("admin_permissions_master")
+}
+
+model admin_user_permissions {
+  id             BigInt                   @id @default(autoincrement())
+  admin_user_id  BigInt
+  permission_key String
+  created_at     DateTime                 @default(now()) @db.Timestamptz(6)
+  admin          users                    @relation(fields: [admin_user_id], references: [id], onDelete: Cascade)
+  permission     admin_permissions_master @relation(fields: [permission_key], references: [key], onDelete: Cascade)
+
+  @@unique([admin_user_id, permission_key])
+  @@index([admin_user_id])
+  @@map("admin_user_permissions")
+}
+
+model admin_activity_logs {
+  id                 BigInt   @id @default(autoincrement())
+  admin_user_id      BigInt
+  action_type        String
+  target_user_id     BigInt?
+  target_entity_type String?
+  target_entity_id   String?  @map("target_entity_id")
+  action_details     Json?    @db.JsonB
+  action_summary     String?  @map("action_summary")
+  ip_address         String?
+  user_agent         String?
+  status             String   @default("success")
+  error_message      String?
+  metadata           Json?    @db.JsonB
+  created_at         DateTime @default(now()) @db.Timestamptz(6)
+  admin              users    @relation(fields: [admin_user_id], references: [id], onDelete: Cascade)
+
+  @@index([admin_user_id])
+  @@index([action_type])
+  @@index([created_at(sort: Desc)])
+  @@index([target_user_id])
+  @@index([status])
+  @@index([admin_user_id, created_at(sort: Desc)])
+  @@map("admin_activity_logs")
+}
+
+// Support / Ticket system
+model support_pre_questions {
+  id            Int      @id @default(autoincrement())
+  question      String
+  category      String?  @default("general")
+  sort_order    Int      @default(0)
+  is_active     Boolean  @default(true)
+  fee_rule_code String?  // e.g. NAME_CHANGE, NUMBER_CHANGE, EMAIL_CHANGE — when set, ticket creation charges this topic fee only (no 2nd-ticket fee)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  tickets    support_tickets[]
+
+  @@index([is_active, sort_order])
+  @@map("support_pre_questions")
+}
+
+model support_tickets {
+  id               BigInt    @id @default(autoincrement())
+  user_id          BigInt
+  pre_question_id  Int?
+  subject          String?   // optional summary; can derive from first message
+  status           String    @default("open") // open | in_progress | closed
+  assigned_to      BigInt?   // sub-admin who took the ticket
+  closed_at        DateTime? @db.Timestamptz(6)
+  closed_by_user_id BigInt?  // only user can close; store user_id when closed
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @default(now()) @db.Timestamptz(6)
+
+  user             users     @relation("TicketOwner", fields: [user_id], references: [id], onDelete: Cascade)
+  assigned_to_user users?    @relation("TicketAssigned", fields: [assigned_to], references: [id], onDelete: SetNull)
+  pre_question     support_pre_questions? @relation(fields: [pre_question_id], references: [id], onDelete: SetNull)
+  messages         support_ticket_messages[]
+
+  @@index([user_id])
+  @@index([status])
+  @@index([assigned_to])
+  @@index([created_at(sort: Desc)])
+  @@map("support_tickets")
+}
+
+model support_ticket_messages {
+  id              BigInt   @id @default(autoincrement())
+  ticket_id       BigInt
+  sender_type     String   // user | admin | system
+  sender_user_id  BigInt?  // user id (for user) or admin user id (for admin)
+  message_text    String?  @db.Text
+  attachment_urls Json?    @db.JsonB // [{ url, type: 'image'|'voice', filename }]
+  created_at      DateTime @default(now()) @db.Timestamptz(6)
+
+  ticket support_tickets @relation(fields: [ticket_id], references: [id], onDelete: Cascade)
+
+  @@index([ticket_id])
+  @@index([ticket_id, created_at(sort: Asc)])
+  @@map("support_ticket_messages")
+}
+
+model courses {
+  id                String                @id @default(uuid())
+  slug              String                @unique
+  title             String
+  short_description String?
+  long_description  String?
+  price             Decimal               @db.Decimal(10, 2)
+  original_price    Decimal?              @db.Decimal(10, 2)
+  language          CourseLanguage
+  level             CourseLevel
+  category          String
+  thumbnail_url     String?
+  package_id        Int?
+  rating            Decimal               @default(0) @db.Decimal(3, 2)
+  total_ratings     Int                   @default(0)
+  total_students    Int                   @default(0)
+  total_lessons     Int                   @default(0)
+  total_duration    Int                   @default(0)
+  is_published      Boolean               @default(false)
+  created_at        DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime              @updatedAt @db.Timestamptz(6)
+  cart_entries      course_cart_entries[]
+  modules           course_modules[]
+  ratings           course_ratings[]
+
+  @@index([slug])
+  @@index([is_published])
+  @@index([package_id])
+  @@index([category])
+  @@map("courses")
+}
+
+model course_modules {
+  id          String          @id @default(uuid())
+  course_id   String
+  title       String
+  description String?
+  order_index Int
+  created_at  DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime        @updatedAt @db.Timestamptz(6)
+  course      courses         @relation(fields: [course_id], references: [id], onDelete: Cascade)
+  videos      course_videos[]
+
+  @@index([course_id])
+  @@index([course_id, order_index])
+  @@map("course_modules")
+}
+
+model course_videos {
+  id               String         @id @default(uuid())
+  module_id        String
+  title            String
+  description      String?
+  video_url        String
+  video_provider   String         @default("BUNNY")
+  duration_seconds Int            @default(0)
+  order_index      Int
+  is_preview       Boolean        @default(false)
+  is_published     Boolean        @default(true)
+  created_at       DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime       @updatedAt @db.Timestamptz(6)
+  module           course_modules @relation(fields: [module_id], references: [id], onDelete: Cascade)
+
+  @@index([module_id])
+  @@index([module_id, order_index])
+  @@map("course_videos")
+}
+
+/// Legacy activation history from old system (Excel import)
+/// Read-only: used for admin reporting only.
+model LegacyActivationHistory {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt?  @map("user_id")
+  displayId  String   @map("display_id")
+  rowIndex   Int      @map("row_index")
+  sourceFile String   @map("source_file")
+  data       Json     @db.JsonB
+  importedAt DateTime @default(now()) @map("imported_at") @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([displayId])
+  @@map("legacy_activation_history")
+}
+
+/// Legacy SPOT income history from old system (Excel import)
+/// Read-only: used for admin reporting only.
+model LegacySpotHistory {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt?  @map("user_id")
+  displayId  String   @map("display_id")
+  rowIndex   Int      @map("row_index")
+  sourceFile String   @map("source_file")
+  data       Json     @db.JsonB
+  importedAt DateTime @default(now()) @map("imported_at") @db.Timestamptz(6)
+
+  @@index([userId])
+  @@index([displayId])
+  @@map("legacy_spot_history")
+}
+
+model course_cart_entries {
+  id         String   @id @default(uuid())
+  user_id    BigInt
+  course_id  String
+  quantity   Int      @default(1)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+  course     courses  @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@index([user_id])
+  @@index([course_id])
+  @@map("course_cart_entries")
+}
+
+model course_ratings {
+  id         String   @id @default(uuid())
+  user_id    BigInt
+  course_id  String
+  rating     Int
+  review     String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+  course     courses  @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@index([course_id])
+  @@index([user_id])
+  @@map("course_ratings")
+}
+
+model user_tree_paths {
+  ancestor_id   BigInt
+  descendant_id BigInt
+  depth         Int
+
+  @@id([ancestor_id, descendant_id])
+  @@map("user_tree_paths")
+}
+
+model ledger_entries {
+  id               BigInt         @id @default(autoincrement())
+  receiver_user_id BigInt
+  source_user_id   BigInt
+  purchase_id      BigInt?
+  commission_type  CommissionType
+  amount           Decimal        @db.Decimal(18, 2)
+  credited_at      DateTime       @default(now()) @db.Timestamptz(6)
+  settled          Boolean        @default(false)
+  metadata         Json?
+  idempotency_key  String?        @unique
+
+  @@index([receiver_user_id])
+  @@index([source_user_id])
+  @@index([purchase_id])
+  @@map("ledger_entries")
+}
+
+model wallet_transactions {
+  id               BigInt   @id @default(autoincrement())
+  receiver_user_id BigInt
+  ledger_entry_id  BigInt?
+  amount           Decimal  @db.Decimal(18, 2)
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  idempotency_key  String?
+
+  @@index([receiver_user_id])
+  @@index([ledger_entry_id])
+  @@map("wallet_transactions")
+}
+
+model pending_commissions {
+  id               BigInt          @id @default(autoincrement())
+  receiver_user_id BigInt
+  source_user_id   BigInt
+  purchase_id      BigInt?
+  level            Int
+  commission_type  CommissionType?
+  amount           Decimal         @db.Decimal(18, 2)
+  created_at       DateTime        @default(now()) @db.Timestamptz(6)
+  metadata         Json?
+
+  @@index([receiver_user_id])
+  @@index([source_user_id])
+  @@index([level])
+  @@map("pending_commissions")
+}
+
+// NOTE: scheduled_commissions table removed (Dec 20, 2025)
+// REASON FOR REMOVAL:
+// All commission types (SELF, GLOBAL_HELPING, MONTHLY) are now processed dynamically
+// by the daily cron job (00:05 UTC / 3:35 AM IST) instead of being pre-scheduled at purchase time.
+// 
+// Benefits:
+// - No missed commissions: All active purchases (old + new) are processed automatically
+// - Simplified architecture: No need to maintain scheduled_commissions table
+// - Dynamic calculation: Package config and eligibility fetched fresh each day
+// - Real-time processing: Eligibility checked dynamically, no scheduling needed
+//
+// Migration: See MLM-API/migrations/drop-scheduled-commissions.sql
+// All endpoints that previously queried scheduled_commissions now return empty results
+// for backward compatibility (UI won't break, just shows empty data).
+//
+// What Remains:
+// - pending_commissions: Still used for SPOT commissions (held until upline qualifies)
+// - ledger_entries: Stores all credited commissions (SELF, GLOBAL_HELPING, SPOT, MONTHLY)
+// - Daily cron jobs: Process all commissions dynamically
+
+model level_eligibility {
+  user_id     BigInt   @id
+  eligibility Json
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("level_eligibility")
+}
+
+model commission_rules {
+  id           Int      @id @default(autoincrement())
+  type         String
+  level        Int?
+  percent      Decimal? @db.Decimal(6, 4)
+  fixed_amount Decimal? @db.Decimal(18, 2)
+  eligibility  Json?
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  level_ref    levels?  @relation("LevelCommissionRules", fields: [level], references: [level], onDelete: Cascade)
+
+  @@index([level])
+  @@map("commission_rules")
+}
+
+model user_balances {
+  user_id                BigInt   @id
+  balance                Decimal  @default(0) @db.Decimal(18, 2)
+  spot_balance           Decimal  @default(0) @db.Decimal(18, 2)
+  other_balance          Decimal  @default(0) @db.Decimal(18, 2)
+  team_royalty_balance   Decimal  @default(0) @db.Decimal(18, 2)
+  spot_team_withdraw_used Decimal  @default(0) @db.Decimal(18, 2) // Spot+Team Royalty withdrawn vs 10x limit, reset on package upgrade
+  spot_team_limit_reached_at DateTime? @db.Timestamptz(6) // When 10x limit was first fully used
+  spot_team_flush_active   Boolean  @default(false) // If true, Spot/Team Royalty incomes are flushed until next package upgrade
+  updated_at             DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("user_balances")
+}
+
+model spot_team_flush_history {
+  id                          BigInt   @id @default(autoincrement())
+  user_id                     BigInt
+  flushed_at                  DateTime @default(now()) @db.Timestamptz(6)
+  spot_amount_flushed         Decimal  @default(0) @db.Decimal(18, 2)
+  team_royalty_amount_flushed Decimal  @default(0) @db.Decimal(18, 2)
+  trigger_commission_type     String?  // SPOT or MONTHLY (credit that triggered the flush)
+  created_at                  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([flushed_at])
+  @@map("spot_team_flush_history")
+}
+
+model kyc_documents {
+  id               BigInt              @id @default(autoincrement())
+  user_id          BigInt
+  document_type    KYCDocumentTypeEnum
+  document_number  String?
+  front_image_url  String?
+  back_image_url   String?
+  status           KYCStatusEnum       @default(pending)
+  rejection_reason String?
+  submitted_at     DateTime            @default(now()) @db.Timestamptz(6)
+  verified_at      DateTime?           @db.Timestamptz(6)
+  verified_by      BigInt?
+  created_at       DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime            @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@map("kyc_documents")
+}
+
+model user_profiles {
+  id                BigInt    @id @default(autoincrement())
+  user_id           BigInt    @unique
+  phone             String?
+  profile_photo_url String?
+  date_of_birth     DateTime? @db.Timestamptz(6)
+  address           String?
+  city              String?
+  state             String?
+  pincode           String?
+  bank_account_no   String?
+  bank_ifsc         String?
+  bank_name         String?
+  bank_branch       String?
+  bank_ac_holder    String?
+  bank_upi          String?
+  nominee_name      String?
+  nominee_contact   String?
+  nominee_relation  String?
+  pan_number        String?
+  aadhar_number     String?
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+
+  @@map("user_profiles")
+}
+
+model levels {
+  level                   Int                @id
+  title                   String
+  description             String?
+  reward                  String?
+  spot_commission_percent Decimal?           @db.Decimal(6, 4)
+  monthly_royalty_percent Decimal?           @db.Decimal(6, 4)
+  business_requirement    Json?
+  icon_url                String?
+  color                   String?
+  created_at              DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime           @default(now()) @db.Timestamptz(6)
+  commission_rules        commission_rules[] @relation("LevelCommissionRules")
+
+  @@map("levels")
+}
+
+model fee_rules {
+  id          Int      @id @default(autoincrement())
+  rule_code   String   @unique
+  rule_name   String
+  description String?
+  amount      Decimal  @db.Decimal(18, 2)
+  is_active   Boolean  @default(true)
+  applies_to  String   @default("all_users")
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("fee_rules")
+}
+
+model fee_transactions {
+  id               BigInt   @id @default(autoincrement())
+  user_id          BigInt
+  rule_code        String
+  amount           Decimal  @db.Decimal(18, 2)
+  transaction_type String   @default("FEE_DEDUCTION")
+  reference_id     BigInt?
+  reference_type   String?
+  description      String?
+  idempotency_key  String?  @unique
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([rule_code])
+  @@index([reference_id])
+  @@map("fee_transactions")
+}
+
+model withdraw_requests {
+  id               BigInt         @id @default(autoincrement())
+  user_id          BigInt
+  withdraw_type    WithdrawType   @default(wallet)
+  amount           Decimal        @db.Decimal(18, 2)
+  payment_method   String
+  account_details  String
+  status           WithdrawStatus @default(pending)
+  remarks          String?
+  reference_id     String?
+  processed_at     DateTime?      @db.Timestamptz(6)
+  processed_by     BigInt?
+  rejection_reason String?
+  created_at       DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime       @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([status])
+  @@index([withdraw_type])
+  @@map("withdraw_requests")
+}
+
+model company_bank_accounts {
+  id             Int      @id @default(autoincrement())
+  bank_name      String
+  bank_ac_holder String
+  bank_ac_no     String
+  bank_ifsc      String
+  bank_branch    String?
+  bank_upi       String?
+  qr_image       String?
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active])
+  @@map("company_bank_accounts")
+}
+
+model withdrawal_transfer_rules {
+  id                            Int      @id @default(autoincrement())
+  admin_charges                 Decimal  @default(0) @db.Decimal(18, 2)
+  min_withdraw                  Decimal  @default(0) @db.Decimal(18, 2)
+  max_withdraw                  Decimal? @db.Decimal(18, 2)
+  spot_min_withdraw             Decimal  @default(0) @db.Decimal(18, 2)
+  spot_team_withdraw_multiplier Int      @default(10)
+  min_transfer_amt              Decimal  @default(0) @db.Decimal(18, 2)
+  max_transfer_amt              Decimal? @db.Decimal(18, 2)
+  transfer_amt_tax              Decimal  @default(0) @db.Decimal(6, 4)
+  is_active                     Boolean  @default(true)
+  created_at                    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at                    DateTime @default(now()) @db.Timestamptz(6)
+  withdrawal_enabled            Boolean  @default(true)
+
+  @@map("withdrawal_transfer_rules")
+}
+
+model notices {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  link       String?
+  is_active  Boolean  @default(true)
+  created_by BigInt?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active])
+  @@index([created_at])
+  @@map("notices")
+}
+
+model website_sliders {
+  id            Int      @id @default(autoincrement())
+  title         String
+  image_url     String
+  link          String?
+  display_order Int      @default(0)
+  is_active     Boolean  @default(true)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active])
+  @@index([display_order])
+  @@map("website_sliders")
+}
+
+model website_notices {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  is_active  Boolean  @default(true)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active])
+  @@index([created_at])
+  @@map("website_notices")
+}
+
+model wallet_transfers {
+  id           BigInt   @id @default(autoincrement())
+  from_user_id BigInt
+  to_user_id   BigInt
+  amount       Decimal  @db.Decimal(18, 2)
+  tax_amount   Decimal  @db.Decimal(18, 2)
+  net_amount   Decimal  @db.Decimal(18, 2)
+  status       String   @default("completed")
+  remarks      String?
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([from_user_id])
+  @@index([to_user_id])
+  @@index([status])
+  @@map("wallet_transfers")
+}
+
+model purchase_requests {
+  id                   BigInt                @id @default(autoincrement())
+  user_id              BigInt
+  package_id           Int
+  previous_package_id  Int? // Package ID of expired package being renewed/upgraded
+  previous_purchase_id BigInt? // Purchase ID of expired purchase being renewed/upgraded (exact)
+  request_type         PurchaseRequestType
+  amount               Decimal               @db.Decimal(18, 2)
+  status               PurchaseRequestStatus @default(pending)
+  txn_id               String?
+  payment_proof_url    String?
+  payment_type         String?
+  remarks              String?
+  rejection_reason     String?
+  processed_at         DateTime?             @db.Timestamptz(6)
+  processed_by         BigInt?
+  created_at           DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime              @default(now()) @db.Timestamptz(6)
+
+  @@index([user_id])
+  @@index([package_id])
+  @@index([previous_package_id])
+  @@index([previous_purchase_id])
+  @@index([status])
+  @@index([request_type])
+  @@map("purchase_requests")
+}
+
+// Gateway payment intents: for renewal via ICICI we don't create a purchase until callback (we update existing).
+// So we store intent by merchant_txn_no to link callback to previous_purchase_id.
+model gateway_payment_intents {
+  id                   BigInt   @id @default(autoincrement())
+  user_id              BigInt
+  merchant_txn_no      String   @unique
+  request_type         String   // 'activation' | 'renew' | 'reinvestment' | 'upgrade'
+  package_id           Int
+  course_id            String?
+  previous_purchase_id BigInt?
+  amount               Decimal  @db.Decimal(18, 2)
+  status               String   @default("pending") // pending | completed | failed
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([merchant_txn_no])
+  @@index([user_id])
+  @@index([status])
+  @@map("gateway_payment_intents")
+}
+
+enum UserRole {
+  STUDENT
+  SUPER_ADMIN
+  SUB_ADMIN
+}
+
+enum PurchaseType {
+  DIRECT_PACKAGE
+  COURSE_PURCHASE
+  MANUAL_DEPOSIT
+}
+
+enum CommissionType {
+  SELF
+  GLOBAL_HELPING
+  SPOT
+  MONTHLY
+  FEE_DEDUCTION
+  ADMIN_OPS
+}
+
+enum KYCStatusEnum {
+  pending
+  submitted
+  approved
+  rejected
+}
+
+enum PurchaseRequestType {
+  activation
+  renew
+  reinvestment
+}
+
+enum PurchaseRequestStatus {
+  pending
+  approved
+  rejected
+}
+
+enum KYCDocumentTypeEnum {
+  aadhar
+  pan
+  passport
+  driving_license
+  bank_statement
+  others
+}
+
+enum CourseLanguage {
+  HINDI
+  ENGLISH
+  BILINGUAL
+}
+
+enum CourseLevel {
+  BASIC
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+  PROFESSIONAL
+}
+
+enum WithdrawStatus {
+  pending
+  approved
+  rejected
+  processing
+  cancelled
+}
+
+enum WithdrawType {
+  wallet
+  spot
+  team_royalty
+}

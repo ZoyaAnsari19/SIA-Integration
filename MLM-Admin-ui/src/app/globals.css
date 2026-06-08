@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f4f7fa; /* light theme bg */
+  --foreground: #333333; /* light theme text */
+  --primary: #007bff; /* brand primary */
+  --primary-dark: #0056b3; /* hover/active */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Layout ported from static HTML (light theme) */
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 60px 1fr;
+  grid-template-areas:
+    "sidebar topbar"
+    "sidebar content";
+  height: 100vh;
+  position: relative;
+}
+
+.top-bar { 
+  grid-area: topbar; 
+}
+
+.sidebar { 
+  grid-area: sidebar; 
+}
+
+.content-area { 
+  grid-area: content; 
+  padding: 15px; 
+  overflow-y: auto; 
+}
+
+@media (min-width: 640px) {
+  .content-area {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .content-area {
+    padding: 25px;
+  }
+}
+
+/* Mobile and Tablet Layout (below 768px) */
+@media (max-width: 767px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas:
+      "topbar"
+      "content";
+  }
+  
+  .sidebar {
+    grid-area: unset;
+    /* Sidebar will be positioned via fixed positioning on mobile */
+  }
+}
+
+/* Tablet Layout (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas:
+      "topbar"
+      "content";
+  }
+  
+  .sidebar {
+    grid-area: unset;
+    /* Sidebar will be positioned via fixed positioning on tablet */
+  }
+}
+
+/* Desktop Layout (1024px and above) */
+@media (min-width: 1024px) {
+  .dashboard-container {
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 60px 1fr;
+    grid-template-areas:
+      "sidebar topbar"
+      "sidebar content";
+  }
+  
+  .sidebar {
+    grid-area: sidebar;
+  }
+}
+
+/* Toast notification animations */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+/* Dashboard: subtle gradient background */
+.dashboard-page-bg {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 30%, #e2e8f0 60%, #f1f5f9 100%);
+  min-height: 100%;
+}
+
+.stat-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+}

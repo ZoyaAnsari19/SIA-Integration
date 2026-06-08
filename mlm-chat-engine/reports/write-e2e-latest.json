@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "passed": 9,
+    "total": 10,
+    "skipped": 1
+  },
+  "results": [
+    {
+      "id": "S01",
+      "title": "Approve 1 pending KYC",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminApprovePendingKycs",
+      "pending_kyc_before": 0,
+      "confirmed": true,
+      "pending_kyc_after": 0,
+      "elapsed_ms": 141
+    },
+    {
+      "id": "S02",
+      "title": "Cancel approve 1 pending KYC",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminApprovePendingKycs",
+      "pending_kyc_before": 0,
+      "confirmed": false,
+      "pending_kyc_after": 0,
+      "elapsed_ms": 134
+    },
+    {
+      "id": "S03",
+      "title": "Approve 2 pending KYCs",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminApprovePendingKycs",
+      "pending_kyc_before": 0,
+      "confirmed": true,
+      "pending_kyc_after": 0,
+      "elapsed_ms": 146
+    },
+    {
+      "id": "S04",
+      "title": "List pending KYCs (should not ask IDs)",
+      "ok": true,
+      "skipped": false,
+      "error": null,
+      "elapsed_ms": 5788
+    },
+    {
+      "id": "S05",
+      "title": "Wallet manage (no-op 0 amounts)",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminManageWallet",
+      "wallet_before": {
+        "other_balance": 4778.24,
+        "spot_balance": 14850.25,
+        "team_royalty_balance": 26579.82
+      },
+      "confirmed": true,
+      "wallet_after": {
+        "other_balance": 4778.24,
+        "spot_balance": 14850.25,
+        "team_royalty_balance": 26579.82
+      },
+      "elapsed_ms": 184
+    },
+    {
+      "id": "S06",
+      "title": "Wallet manage cancel",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminManageWallet",
+      "wallet_before": {
+        "other_balance": 4778.24,
+        "spot_balance": 14850.25,
+        "team_royalty_balance": 26579.82
+      },
+      "confirmed": false,
+      "wallet_after": {
+        "other_balance": 4778.24,
+        "spot_balance": 14850.25,
+        "team_royalty_balance": 26579.82
+      },
+      "elapsed_ms": 126
+    },
+    {
+      "id": "S07",
+      "title": "Approve withdrawals by date cancel",
+      "ok": false,
+      "skipped": true,
+      "reason": "no_pending_withdrawals_today_or_model_did_not_propose_write"
+    },
+    {
+      "id": "S08",
+      "title": "Approve withdrawals by date (spot) max 1",
+      "ok": true,
+      "skipped": false,
+      "tool_name": "adminApproveWithdrawalsByDate",
+      "confirmed": true,
+      "elapsed_ms": 7732
+    },
+    {
+      "id": "S09",
+      "title": "Approve one pending withdrawal by id",
+      "ok": true,
+      "skipped": false,
+      "error": null,
+      "elapsed_ms": 30
+    },
+    {
+      "id": "S10",
+      "title": "Reject one pending withdrawal by id (cancel)",
+      "ok": true,
+      "skipped": false,
+      "error": null,
+      "elapsed_ms": 21
+    }
+  ]
+}

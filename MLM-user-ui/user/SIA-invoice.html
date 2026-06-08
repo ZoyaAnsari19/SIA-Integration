@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Infinite Association Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: white;
+            width: 100%;
+            max-width: 750px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+            padding-bottom: 0;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #302b63;
+            font-size: 10px;
+            text-align: center;
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .header-text {
+            flex: 1;
+            text-align: center;
+            color: #000080; /* Dark Blue */
+        }
+
+        .header-text h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .receipt-title {
+            text-align: center;
+            color: #000080;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        /* Info Section */
+        .info-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 40px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        .info-left, .info-right {
+            width: 48%;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .label {
+            font-weight: bold;
+            min-width: 110px;
+        }
+
+        .value {
+            font-weight: bold;
+        }
+        
+        .address-value {
+            display: block;
+        }
+
+        .receipt-no {
+            color: #302b63;
+            font-weight: bold;
+        }
+
+        /* Table Section */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background-color: #3b2a6b; /* Dark Purple */
+            color: white;
+        }
+
+        th {
+            padding: 12px 15px;
+            text-align: left;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+        
+        th:nth-child(2), th:nth-child(3), th:nth-child(4) {
+            text-align: center;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            color: #555;
+            font-size: 14px;
+        }
+
+        td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+            text-align: center;
+        }
+
+        /* Total Section */
+        .total-row td {
+            border-bottom: 2px solid #ddd;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .total-label {
+            text-align: left;
+            padding-left: 40px;
+        }
+        
+        .total-amount {
+            text-align: right;
+            padding-right: 40px;
+        }
+
+        /* Paid Stamp */
+        .stamp-container {
+            position: relative;
+            height: 60px;
+        }
+
+        .stamp {
+            position: absolute;
+            right: 150px;
+            top: -50px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: 4px solid #28a745;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            opacity: 0.9;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        
+        .stamp-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .stamp-thank-you-top {
+            font-size: 9px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1px;
+            line-height: 1;
+        }
+        
+        .stamp-stars {
+            font-size: 7px;
+            color: white;
+            margin: 1px 0;
+            letter-spacing: 3px;
+            line-height: 1;
+        }
+        
+        .stamp-paid {
+            font-size: 28px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 3px 0;
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.4);
+            line-height: 1;
+        }
+        
+        .stamp-thank-you-bottom {
+            font-size: 9px;
+            font-weight: 900;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 1px;
+            transform: scaleY(-1);
+            line-height: 1;
+        }
+
+        /* Notes */
+        .notes-section {
+            text-align: center;
+            padding: 20px 40px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .notes-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px 40px 20px 40px;
+            margin-top: 20px;
+            align-items: flex-end;
+        }
+
+        .sig-left {
+            text-align: left;
+            position: relative;
+            max-width: 300px;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .sig-image-placeholder {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            width: 150px;
+            height: 50px;
+            /* Placeholder for signature image */
+            display: flex;
+            align-items: center;
+            color: blue;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 24px;
+        }
+
+        .auth-text {
+            color: #302b63;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-top: 1px solid #302b63; /* Only if line needed, removing based on image */
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+
+        .sig-right {
+            text-align: right;
+            position: relative;
+        }
+
+        .stamp-round-placeholder {
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #302b63;
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
+            margin-left: auto;
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #302b63;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .footer div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo-placeholder">
+                <img src="logo.png" alt="Secure Infinite Association Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+            </div>
+            <div class="header-text">
+                <h1>SECURE INFINITE ASSOCIATION</h1>
+            </div>
+        </div>
+
+        <div class="receipt-title">RECEIPT</div>
+
+        <div class="info-section">
+            <div class="info-left">
+                <div class="info-row">
+                    <span class="label">Date Issued:</span>
+                    <span class="value">02/09/2035</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Name:</span>
+                    <div class="value address-value">
+                        Mr. Aaron Loeb<br>
+                        Desalganj Wadsa 441207
+                    </div>
+                </div>
+                <div class="info-row">
+                    <span class="label">ID Number:</span>
+                    <span class="value">SIA00021</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Mobile Number:</span>
+                    <span class="value">8965325690</span>
+                </div>
+            </div>
+
+            <div class="info-right">
+                <div class="info-row">
+                    <span class="label">Receipt No:</span>
+                    <span class="value receipt-no">#01234</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Transaction Details</span>
+                </div>
+                <div class="info-row">
+                    <span class="value">UPI /Gateway/UTR<br>T2135479895421230</span>
+                </div>
+                <div class="info-row" style="margin-top: 10px;">
+                    <span class="label">Purpose:</span>
+                    <span class="value">Amount given as Credit</span>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="padding-left: 40px;">DESCRIPTION</th>
+                    <th>RATE</th>
+                    <th>HOURS</th>
+                    <th style="padding-right: 40px; text-align: right;">AMOUNT</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding-left: 40px;">English Speaking</td>
+                    <td>Rs 2500</td>
+                    <td>4</td>
+                    <td style="padding-right: 40px; text-align: right;">Rs 2500</td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 40px;">Sub-Total</td>
+                    <td>Rs 2500</td>
+                    <td>4</td>
+                    <td style="padding-right: 40px; text-align: right;">Rs 2500</td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 40px;">Tax (0%)</td>
+                    <td>Rs 0</td>
+                    <td>0</td>
+                    <td style="padding-right: 40px; text-align: right;">Rs 2500</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div style="padding: 20px 0; border-bottom: 1px solid #ddd; margin: 0 40px;">
+            <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px;">
+                <span>TOTAL</span>
+                <span>Rs 2500</span>
+            </div>
+        </div>
+
+        <div class="stamp-container">
+            <div class="stamp">
+                <div class="stamp-inner">
+                    <div class="stamp-thank-you-top">THANK YOU!</div>
+                    <div class="stamp-stars">★ ★ ★</div>
+                    <div class="stamp-paid">PAID</div>
+                    <div class="stamp-stars">★ ★ ★</div>
+                    <div class="stamp-thank-you-bottom">THANK YOU!</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <div class="notes-title">NOTES</div>
+            <p style="margin: 0; line-height: 1.5;">
+                Thank you for providing the amount as credit. We appreciate your support and encourage you to learn additional courses, refer others, and grow together with us.
+            </p>
+        </div>
+
+        <div class="signature-section">
+            <div class="sig-left">
+                <div class="sig-image-placeholder">Sign...</div>
+                
+                <div class="auth-text">AUTHORIZED SIGNATORY</div>
+                <div class="company-text" style="color:#302b63; font-weight: bold; margin-bottom: 5px;">SECURE INFINITE ASSOCIATION</div>
+                <div>Barampuri, Nagpur Rd, Desaiganj</div>
+                <div>Wadsa, Gadchiroli, Maharashtra,</div>
+                <div>441207</div>
+            </div>
+
+            <div class="sig-right">
+                <div class="stamp-round-placeholder">
+                    <img src="seal.png" alt="Secure Infinite Association Seal" style="width: 100%; height: 100%; object-fit: contain; border-radius: 50%;">
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>&#128222; 02269719182</div>
+            <div>&#127760; www.secureinfiniteassociation.com</div>
+            <div>&#9993; secureinfiniteassociation@gmail.com</div>
+        </div>
+
+    </div>
+
+</body>
+</html>

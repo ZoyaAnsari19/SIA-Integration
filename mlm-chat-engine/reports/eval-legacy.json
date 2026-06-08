@@ -1,0 +1,1087 @@
+{
+  "summary": {
+    "total": 35,
+    "passed": 24,
+    "satisfactory_pct": 68.57,
+    "by_role": {
+      "user": {
+        "total": 17,
+        "passed": 16
+      },
+      "admin": {
+        "total": 18,
+        "passed": 8
+      }
+    },
+    "by_area": {
+      "legacy_total": {
+        "total": 1,
+        "passed": 1
+      },
+      "legacy_count": {
+        "total": 1,
+        "passed": 1
+      },
+      "migration_context": {
+        "total": 1,
+        "passed": 1
+      },
+      "compare_legacy_vs_ledger": {
+        "total": 1,
+        "passed": 1
+      },
+      "legacy_by_level": {
+        "total": 1,
+        "passed": 1
+      },
+      "ledger_window": {
+        "total": 1,
+        "passed": 0
+      },
+      "purchase_mismatch": {
+        "total": 1,
+        "passed": 1
+      },
+      "wallet_mismatch": {
+        "total": 1,
+        "passed": 1
+      },
+      "missing_commission": {
+        "total": 1,
+        "passed": 1
+      },
+      "package_expiry": {
+        "total": 1,
+        "passed": 1
+      },
+      "incorrect_expiry_complaint": {
+        "total": 1,
+        "passed": 1
+      },
+      "ledger_empty": {
+        "total": 1,
+        "passed": 1
+      },
+      "legacy_activation": {
+        "total": 1,
+        "passed": 1
+      },
+      "combined_spot": {
+        "total": 1,
+        "passed": 1
+      },
+      "boundary_explain": {
+        "total": 1,
+        "passed": 1
+      },
+      "data_source_truth": {
+        "total": 1,
+        "passed": 1
+      },
+      "compare_combined": {
+        "total": 1,
+        "passed": 1
+      },
+      "platform_legacy_total": {
+        "total": 1,
+        "passed": 0
+      },
+      "platform_legacy_distinct": {
+        "total": 1,
+        "passed": 0
+      },
+      "platform_legacy_act": {
+        "total": 1,
+        "passed": 0
+      },
+      "user_legacy_lookup": {
+        "total": 1,
+        "passed": 0
+      },
+      "top_legacy_user": {
+        "total": 1,
+        "passed": 0
+      },
+      "mismatch_lookup": {
+        "total": 1,
+        "passed": 0
+      },
+      "no_ledger_user": {
+        "total": 1,
+        "passed": 1
+      },
+      "boundary_admin": {
+        "total": 1,
+        "passed": 1
+      },
+      "user_legacy_count": {
+        "total": 1,
+        "passed": 0
+      },
+      "legacy_concept": {
+        "total": 1,
+        "passed": 1
+      },
+      "user_legacy_by_level": {
+        "total": 1,
+        "passed": 1
+      },
+      "explain_purchase_mismatch": {
+        "total": 1,
+        "passed": 1
+      },
+      "investigation_workflow": {
+        "total": 1,
+        "passed": 1
+      },
+      "user_lookup_legacy": {
+        "total": 1,
+        "passed": 0
+      },
+      "missing_commission_admin": {
+        "total": 1,
+        "passed": 1
+      },
+      "legacy_spot_global_sum": {
+        "total": 1,
+        "passed": 0
+      },
+      "user_combined": {
+        "total": 1,
+        "passed": 0
+      },
+      "migration_design": {
+        "total": 1,
+        "passed": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "LU01",
+      "role": "user",
+      "area": "legacy_total",
+      "question": "Mere legacy SPOT history mein total kitna income hua tha (purane system se)?",
+      "expected": [
+        "46181",
+        "46,181",
+        "46181.25"
+      ],
+      "db_truth": "46181.25",
+      "reply_text": "Aapke purane system (legacy) ke records ke mutabiq, aapki total SPOT income **\u20b946,181.25** thi.\n\nIska breakup neeche diya gaya hai:\n- **Direct Income:** \u20b95,800\n- **Level 1 Income:** \u20b940,381.25",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 4925,
+      "passed": true,
+      "matched": [
+        "46181",
+        "46,181",
+        "46181.25"
+      ]
+    },
+    {
+      "id": "LU02",
+      "role": "user",
+      "area": "legacy_count",
+      "question": "Old (legacy) system mein meri kitni SPOT history rows hain?",
+      "expected": [
+        "93"
+      ],
+      "db_truth": "93",
+      "reply_text": "Old (legacy) system mein aapki total 93 SPOT history rows hain.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2439,
+      "passed": true,
+      "matched": [
+        "93"
+      ]
+    },
+    {
+      "id": "LU03",
+      "role": "user",
+      "area": "migration_context",
+      "question": "When did the migration happen and which type of data was migrated as snapshot vs not migrated?",
+      "expected": [
+        "18",
+        "Dec",
+        "snapshot",
+        "balance",
+        "ledger"
+      ],
+      "db_truth": "2025-12-18",
+      "reply_text": "The migration happened on **2025-12-18**.\n\n*   **Migrated as Snapshot:** Wallet balances (Total: 46208.31) and active package states were captured as a state-based snapshot. This includes a Spot balance of 14850.25 and a Team Royalty balance of 26579.82.\n*   **Not Migrated (Historical):** The complete historical ledger was not migrated. Legacy records, such as the 46181.25 in pre-migration SPOT earnings, are maintained separately for reference and are not part of the active ledger computation.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 4059,
+      "passed": true,
+      "matched": [
+        "18",
+        "snapshot",
+        "balance",
+        "ledger"
+      ]
+    },
+    {
+      "id": "LU04",
+      "role": "user",
+      "area": "compare_legacy_vs_ledger",
+      "question": "Mera legacy spot income vs ledger spot income ka comparison batao \u2014 gap kitna hai?",
+      "expected": [
+        "46,181",
+        "46181",
+        "82,856",
+        "82856"
+      ],
+      "db_truth": "legacy=46181.25|ledger=82856.25",
+      "reply_text": "Aapka legacy aur ledger spot income ka comparison niche diya gaya hai:\n\n*   **Legacy Spot Income:** 46,181.25\n*   **Ledger Spot Income:** 82,856.25\n*   **Gap (Antar):** 36,675.00\n\nAapka Ledger Spot Income legacy se 36,675.00 zyada hai, kyunki ledger mein migration ke baad ki saari nayi earnings shamil hain.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 3795,
+      "passed": true,
+      "matched": [
+        "46,181",
+        "46181",
+        "82,856",
+        "82856"
+      ]
+    },
+    {
+      "id": "LU05",
+      "role": "user",
+      "area": "legacy_by_level",
+      "question": "Purane system mein mera SPOT income kis level se kitna mila tha (Direct vs Level 1)?",
+      "expected": [
+        "Direct",
+        "5800",
+        "Level 1",
+        "40381",
+        "40,381"
+      ],
+      "db_truth": "<db_error: ERROR:  column \"data\" does not exist\nLINE 1: select string_agg(coalesce(data->>'income_lvl','') || '=' ||...\n                                   ^>",
+      "reply_text": "Aapka total SPOT income data ye hai:\n\n*   **Direct (Level 1):** Aapko apne direct referrals se total **4,000.00** mile hain (7 entries).\n*   **Total SPOT Income:** Aapka kul SPOT income **82,856.25** hai (162 entries).\n\nIska matlab hai ki baaki ka **78,856.25** aapko Level 2 aur usse neeche ke team levels se mila hai.",
+      "tool_calls": [
+        "getUserLevelProgress",
+        "diagnoseMissingCommission"
+      ],
+      "error": null,
+      "elapsed_ms": 5514,
+      "passed": true,
+      "matched": [
+        "Direct",
+        "Level 1"
+      ]
+    },
+    {
+      "id": "LU06",
+      "role": "user",
+      "area": "ledger_window",
+      "question": "Mere new system ke ledger entries kab se shuru hue hain (earliest credited_at)?",
+      "expected": [
+        "2025-12-18"
+      ],
+      "db_truth": "2025-12-18 00:00:00+00",
+      "reply_text": "Aapke new system ke ledger entries **18-Dec-2025** se shuru hue hain.\n\nYeh wahi date hai jab system legacy platform se migrate hokar naye PostgreSQL system par shift hua tha. Isliye current ledger mein entries isi date se start hoti hain.\n\nAapke records ki summary:\n*   **Earliest Ledger Entry:** 18-Dec-2025\n*   **Total Ledger Entries:** 56,695\n*   **Legacy Data:** Aapke 93 SPOT rows aur 1 activation row legacy tables mein bhi available hain, jo migration se pehle ke hain.",
+      "tool_calls": [
+        "getUserMigrationContext"
+      ],
+      "error": null,
+      "elapsed_ms": 8595,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LU07",
+      "role": "user",
+      "area": "purchase_mismatch",
+      "question": "Mera ek purchase 2x tak pahunch gaya hai but ledger entries usse kam dikhati hain \u2014 kyu? Kya legacy income bhi count hota hai?",
+      "expected": [
+        "legacy",
+        "migration",
+        "ledger",
+        "snapshot",
+        "before",
+        "purana"
+      ],
+      "db_truth": "concept_migration",
+      "reply_text": "Aapka ledger balance isliye kam dikh raha hai kyunki ledger mein sirf migration date (18-12-2025) ke baad ki entries hain. Ji haan, legacy income 2x limit mein bilkul count hoti hai.\n\nAapka total income do hisson mein hai:\n1. **Legacy Spot Income:** 46181.25 (Ye purane system ka record hai).\n2. **Ledger Spot Income:** 82856.25 (Ye migration ke baad ki kamayi hai).\n\nChunki system 2x limit ke liye dono ko count karta hai, isliye aapka limit jaldi hit ho gaya hai, bhale hi ledger mein sirf naya data dikh raha ho.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 6332,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "migration",
+        "ledger"
+      ]
+    },
+    {
+      "id": "LU08",
+      "role": "user",
+      "area": "wallet_mismatch",
+      "question": "Mera wallet balance ledger ke total se zyada lag raha hai \u2014 kyu? Migration ke karan koi snapshot hai kya?",
+      "expected": [
+        "snapshot",
+        "migration",
+        "balance",
+        "legacy",
+        "boundary"
+      ],
+      "db_truth": "concept_wallet_snapshot",
+      "reply_text": "Haan, aapka observation bilkul sahi hai. Migration ke wajah se hi aapko ye farak dikh raha hai.\n\nSystem 2025-12-18 ko migrate hua tha, aur aapka wallet balance ek **snapshot** ke taur par laya gaya hai. Aapka ledger poora historical record nahi hai; isme zyada tar migration ke baad ki transactions hi hain.\n\nYahan kuch zaroori details hain:\n- **Migration Snapshot Balance:** 46208.31 (Isme Spot balance 14850.25 aur Team Royalty 26579.82 shamil tha).\n- **Legacy Spot Total:** 46181.25 (Ye aapka purana record hai jo naye ledger calculation mein count nahi hota, isliye ledger ka total kam lag sakta hai).\n- **Migration Date:** 2025-12-18.\n\nIn short, aapka balance sahi hai, bas purana data snapshot ke roop mein migrate kiya gaya tha jo ledger ke total mein directly nahi dikhta.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 7334,
+      "passed": true,
+      "matched": [
+        "snapshot",
+        "migration",
+        "balance",
+        "legacy"
+      ]
+    },
+    {
+      "id": "LU09",
+      "role": "user",
+      "area": "missing_commission",
+      "question": "I think I did not receive my old direct/spot commission for some users \u2014 please check legacy data and explain.",
+      "expected": [
+        "legacy",
+        "spot",
+        "ledger",
+        "before",
+        "migration",
+        "old"
+      ],
+      "db_truth": "concept_legacy_commission",
+      "reply_text": "Based on the legacy records, your total pre-migration Spot Commission was **46,181.25** (comprising 5,800 in Direct and 40,381.25 in Level 1 commissions).\n\nThis amount was accounted for in your wallet snapshot during the system migration on **2025-12-18**. Because these are legacy records, they are maintained for your reference but do not appear as individual entries in your new active ledger. Your current ledger shows an additional **82,856.25** earned after the migration.\n\nYour account is active and KYC is approved. Any new commissions currently in the \"pending\" state will credit to your ledger as soon as the system's eligibility rules are met.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot",
+        "diagnoseMissingCommission"
+      ],
+      "error": null,
+      "elapsed_ms": 9809,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "spot",
+        "ledger",
+        "migration"
+      ]
+    },
+    {
+      "id": "LU10",
+      "role": "user",
+      "area": "package_expiry",
+      "question": "Mera ek package expire ho gaya \u2014 par maine ledger mein 2x tak income nahi dekha. Kya ye legacy income ki wajah se hai?",
+      "expected": [
+        "legacy",
+        "2x",
+        "income",
+        "ledger",
+        "migration",
+        "snapshot"
+      ],
+      "db_truth": "concept_expiry_legacy",
+      "reply_text": "Ji haan, aapka package legacy income ki wajah se hi expire hua hai. Ledger mein sirf migration (18 Dec 2025) ke baad ki transactions dikhti hain, lekin system aapki total 2x limit calculate karne ke liye purani earnings ko bhi count karta hai.\n\nAapka data ye hai:\n- **Legacy Spot Income:** 46,181.25 (Ye migration se pehle ki income hai jo ledger mein nahi dikhegi).\n- **Ledger Spot Income:** 82,856.25 (Ye migration ke baad ki income hai).\n\nKyuki aapki total income (Legacy + Ledger) package ki limit ko cross kar gayi hai, isliye wo expire show ho raha hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot",
+        "diagnoseMissingCommission"
+      ],
+      "error": null,
+      "elapsed_ms": 6184,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "2x",
+        "income",
+        "ledger",
+        "migration"
+      ]
+    },
+    {
+      "id": "LU11",
+      "role": "user",
+      "area": "incorrect_expiry_complaint",
+      "question": "I feel my package expired wrongly \u2014 only the new ledger shows the income. Can you reconstruct the total income using legacy + new system?",
+      "expected": [
+        "legacy",
+        "ledger",
+        "combined",
+        "before",
+        "migration",
+        "total"
+      ],
+      "db_truth": "concept_total_income",
+      "reply_text": "To reconstruct your total income, we combine the earnings from the old system (Legacy) and the current ledger:\n\n1.  **Legacy Spot Income (Pre-migration):** 46,181.25\n2.  **New Ledger Spot Income:** 82,856.25\n3.  **Total Combined Spot Income:** 129,037.50\n\nThe new ledger only shows transactions from December 18, 2025, onwards. However, your legacy earnings of 46,181.25 were imported and are counted toward your package's total income limit. This combined total is what triggered the package expiry.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 11591,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "ledger",
+        "combined",
+        "migration",
+        "total"
+      ]
+    },
+    {
+      "id": "LU12",
+      "role": "user",
+      "area": "ledger_empty",
+      "question": "Mere account mein activity bahut kam dikh rahi hai. Kya purane system ki bhi history hai mere paas?",
+      "expected": [
+        "93",
+        "legacy",
+        "old",
+        "import"
+      ],
+      "db_truth": "93",
+      "reply_text": "Haan, aapke paas purane system ki history bilkul available hai. Humara system **18-Dec-2025** ko naye platform par migrate hua tha, isliye naye ledger mein zyadaatar activity us date ke baad ki hi dikhegi.\n\nAapka purana (legacy) data system mein save hai:\n\n*   **Legacy SPOT Income:** Aapne purane system mein total **\u20b946,181.25** earn kiye thhe (Jan 2025 se Dec 2025 tak).\n*   **Income Breakdown:**\n    *   **Direct Income:** \u20b95,800 (26 rows)\n    *   **Level 1 Income:** \u20b940,381.25 (67 rows)\n*   **Legacy Activations:** Aapki 1 purani activation record bhi migration ke waqt snapshot ke roop mein li gayi thi.\n\nAbhi aapke wallet mein total balance **\u20b946,208.31** hai, jisme purane system ka snapshot aur migration ke baad ki earnings dono shamil hain. Agar aapko koi specific purani transaction check karni hai, toh main uski details bhi nikaal sakta hoon.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 14046,
+      "passed": true,
+      "matched": [
+        "legacy"
+      ]
+    },
+    {
+      "id": "LU13",
+      "role": "user",
+      "area": "legacy_activation",
+      "question": "Mere legacy activation history mein kitni entries hain?",
+      "expected": [
+        "1"
+      ],
+      "db_truth": "1",
+      "reply_text": "Aapke legacy activation history mein total **1 entry** hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2547,
+      "passed": true,
+      "matched": [
+        "1"
+      ]
+    },
+    {
+      "id": "LU14",
+      "role": "user",
+      "area": "combined_spot",
+      "question": "Mera total SPOT income \u2014 legacy + new ledger \u2014 combined kitna hai approximately?",
+      "expected": [
+        "129",
+        "129,037",
+        "129037",
+        "1,29,037"
+      ],
+      "db_truth": "129037.50",
+      "reply_text": "Aapka total SPOT income (Legacy + New Ledger) mila kar **1,29,037.50** hai.\n\nIska breakdown is tarah hai:\n- **Legacy SPOT Income:** 46,181.25\n- **New Ledger SPOT Income:** 82,856.25",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2591,
+      "passed": true,
+      "matched": [
+        "129",
+        "129,037",
+        "129037",
+        "1,29,037"
+      ]
+    },
+    {
+      "id": "LU15",
+      "role": "user",
+      "area": "boundary_explain",
+      "question": "Why does my new ledger start only from 18 December 2025?",
+      "expected": [
+        "18",
+        "December",
+        "Dec",
+        "migration",
+        "boundary",
+        "legacy"
+      ],
+      "db_truth": "concept_boundary",
+      "reply_text": "SIA system 18 December 2025 ko ek legacy platform se naye PostgreSQL system par migrate hua tha. Is migration se judi kuch zaroori baatein ye hain:\n\n*   **State-based Migration:** Migration ke waqt aapke wallet balances, package status aur team hierarchy ka snapshot liya gaya tha.\n*   **Ledger Activity:** Kyonki ye ek full historical migration nahi tha, isliye purane system ki har ek commission transaction naye ledger me transfer nahi ki gayi. \n*   **New Record:** Naya ledger sirf 18-Dec-2025 ke baad ki activity aur post-migration updates ko hi reflect karta hai.\n\nAgar aapko isse pehle ka data dekhna hai, toh aap apne dashboard par **Legacy/Old Data** section check kar sakte hain ya main tool use karke aapke liye summarize kar sakta hoon.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 5412,
+      "passed": true,
+      "matched": [
+        "18",
+        "December",
+        "Dec",
+        "migration",
+        "legacy"
+      ]
+    },
+    {
+      "id": "LU16",
+      "role": "user",
+      "area": "data_source_truth",
+      "question": "Legacy data aur new ledger mein se konsa data financial truth ke liye source-of-truth hai?",
+      "expected": [
+        "new",
+        "ledger",
+        "current",
+        "legacy",
+        "reference",
+        "read-only"
+      ],
+      "db_truth": "concept_truth",
+      "reply_text": "Financial truth ke liye dono data ka combination zaroori hai kyunki ledger mein pura historical record nahi hai.\n\n1. **Legacy Data:** Yeh 2025-12-18 se pehle ka snapshot hai. Pre-migration earnings (jaise Legacy SPOT total: 46,181.25) isi data se explain hoti hain.\n2. **New Ledger:** Yeh sirf migration date (2025-12-18) ke baad ki transactions dikhata hai.\n3. **Wallet Snapshot:** Aapka total migrated balance 46,208.31 hai, jo snapshot ke basis par set kiya gaya tha.\n\nShort mein: Purana hisab Legacy data se aur naya activity Ledger se verify karein.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 6083,
+      "passed": true,
+      "matched": [
+        "new",
+        "ledger",
+        "legacy"
+      ]
+    },
+    {
+      "id": "LU17",
+      "role": "user",
+      "area": "compare_combined",
+      "question": "Total combined SPOT income ka calculation karke batao \u2014 legacy ka kitna, ledger ka kitna, total kitna?",
+      "expected": [
+        "46,181",
+        "82,856",
+        "129",
+        "129,037"
+      ],
+      "db_truth": "legacy=46181.25|ledger=82856.25|total=129037.50",
+      "reply_text": "Aapka total combined SPOT income ka calculation niche diya gaya hai:\n\n*   **Legacy SPOT Income:** 46,181.25\n*   **Ledger SPOT Income:** 82,856.25\n*   **Total Combined SPOT Income:** 1,29,037.50",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 3212,
+      "passed": true,
+      "matched": [
+        "46,181",
+        "82,856",
+        "129",
+        "129,037"
+      ]
+    },
+    {
+      "id": "LA01",
+      "role": "admin",
+      "area": "platform_legacy_total",
+      "question": "Platform-wide me legacy SPOT history rows kitni hain aur unka total amount kya hai?",
+      "expected": [
+        "2882",
+        "2,882",
+        "2631643",
+        "2,631,643",
+        "26,31,643"
+      ],
+      "db_truth": "2882|2631643.75",
+      "reply_text": "Legacy SPOT history mein total 0 rows hain aur unka total amount 0 hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2480,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA02",
+      "role": "admin",
+      "area": "platform_legacy_distinct",
+      "question": "How many distinct users have any legacy SPOT history rows in our system?",
+      "expected": [
+        "411"
+      ],
+      "db_truth": "411",
+      "reply_text": "Based on the system data for User 1897, there are **0** legacy SPOT history rows. The provided tool results only cover User 1897, showing a `legacy_spot_rows` count of 0 and a total legacy amount of 0. I do not have the global aggregate count for all distinct users across the entire system.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 8008,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA03",
+      "role": "admin",
+      "area": "platform_legacy_act",
+      "question": "How many distinct users have legacy activation history rows?",
+      "expected": [
+        "1315",
+        "1,315"
+      ],
+      "db_truth": "1315",
+      "reply_text": "Based on the data provided for User 1897, there are **0** legacy activation history rows. I do not have the information required to provide a global count of all distinct users across the database.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 12739,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA04",
+      "role": "admin",
+      "area": "user_legacy_lookup",
+      "question": "User SIA00299 ka legacy SPOT total kitna hai aur ledger SPOT kitna hai?",
+      "expected": [
+        "46,181",
+        "46181",
+        "82,856",
+        "82856"
+      ],
+      "db_truth": "legacy=46181.25|ledger=82856.25",
+      "reply_text": "User SIA00299 ka legacy SPOT total 0 hai aur ledger SPOT total bhi 0 hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2054,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA05",
+      "role": "admin",
+      "area": "top_legacy_user",
+      "question": "Top legacy SPOT earner kaun hai aur kitna amount hai unka?",
+      "expected": [
+        "SIA00334",
+        "133",
+        "1,33,250",
+        "133250"
+      ],
+      "db_truth": "SIA00334|133250",
+      "reply_text": "Data ke mutabik, legacy SPOT earnings mein User ID 1897 ka total amount **0** hai. Mere paas filhaal sabhi users ki ranking ya global top earner ki list nahi hai, sirf is specific user ka migration data available hai jisme amount 0 dikha raha hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 6358,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA06",
+      "role": "admin",
+      "area": "mismatch_lookup",
+      "question": "User SIA00386 ki legacy SPOT vs ledger SPOT compare karke mismatch ka size batao.",
+      "expected": [
+        "130000",
+        "130,000",
+        "1,30,000",
+        "5000",
+        "5,000"
+      ],
+      "db_truth": "legacy=130000|ledger=5000",
+      "reply_text": "User SIA00386 ke liye, Legacy SPOT total **0** hai aur Ledger SPOT total bhi **0** hai. Dono values matching hain, isliye ismein koi mismatch nahi hai (mismatch size: **0**).",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2529,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA07",
+      "role": "admin",
+      "area": "no_ledger_user",
+      "question": "User SIA00870 ka kya legacy SPOT history hai but new ledger SPOT zero hai? Verify and explain.",
+      "expected": [
+        "30,337",
+        "30337",
+        "0"
+      ],
+      "db_truth": "legacy=30337.5|ledger=0",
+      "reply_text": "SIA00870 ke records ke mutabiq, aapka Legacy SPOT history aur New Ledger SPOT dono hi zero hain.\n\nTool data verify karne par ye pata chala hai:\n1. **Legacy SPOT:** Purane Excel data mein aapka total SPOT amount 0 hai.\n2. **New Ledger SPOT:** Migration ke baad naye ledger mein bhi koi SPOT entry nahi hai (Total: 0).\n3. **Wallet Snapshot:** Aapka current spot_balance bhi 0.00 show kar raha hai.\n\nIska matlab hai ki na to migration se pehle koi earning record thi aur na hi migration ke baad koi naye transactions hue hain.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 4671,
+      "passed": true,
+      "matched": [
+        "0"
+      ]
+    },
+    {
+      "id": "LA08",
+      "role": "admin",
+      "area": "boundary_admin",
+      "question": "What is the migration cut-off date in our system and how does that affect the new ledger?",
+      "expected": [
+        "18",
+        "Dec",
+        "2025",
+        "boundary",
+        "migration",
+        "snapshot"
+      ],
+      "db_truth": "2025-12-18",
+      "reply_text": "The migration cut-off date (boundary date) in our system is **2025-12-18**.\n\nThis affects the new ledger in the following ways:\n1. **Partial Record:** The ledger is not a complete historical record; it primarily represents activity that happened **after** the migration.\n2. **Snapshot Migration:** Your pre-migration status, including wallet balances and active packages, was migrated as a snapshot rather than individual transactions.\n3. **Legacy Data:** Any historical data from the old system (like legacy SPOT history) is read-only and used for reference. It is **not** part of the active ledger computation.\n\nCurrently, your migrated wallet snapshot balance is **0.00**.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 4197,
+      "passed": true,
+      "matched": [
+        "18",
+        "2025",
+        "boundary",
+        "migration",
+        "snapshot"
+      ]
+    },
+    {
+      "id": "LA09",
+      "role": "admin",
+      "area": "user_legacy_count",
+      "question": "User SIA00299 ke legacy SPOT history me kitni rows imported hain?",
+      "expected": [
+        "93"
+      ],
+      "db_truth": "93",
+      "reply_text": "User SIA00299 ke legacy SPOT history me total 0 rows imported hain.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2593,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA10",
+      "role": "admin",
+      "area": "legacy_concept",
+      "question": "Briefly explain what legacy_spot_history and legacy_activation_history tables are used for, and whether they are part of active financial computation.",
+      "expected": [
+        "legacy",
+        "import",
+        "Excel",
+        "read-only",
+        "reference",
+        "spot",
+        "activation"
+      ],
+      "db_truth": "concept_legacy_tables",
+      "reply_text": "The `legacy_spot_history` and `legacy_activation_history` tables store historical data imported from the old system (Excel records). They provide a read-only record of earnings and package activations that occurred before the migration date (2025-12-18).\n\nThese tables are **not** part of the active financial computation. Current wallet balances were migrated as a snapshot, and the new ledger only tracks post-migration activity. These legacy tables are used only for reference and to address queries about pre-migration earnings.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 3497,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "import",
+        "Excel",
+        "read-only",
+        "reference",
+        "spot",
+        "activation"
+      ]
+    },
+    {
+      "id": "LA11",
+      "role": "admin",
+      "area": "user_legacy_by_level",
+      "question": "User SIA00299 ka legacy SPOT income by level batao \u2014 Direct vs Level 1 vs others.",
+      "expected": [
+        "Direct",
+        "5800",
+        "5,800",
+        "40381",
+        "40,381",
+        "Level 1"
+      ],
+      "db_truth": "Direct=5800|Level 1=40381.25",
+      "reply_text": "User SIA00299 ka koi legacy SPOT income record nahi mila hai. \n\nRecords ke mutabik:\n- **Total Legacy SPOT Income:** 0\n- **Direct/Level 1/Others:** Sabhi levels par income **0** hai.\n\nAapka legacy history aur current spot balance dono zero show kar rahe hain.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2623,
+      "passed": true,
+      "matched": [
+        "Direct",
+        "Level 1"
+      ]
+    },
+    {
+      "id": "LA12",
+      "role": "admin",
+      "area": "explain_purchase_mismatch",
+      "question": "User SIA00299 ka purchase id 1540 (\u20b97500 package) ka 2x income tracker vs ledger entries explain karo aur legacy context bhi do.",
+      "expected": [
+        "7500",
+        "7,500",
+        "4808",
+        "4,808",
+        "legacy",
+        "ledger",
+        "migration"
+      ],
+      "db_truth": "amount=7500|income=4808.96|legacy_spot=46181.25",
+      "reply_text": "User SIA00299 (ID: 1897) ke \u20b97500 package (ID 1540) ka status aur legacy context neeche diya gaya hai:\n\n**1. Legacy Context:**\nSIA ka migration **state-based snapshot** ke zariye hua tha (Boundary Date: 2025-12-18). Iska matlab hai ki ledger mein poori purani history nahi hai; sirf migration ke waqt ka final balance aur uske baad ki activities dikhti hain.\n\n**2. Income Tracker vs Ledger:**\n*   **Ledger Entries:** Aapke records mein filhal **0** ledger entries hain. Ledger sirf post-migration activity dikhata hai.\n*   **Legacy Spot Summary:** Purane Excel data ke hisaab se bhi legacy spot earnings **\u20b90** show ho rahi hain.\n*   **Wallet Snapshot:** Aapka current wallet balance, spot balance, aur team royalty balance sabhi **\u20b90.00** par hain (Updated: 2025-12-12).\n\n**Conclusion:** \nAgar 2x tracker mein income show ho rahi hai lekin ledger empty hai, toh iska karan **state-based migration** hai. Ledger mein wahi entries dikhengi jo migration boundary ke baad generate hui hain. Filhal database mein is package se judi koi active ledger entry ya legacy spot record nahi mila hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 6189,
+      "passed": true,
+      "matched": [
+        "7500",
+        "7,500",
+        "legacy",
+        "ledger",
+        "migration"
+      ]
+    },
+    {
+      "id": "LA13",
+      "role": "admin",
+      "area": "investigation_workflow",
+      "question": "Bataiye step-by-step ki agar user complain kare ki uska balance galat hai, toh legacy + ledger ka use karke kaise investigate karenge?",
+      "expected": [
+        "legacy",
+        "ledger",
+        "balance",
+        "snapshot",
+        "audit",
+        "wallet"
+      ],
+      "db_truth": "concept_investigation",
+      "reply_text": "Agar user balance galat hone ki complaint kare, toh legacy aur ledger data ka use karke aise investigate karein:\n\n1. **Migration Context Check Karein:** Sabse pehle user ki migration date dekhein. User 1897 ke liye **migration_boundary_date 2025-12-18** hai. Yaad rakhein ki ledger sirf migration ke baad ki transactions dikhata hai.\n2. **Wallet Snapshot Dekhein:** Check karein ki migration ke waqt snapshot balance kitna tha. Is user ka **wallet snapshot balance 0.00** aur **spot_balance 0.00** tha (updated at 2025-12-12).\n3. **Legacy Spot Summary:** Purane Excel data (Legacy) ko check karein. User 1897 ka **total legacy spot amount 0** hai. Agar yahan koi amount hota, toh wo purani earnings ko justify karta jo ledger mein nahi dikhti.\n4. **Ledger vs Legacy Comparison:** Dono ko compare karein. Is case mein:\n   - **Legacy Spot:** 0\n   - **Ledger Spot:** 0\n   Agar user ko lagta hai balance kam hai, toh unhe batayein ki ledger sirf post-migration records dikhata hai, aur pre-migration earnings legacy snapshot mein cover hoti hain. Kyunki user ka snapshot aur legacy data dono 0.00 hain, iska matlab migration ke waqt koi pending balance nahi tha.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 7231,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "ledger",
+        "balance",
+        "snapshot",
+        "wallet"
+      ]
+    },
+    {
+      "id": "LA14",
+      "role": "admin",
+      "area": "user_lookup_legacy",
+      "question": "User SIA00558 ke legacy SPOT total + ledger SPOT total batao.",
+      "expected": [
+        "105",
+        "1,05,225",
+        "105225",
+        "30,187",
+        "30187"
+      ],
+      "db_truth": "legacy=105225|ledger=30187.5",
+      "reply_text": "User SIA00558 ka legacy SPOT total 0 hai aur ledger SPOT total bhi 0 hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2256,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA15",
+      "role": "admin",
+      "area": "missing_commission_admin",
+      "question": "User SIA00299 says 'I did not get level-1 SPOT commission' \u2014 admin POV se diagnose karke explain karo, aur legacy context bhi do.",
+      "expected": [
+        "legacy",
+        "spot",
+        "level",
+        "ledger",
+        "before",
+        "migration",
+        "diagnose"
+      ],
+      "db_truth": "concept_diagnose_legacy",
+      "reply_text": "SIA00299 ke account diagnosis ka summary yeh hai:\n\n**Problem:** Aapki Level-1 SPOT commissions (total **687.50**) \"Pending\" state mein hain, ledger mein credit nahi hui hain.\n\n**Main Blockers:**\n1. **KYC Pending:** Aapka KYC status abhi 'pending' hai. Jab tak KYC approve nahi hoti, commissions wallet mein credit nahi hongi.\n2. **No Active Package:** Filhaal aapke paas koi active package nahi hai, jo commission eligibility ke liye zaroori hai.\n\n**Data Details:**\n*   **Pending Amount:** Level-1 se total 5 entries pending hain (Jaise 187.50, 62.50, 187.50, etc.).\n*   **Recent Activations:** Downline user SIA02000 ne Level-1 par multiple purchases ki hain (e.g., 2500, 15000, 7500 amounts ki), par blockers ki wajah se aapka commission release nahi hua.\n\n**Legacy Context:**\nAapka migration **18 Dec 2025** ko hua tha. Snapshot ke time aapka wallet balance 0.00 tha aur Excel-based legacy records mein bhi koi purana data nahi mila. Iska matlab saari current activity post-migration ki hi hai. \n\n**Solution:** KYC approve karwayein aur package active karein taaki pending amount ledger mein shift ho sake.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot",
+        "diagnoseMissingCommission"
+      ],
+      "error": null,
+      "elapsed_ms": 7076,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "spot",
+        "level",
+        "ledger",
+        "migration"
+      ]
+    },
+    {
+      "id": "LA16",
+      "role": "admin",
+      "area": "legacy_spot_global_sum",
+      "question": "What is the total amount of legacy SPOT income imported into the system across all users?",
+      "expected": [
+        "2631643",
+        "2,631,643",
+        "26,31,643"
+      ],
+      "db_truth": "2631643.75",
+      "reply_text": "The total amount of legacy SPOT income imported into the system is 0.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 4177,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA17",
+      "role": "admin",
+      "area": "user_combined",
+      "question": "User SIA00299 ka combined (legacy + ledger) SPOT total kitna hota hai?",
+      "expected": [
+        "129037",
+        "129,037",
+        "1,29,037"
+      ],
+      "db_truth": "129037.50",
+      "reply_text": "User SIA00299 ka combined (legacy + ledger) SPOT total 0 hai. Dono legacy aur ledger accounts mein SPOT amount 0 dikha raha hai.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2428,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "LA18",
+      "role": "admin",
+      "area": "migration_design",
+      "question": "Migration approach state-based tha ya full ledger migration tha? Explain in 2-3 sentences.",
+      "expected": [
+        "state",
+        "snapshot",
+        "ledger",
+        "not",
+        "full",
+        "migration"
+      ],
+      "db_truth": "concept_state_based",
+      "reply_text": "Migration approach **state-based** tha, jisme wallet balances aur active package state ka snapshot migrate kiya gaya tha. Ye full ledger migration nahi tha, isliye current ledger mein sirf migration ke baad ki activity dikhayi degi, pura historical record nahi.",
+      "tool_calls": [
+        "getUserMigrationContext",
+        "getUserLegacySpotSummary",
+        "compareLegacySpotVsLedgerSpot"
+      ],
+      "error": null,
+      "elapsed_ms": 2986,
+      "passed": true,
+      "matched": [
+        "state",
+        "snapshot",
+        "ledger",
+        "full",
+        "migration"
+      ]
+    }
+  ]
+}

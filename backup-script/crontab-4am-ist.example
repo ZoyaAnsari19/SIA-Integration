@@ -1,0 +1,12 @@
+# Production DB backup: daily at 4:00 AM Indian time (IST)
+# Uses same Bunny as app: BUNNY_STORAGE_ZONE_NAME, BUNNY_STORAGE_ENDPOINT, BUNNY_STORAGE_API_KEY
+#
+# Easiest: run ./backup-script/install-backup-cron.sh (after creating backup-bunny.env)
+#
+# Or add manually (crontab -e). Replace /path/to/MLM with repo path.
+#
+# Option A: Server in IST (or use CRON_TZ=Asia/Kolkata so 0 4 = 4 AM IST)
+# 0 4 * * * /bin/bash -l -c 'cd /path/to/MLM && . ./backup-script/backup-bunny.env 2>/dev/null && ./backup-script/prod-backup-to-bunny.sh' >> /path/to/MLM/backup-script/backup.log 2>&1
+#
+# Option B: Server in UTC (4:00 AM IST = 22:30 UTC)
+# 30 22 * * * /bin/bash -l -c 'cd /path/to/MLM && . ./backup-script/backup-bunny.env 2>/dev/null && ./backup-script/prod-backup-to-bunny.sh' >> /path/to/MLM/backup-script/backup.log 2>&1

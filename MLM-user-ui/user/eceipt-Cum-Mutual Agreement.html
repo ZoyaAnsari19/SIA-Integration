@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipt-cum-Mutual Agreement - SIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #c5a059;
+            --dark-blue: #1a1a2e;
+            --text-color: #333;
+            --border-color: #e0d0b0;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        /* Certificate Container */
+        .certificate-wrapper {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            padding: 10px;
+            border: 2px solid var(--primary-gold);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .inner-border {
+            border: 1px solid var(--primary-gold);
+            padding: 40px;
+            position: relative;
+            background-image: radial-gradient(circle, #fffcf5 0%, #ffffff 100%);
+        }
+
+        /* Header Decor */
+        .header-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--primary-gold);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-gold);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            text-align: center;
+            font-size: 26px;
+            color: var(--dark-blue);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--primary-gold);
+            display: inline-block;
+            width: 100%;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Content Section */
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 30px 0;
+            line-height: 1.6;
+        }
+
+        .details-item b {
+            color: #000;
+        }
+
+        .amount-section {
+            background: #f9f6f0;
+            padding: 15px;
+            border-left: 4px solid var(--primary-gold);
+            margin: 25px 0;
+        }
+
+        .agreement-text {
+            text-align: justify;
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text-color);
+        }
+
+        .highlight-box {
+            font-weight: 700;
+            color: #000;
+        }
+
+        /* Footer Stamps & Signature */
+        .footer-section {
+            margin-top: 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+        }
+
+        .stamp-box {
+            text-align: center;
+        }
+
+        .wax-seal {
+            width: 90px;
+            height: 90px;
+            background: #a52a2a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            font-size: 12px;
+            border: 3px double #800000;
+        }
+
+        .round-stamp {
+            width: 100px;
+            height: 100px;
+            border: 2px solid #3f51b5;
+            border-radius: 50%;
+            color: #3f51b5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            transform: rotate(-15deg);
+            padding: 5px;
+        }
+
+        .signature-area {
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .signature-img {
+            font-family: 'Brush Script MT', cursive;
+            font-size: 24px;
+            color: #00008b;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #333;
+        }
+
+        .director-title {
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .serial-no {
+            position: absolute;
+            top: 100px;
+            right: 40px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        /* Print styling */
+        @media print {
+            body { background: white; padding: 0; }
+            .certificate-wrapper { box-shadow: none; border: 1px solid var(--primary-gold); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="certificate-wrapper">
+    <div class="inner-border">
+        
+        <div class="header-logo">
+            <div class="logo-placeholder">SIA</div>
+            <p style="margin:0; font-size: 12px; color: var(--primary-gold); letter-spacing: 1px;">SECURE INFINITE ASSOCIATION</p>
+        </div>
+
+        <h1>Receipt-cum-Mutual Agreement</h1>
+
+        <div class="serial-no">NO: SIA000299</div>
+
+        <div class="details-grid">
+            <div class="details-item">
+                <p><b>To:</b><br>
+                Mr. Rahul Parwatkar<br>
+                <b>ID Number:</b> SIA000299<br>
+                <b>Address:</b> Desaiganj, Wadsa - 441207</p>
+            </div>
+            <div class="details-item" style="text-align: right;">
+                <p><b>Date:</b> 15 November 2025<br>
+                <b>Payment Mode:</b> Online<br>
+                <b>Transaction No.:</b> 256878455220</p>
+            </div>
+        </div>
+
+        <div class="amount-section">
+            <p><b>Credit Amount: ₹2,500 (Rupees Two Thousand Five Hundred Only)</b></p>
+            <p style="font-size: 14px; margin-bottom: 0;">This is to confirm that Secure Infinite Association has received the above amount as credit from the above-named member.</p>
+        </div>
+
+        <div class="agreement-text">
+            <p>As per mutual understanding, the credited capital amount shall be returned gradually on a monthly basis, subject to commitment and performance. The company does not guarantee any fixed return or profit. <span class="highlight-box">The company takes 100% responsibility of the credited principal amount and commits to return the same as per applicable terms.</span></p>
+
+            <p>This receipt-agreement is strictly between the member and Secure Infinite Association only. Any involvement in fraud, misrepresentation, or violation of company rules will result in immediate cancellation of this agreement, and in such cases, the amount shall not be refundable, and action may be taken as per rules and applicable law.</p>
+        </div>
+
+        <div class="footer-section">
+            <div class="stamp-box">
+                <div class="wax-seal">SIA<br>SEAL</div>
+            </div>
+
+            <div class="signature-area">
+                <div class="signature-img">R. Parwatkar</div>
+                <div class="director-title">CHAIRMAN & MANAGING DIRECTOR</div>
+                <div style="font-size: 11px; color: #555;">For Secure Infinite Association</div>
+            </div>
+
+            <div class="stamp-box">
+                <div class="round-stamp">
+                    SECURE INFINITE<br>SIA<br>ASSOCIATION
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

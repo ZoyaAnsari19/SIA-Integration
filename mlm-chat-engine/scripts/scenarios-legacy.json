@@ -1,0 +1,260 @@
+{
+  "_meta": {
+    "description": "35 legacy/migration scenarios for SIA MLM chat-engine. Mix of Hinglish + English. 17 user + 18 admin.",
+    "user_display_id": "SIA00299",
+    "user_id": 280,
+    "admin_email": "bilal@sia.com",
+    "admin_user_id": 1897,
+    "boundary_date": "2025-12-18",
+    "db": {"container": "mlm-local-dump-20260425", "user": "mlm_user", "name": "mlm_commission"}
+  },
+  "user": [
+    {
+      "id": "LU01",
+      "area": "legacy_total",
+      "question": "Mere legacy SPOT history mein total kitna income hua tha (purane system se)?",
+      "ground_truth_sql": "select coalesce(sum((data->>'income_amount')::numeric),0)::text from legacy_spot_history where user_id=280 and nullif(data->>'income_amount','') is not null",
+      "expect_any": ["46181", "46,181", "46181.25"]
+    },
+    {
+      "id": "LU02",
+      "area": "legacy_count",
+      "question": "Old (legacy) system mein meri kitni SPOT history rows hain?",
+      "ground_truth_sql": "select count(*)::text from legacy_spot_history where user_id=280",
+      "expect_any": ["93"]
+    },
+    {
+      "id": "LU03",
+      "area": "migration_context",
+      "question": "When did the migration happen and which type of data was migrated as snapshot vs not migrated?",
+      "ground_truth_sql": "select '2025-12-18'",
+      "expect_any": ["18", "Dec", "snapshot", "balance", "ledger"]
+    },
+    {
+      "id": "LU04",
+      "area": "compare_legacy_vs_ledger",
+      "question": "Mera legacy spot income vs ledger spot income ka comparison batao — gap kitna hai?",
+      "ground_truth_sql": "select 'legacy=46181.25|ledger=82856.25'",
+      "expect_any": ["46,181", "46181", "82,856", "82856"]
+    },
+    {
+      "id": "LU05",
+      "area": "legacy_by_level",
+      "question": "Purane system mein mera SPOT income kis level se kitna mila tha (Direct vs Level 1)?",
+      "ground_truth_sql": "select string_agg(coalesce(data->>'income_lvl','') || '=' || s::text, ',') from (select coalesce(data->>'income_lvl','') as lvl, sum((data->>'income_amount')::numeric) as s from legacy_spot_history where user_id=280 and nullif(data->>'income_amount','') is not null group by lvl) t",
+      "expect_any": ["Direct", "5800", "Level 1", "40381", "40,381"]
+    },
+    {
+      "id": "LU06",
+      "area": "ledger_window",
+      "question": "Mere new system ke ledger entries kab se shuru hue hain (earliest credited_at)?",
+      "ground_truth_sql": "select min(credited_at)::text from ledger_entries where receiver_user_id=280",
+      "expect_any": ["2025-12-18"]
+    },
+    {
+      "id": "LU07",
+      "area": "purchase_mismatch",
+      "question": "Mera ek purchase 2x tak pahunch gaya hai but ledger entries usse kam dikhati hain — kyu? Kya legacy income bhi count hota hai?",
+      "ground_truth_sql": "select 'concept_migration'",
+      "expect_any": ["legacy", "migration", "ledger", "snapshot", "before", "purana"]
+    },
+    {
+      "id": "LU08",
+      "area": "wallet_mismatch",
+      "question": "Mera wallet balance ledger ke total se zyada lag raha hai — kyu? Migration ke karan koi snapshot hai kya?",
+      "ground_truth_sql": "select 'concept_wallet_snapshot'",
+      "expect_any": ["snapshot", "migration", "balance", "legacy", "boundary"]
+    },
+    {
+      "id": "LU09",
+      "area": "missing_commission",
+      "question": "I think I did not receive my old direct/spot commission for some users — please check legacy data and explain.",
+      "ground_truth_sql": "select 'concept_legacy_commission'",
+      "expect_any": ["legacy", "spot", "ledger", "before", "migration", "old"]
+    },
+    {
+      "id": "LU10",
+      "area": "package_expiry",
+      "question": "Mera ek package expire ho gaya — par maine ledger mein 2x tak income nahi dekha. Kya ye legacy income ki wajah se hai?",
+      "ground_truth_sql": "select 'concept_expiry_legacy'",
+      "expect_any": ["legacy", "2x", "income", "ledger", "migration", "snapshot"]
+    },
+    {
+      "id": "LU11",
+      "area": "incorrect_expiry_complaint",
+      "question": "I feel my package expired wrongly — only the new ledger shows the income. Can you reconstruct the total income using legacy + new system?",
+      "ground_truth_sql": "select 'concept_total_income'",
+      "expect_any": ["legacy", "ledger", "combined", "before", "migration", "total"]
+    },
+    {
+      "id": "LU12",
+      "area": "ledger_empty",
+      "question": "Mere account mein activity bahut kam dikh rahi hai. Kya purane system ki bhi history hai mere paas?",
+      "ground_truth_sql": "select count(*)::text from legacy_spot_history where user_id=280",
+      "expect_any": ["93", "legacy", "old", "import"]
+    },
+    {
+      "id": "LU13",
+      "area": "legacy_activation",
+      "question": "Mere legacy activation history mein kitni entries hain?",
+      "ground_truth_sql": "select count(*)::text from legacy_activation_history where user_id=280",
+      "expect_any": ["1"]
+    },
+    {
+      "id": "LU14",
+      "area": "combined_spot",
+      "question": "Mera total SPOT income — legacy + new ledger — combined kitna hai approximately?",
+      "ground_truth_sql": "select '129037.50'",
+      "expect_any": ["129", "129,037", "129037", "1,29,037"]
+    },
+    {
+      "id": "LU15",
+      "area": "boundary_explain",
+      "question": "Why does my new ledger start only from 18 December 2025?",
+      "ground_truth_sql": "select 'concept_boundary'",
+      "expect_any": ["18", "December", "Dec", "migration", "boundary", "legacy"]
+    },
+    {
+      "id": "LU16",
+      "area": "data_source_truth",
+      "question": "Legacy data aur new ledger mein se konsa data financial truth ke liye source-of-truth hai?",
+      "ground_truth_sql": "select 'concept_truth'",
+      "expect_any": ["new", "ledger", "current", "legacy", "reference", "read-only"]
+    },
+    {
+      "id": "LU17",
+      "area": "compare_combined",
+      "question": "Total combined SPOT income ka calculation karke batao — legacy ka kitna, ledger ka kitna, total kitna?",
+      "ground_truth_sql": "select 'legacy=46181.25|ledger=82856.25|total=129037.50'",
+      "expect_any": ["46,181", "82,856", "129", "129,037"]
+    }
+  ],
+  "admin": [
+    {
+      "id": "LA01",
+      "area": "platform_legacy_total",
+      "question": "Platform-wide me legacy SPOT history rows kitni hain aur unka total amount kya hai?",
+      "ground_truth_sql": "select count(*)::text || '|' || coalesce(sum((data->>'income_amount')::numeric),0)::text from legacy_spot_history where nullif(data->>'income_amount','') is not null",
+      "expect_any": ["2882", "2,882", "2631643", "2,631,643", "26,31,643"]
+    },
+    {
+      "id": "LA02",
+      "area": "platform_legacy_distinct",
+      "question": "How many distinct users have any legacy SPOT history rows in our system?",
+      "ground_truth_sql": "select count(distinct user_id)::text from legacy_spot_history",
+      "expect_any": ["411"]
+    },
+    {
+      "id": "LA03",
+      "area": "platform_legacy_act",
+      "question": "How many distinct users have legacy activation history rows?",
+      "ground_truth_sql": "select count(distinct user_id)::text from legacy_activation_history",
+      "expect_any": ["1315", "1,315"]
+    },
+    {
+      "id": "LA04",
+      "area": "user_legacy_lookup",
+      "question": "User SIA00299 ka legacy SPOT total kitna hai aur ledger SPOT kitna hai?",
+      "ground_truth_sql": "select 'legacy=46181.25|ledger=82856.25'",
+      "expect_any": ["46,181", "46181", "82,856", "82856"]
+    },
+    {
+      "id": "LA05",
+      "area": "top_legacy_user",
+      "question": "Top legacy SPOT earner kaun hai aur kitna amount hai unka?",
+      "ground_truth_sql": "select 'SIA00334|133250'",
+      "expect_any": ["SIA00334", "133", "1,33,250", "133250"]
+    },
+    {
+      "id": "LA06",
+      "area": "mismatch_lookup",
+      "question": "User SIA00386 ki legacy SPOT vs ledger SPOT compare karke mismatch ka size batao.",
+      "ground_truth_sql": "select 'legacy=130000|ledger=5000'",
+      "expect_any": ["130000", "130,000", "1,30,000", "5000", "5,000"]
+    },
+    {
+      "id": "LA07",
+      "area": "no_ledger_user",
+      "question": "User SIA00870 ka kya legacy SPOT history hai but new ledger SPOT zero hai? Verify and explain.",
+      "ground_truth_sql": "select 'legacy=30337.5|ledger=0'",
+      "expect_any": ["30,337", "30337", "0"]
+    },
+    {
+      "id": "LA08",
+      "area": "boundary_admin",
+      "question": "What is the migration cut-off date in our system and how does that affect the new ledger?",
+      "ground_truth_sql": "select '2025-12-18'",
+      "expect_any": ["18", "Dec", "2025", "boundary", "migration", "snapshot"]
+    },
+    {
+      "id": "LA09",
+      "area": "user_legacy_count",
+      "question": "User SIA00299 ke legacy SPOT history me kitni rows imported hain?",
+      "ground_truth_sql": "select count(*)::text from legacy_spot_history where user_id=280",
+      "expect_any": ["93"]
+    },
+    {
+      "id": "LA10",
+      "area": "legacy_concept",
+      "question": "Briefly explain what legacy_spot_history and legacy_activation_history tables are used for, and whether they are part of active financial computation.",
+      "ground_truth_sql": "select 'concept_legacy_tables'",
+      "expect_any": ["legacy", "import", "Excel", "read-only", "reference", "spot", "activation"]
+    },
+    {
+      "id": "LA11",
+      "area": "user_legacy_by_level",
+      "question": "User SIA00299 ka legacy SPOT income by level batao — Direct vs Level 1 vs others.",
+      "ground_truth_sql": "select 'Direct=5800|Level 1=40381.25'",
+      "expect_any": ["Direct", "5800", "5,800", "40381", "40,381", "Level 1"]
+    },
+    {
+      "id": "LA12",
+      "area": "explain_purchase_mismatch",
+      "question": "User SIA00299 ka purchase id 1540 (₹7500 package) ka 2x income tracker vs ledger entries explain karo aur legacy context bhi do.",
+      "ground_truth_sql": "select 'amount=7500|income=4808.96|legacy_spot=46181.25'",
+      "expect_any": ["7500", "7,500", "4808", "4,808", "legacy", "ledger", "migration"]
+    },
+    {
+      "id": "LA13",
+      "area": "investigation_workflow",
+      "question": "Bataiye step-by-step ki agar user complain kare ki uska balance galat hai, toh legacy + ledger ka use karke kaise investigate karenge?",
+      "ground_truth_sql": "select 'concept_investigation'",
+      "expect_any": ["legacy", "ledger", "balance", "snapshot", "audit", "wallet"]
+    },
+    {
+      "id": "LA14",
+      "area": "user_lookup_legacy",
+      "question": "User SIA00558 ke legacy SPOT total + ledger SPOT total batao.",
+      "ground_truth_sql": "select 'legacy=105225|ledger=30187.5'",
+      "expect_any": ["105", "1,05,225", "105225", "30,187", "30187"]
+    },
+    {
+      "id": "LA15",
+      "area": "missing_commission_admin",
+      "question": "User SIA00299 says 'I did not get level-1 SPOT commission' — admin POV se diagnose karke explain karo, aur legacy context bhi do.",
+      "ground_truth_sql": "select 'concept_diagnose_legacy'",
+      "expect_any": ["legacy", "spot", "level", "ledger", "before", "migration", "diagnose"]
+    },
+    {
+      "id": "LA16",
+      "area": "legacy_spot_global_sum",
+      "question": "What is the total amount of legacy SPOT income imported into the system across all users?",
+      "ground_truth_sql": "select coalesce(sum((data->>'income_amount')::numeric),0)::text from legacy_spot_history where nullif(data->>'income_amount','') is not null",
+      "expect_any": ["2631643", "2,631,643", "26,31,643"]
+    },
+    {
+      "id": "LA17",
+      "area": "user_combined",
+      "question": "User SIA00299 ka combined (legacy + ledger) SPOT total kitna hota hai?",
+      "ground_truth_sql": "select '129037.50'",
+      "expect_any": ["129037", "129,037", "1,29,037"]
+    },
+    {
+      "id": "LA18",
+      "area": "migration_design",
+      "question": "Migration approach state-based tha ya full ledger migration tha? Explain in 2-3 sentences.",
+      "ground_truth_sql": "select 'concept_state_based'",
+      "expect_any": ["state", "snapshot", "ledger", "not", "full", "migration"]
+    }
+  ]
+}

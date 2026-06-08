@@ -1,0 +1,40 @@
+name: mlm-api-v2
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mlm
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/mlm?schema=public
+      NODE_ENV: development
+      PORT: 3000
+      JWT_SECRET: dev-secret
+      ADMIN_TOKEN: dev-admin
+      DEBUG: "true"
+    ports:
+      - "3006:3000"
+    command: sh -lc "npx prisma db push --accept-data-loss && npx tsx src/server.ts"
+
+volumes:
+  postgres-data:
+

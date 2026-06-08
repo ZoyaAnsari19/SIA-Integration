@@ -1,0 +1,52 @@
+# ============================================
+# Levels API Test Commands (Copy & Paste)
+# ============================================
+
+API_BASE="http://localhost:3000/api/v1"
+TEST_EMAIL="testkyc@example.com"
+TEST_USER_ID="2"
+
+# Step 1: Login (Get User Token)
+curl -X POST $API_BASE/users/login \
+  -H "Content-Type: application/json" \
+  -d "{\"email\": \"$TEST_EMAIL\"}"
+
+# Step 2: Get All Levels (User API)
+# Replace YOUR_TOKEN with token from Step 1
+curl -X GET $API_BASE/users/levels \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" | jq .
+
+# Step 3: Get User Eligibility
+curl -X GET $API_BASE/users/$TEST_USER_ID/eligibility \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" | jq .
+
+# Step 4: Admin - Get All Levels
+# Replace ADMIN_TOKEN with admin JWT token
+curl -X GET $API_BASE/admin/levels \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" | jq .
+
+# Step 5: Admin - Update Level 1
+curl -X PUT $API_BASE/admin/levels/1 \
+  -H "Authorization: Bearer ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "reward": "T-shirt and Diary",
+    "spot_commission_percent": 2.5,
+    "monthly_royalty_percent": 0.30
+  }' | jq .
+
+# ============================================
+# Expected Response Fields:
+# ============================================
+# - level (0-9)
+# - title (e.g., "Company Representative")
+# - description
+# - reward (e.g., "T-shirt and Diary", "5G Mobile")
+# - spot_commission_percent
+# - monthly_royalty_percent
+# - business_requirement
+# - icon_url
+# - color

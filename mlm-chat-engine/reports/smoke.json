@@ -1,0 +1,72 @@
+{
+  "summary": {
+    "total": 2,
+    "passed": 2,
+    "satisfactory_pct": 100.0,
+    "by_role": {
+      "user": {
+        "total": 1,
+        "passed": 1
+      },
+      "admin": {
+        "total": 1,
+        "passed": 1
+      }
+    },
+    "by_area": {
+      "profile": {
+        "total": 1,
+        "passed": 1
+      },
+      "system_stats": {
+        "total": 1,
+        "passed": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "U01",
+      "role": "user",
+      "area": "profile",
+      "question": "What is my SIA ID and registered name?",
+      "expected": [
+        "SIA00299",
+        "RAHUL"
+      ],
+      "db_truth": "SIA00299|RAHUL PARWATKAR",
+      "reply_text": "Your SIA ID is **SIA00299** and your registered name is **RAHUL PARWATKAR**.",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 14002,
+      "passed": true,
+      "matched": [
+        "SIA00299",
+        "RAHUL"
+      ]
+    },
+    {
+      "id": "A01",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many total users are registered on the SIA platform right now?",
+      "expected": [
+        "2807",
+        "2,807"
+      ],
+      "db_truth": "2807",
+      "reply_text": "Right now, there are a total of **2,807 registered users** on the SIA platform. Out of these, **2,803 are currently active** users. \n\nLet me know if you need more statistics or details!",
+      "tool_calls": [
+        "getSystemStats"
+      ],
+      "error": null,
+      "elapsed_ms": 11802,
+      "passed": true,
+      "matched": [
+        "2,807"
+      ]
+    }
+  ]
+}

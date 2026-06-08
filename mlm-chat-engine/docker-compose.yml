@@ -1,0 +1,25 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "no"]
+
+  chat-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - PORT=8088
+      - DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_JWT_SECRET=${ADMIN_JWT_SECRET:-${JWT_SECRET}}
+      - REDIS_URL=redis://redis:6379/0
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-pro}
+      - MLM_API_BASE_URL=${MLM_API_BASE_URL:-http://host.docker.internal:3000}
+    ports:
+      - "8088:8088"
+    depends_on:
+      - redis
+

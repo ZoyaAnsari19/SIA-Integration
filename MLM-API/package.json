@@ -1,0 +1,53 @@
+{
+  "name": "mlm-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "seed": "tsx scripts/seed.ts",
+    "seed:levels": "tsx scripts/seed-levels.ts",
+    "seed:fees": "tsx scripts/seed-operation-fees.ts",
+    "prisma:dev": "prisma migrate dev --name init",
+    "lint": "eslint . --ext .ts",
+    "test": "jest --runInBand",
+    "swagger:generate": "tsx scripts/generate-swagger.ts"
+  },
+  "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@fastify/formbody": "^8.0.0",
+    "@fastify/multipart": "^9.0.0",
+    "@fastify/swagger": "^9.0.0",
+    "@fastify/swagger-ui": "^5.0.0",
+    "@prisma/client": "^5.22.0",
+    "@types/bcrypt": "^6.0.0",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.12.12",
+    "@types/nodemailer": "^8.0.0",
+    "axios": "^1.13.2",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.6.1",
+    "fastify": "^5.0.0",
+    "fastify-plugin": "^4.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^8.0.10",
+    "pg": "^8.16.3",
+    "pg-boss": "^10.2.3",
+    "prisma": "^5.19.0",
+    "tsx": "^4.19.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.4.5"
+  }
+}

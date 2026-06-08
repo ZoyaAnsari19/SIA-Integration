@@ -1,0 +1,686 @@
+{
+  "_meta": {
+    "description": "70 chat-engine evaluation scenarios (35 user + 35 admin) with DB ground-truth queries and expected reply substrings.",
+    "user_display_id": "SIA00299",
+    "user_id": 280,
+    "admin_email": "bilal@sia.com",
+    "admin_user_id": 1897,
+    "db": {
+      "container": "mlm-local-dump-20260425",
+      "user": "mlm_user",
+      "name": "mlm_commission"
+    }
+  },
+  "user": [
+    {
+      "id": "U01",
+      "area": "profile",
+      "question": "What is my SIA ID and registered name?",
+      "ground_truth_sql": "select display_id || '|' || coalesce(name,'') from users where id=280",
+      "expect_any": ["SIA00299", "RAHUL"]
+    },
+    {
+      "id": "U02",
+      "area": "profile",
+      "question": "What is my registered email and phone number?",
+      "ground_truth_sql": "select coalesce(email,'') || '|' || coalesce(phone,'') from users where id=280",
+      "expect_any": ["rahulparwatkar1983@gmail.com", "8605099465"]
+    },
+    {
+      "id": "U03",
+      "area": "profile",
+      "question": "What is my current KYC status?",
+      "ground_truth_sql": "select kyc_status::text from users where id=280",
+      "expect_any": ["approved", "verified"]
+    },
+    {
+      "id": "U04",
+      "area": "profile",
+      "question": "What is my account status — active or blocked?",
+      "ground_truth_sql": "select status from users where id=280",
+      "expect_any": ["active"]
+    },
+    {
+      "id": "U05",
+      "area": "profile",
+      "question": "Who is my sponsor / referrer user id?",
+      "ground_truth_sql": "select coalesce(referrer_user_id::text,'none') from users where id=280",
+      "expect_any": ["92"]
+    },
+    {
+      "id": "U06",
+      "area": "wallet",
+      "question": "What is my main wallet balance right now?",
+      "ground_truth_sql": "select balance::text from user_balances where user_id=280",
+      "expect_any": ["46208", "46,208"]
+    },
+    {
+      "id": "U07",
+      "area": "wallet",
+      "question": "Show me all my wallet balances — main, spot, other and team royalty.",
+      "ground_truth_sql": "select balance::text||'|'||spot_balance::text||'|'||other_balance::text||'|'||team_royalty_balance::text from user_balances where user_id=280",
+      "expect_any": ["46208", "14850", "4778", "26579"]
+    },
+    {
+      "id": "U08",
+      "area": "wallet",
+      "question": "What is my spot wallet balance?",
+      "ground_truth_sql": "select spot_balance::text from user_balances where user_id=280",
+      "expect_any": ["14850", "14,850"]
+    },
+    {
+      "id": "U09",
+      "area": "wallet",
+      "question": "What is my team royalty wallet balance?",
+      "ground_truth_sql": "select team_royalty_balance::text from user_balances where user_id=280",
+      "expect_any": ["26579", "26,579"]
+    },
+    {
+      "id": "U10",
+      "area": "packages",
+      "question": "How many packages have I purchased so far?",
+      "ground_truth_sql": "select count(*)::text from purchases where user_id=280",
+      "expect_any": ["4"]
+    },
+    {
+      "id": "U11",
+      "area": "packages",
+      "question": "List the names of all packages I have ever purchased.",
+      "ground_truth_sql": "select string_agg(distinct pk.name, ', ') from purchases p join packages pk on pk.id=p.package_id where p.user_id=280",
+      "expect_any": ["English Speaking", "Digital Marketing", "Share Market", "Graphic Designing"]
+    },
+    {
+      "id": "U12",
+      "area": "packages",
+      "question": "Which of my package purchases are still in pending status?",
+      "ground_truth_sql": "select string_agg(pk.name, ', ') from purchases p join packages pk on pk.id=p.package_id where p.user_id=280 and p.status='pending'",
+      "expect_any": ["Graphic Designing", "Digital Marketing"]
+    },
+    {
+      "id": "U13",
+      "area": "packages",
+      "question": "What was the price of my Share Market Learning purchase?",
+      "ground_truth_sql": "select amount::text from purchases where user_id=280 and package_id=4 limit 1",
+      "expect_any": ["30000", "30,000"]
+    },
+    {
+      "id": "U14",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have I raised in total?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where user_id=280",
+      "expect_any": ["33"]
+    },
+    {
+      "id": "U15",
+      "area": "withdrawals",
+      "question": "Do I currently have any pending withdrawal requests?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where user_id=280 and status='pending'",
+      "expect_any": ["0", "no", "none", "do not have any"]
+    },
+    {
+      "id": "U16",
+      "area": "withdrawals",
+      "question": "How many of my withdrawal requests have been approved so far?",
+      "_drift_note": "DB now 33 approved (was 32 when authored)",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where user_id=280 and status='approved'",
+      "expect_any": ["33"]
+    },
+    {
+      "id": "U17",
+      "area": "withdrawals",
+      "question": "What is the total approved withdrawal amount across all my requests?",
+      "_drift_note": "DB now 326090 (was ~192k when authored)",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from withdraw_requests where user_id=280 and status='approved'",
+      "expect_any": ["326090", "326,090", "3,26,090"]
+    },
+    {
+      "id": "U18",
+      "area": "income",
+      "question": "What is the total credit amount I have received in my wallet so far (sum of positive wallet transactions)?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from wallet_transactions where receiver_user_id=280 and amount>0",
+      "expect_any": ["204567", "204,567"]
+    },
+    {
+      "id": "U19",
+      "area": "income",
+      "question": "Roughly how many wallet transactions are recorded against my account?",
+      "ground_truth_sql": "select count(*)::text from wallet_transactions where receiver_user_id=280",
+      "expect_any": ["56714", "56,714", "56000", "57000"]
+    },
+    {
+      "id": "U20",
+      "area": "team",
+      "question": "How many direct referrals (direct legs) do I have?",
+      "ground_truth_sql": "select count(*)::text from users where referrer_user_id=280",
+      "expect_any": ["28"]
+    },
+    {
+      "id": "U21",
+      "area": "team",
+      "question": "What is my total downline size (across all levels, excluding myself)?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths where ancestor_id=280 and depth>0",
+      "expect_any": ["1893", "1,893"]
+    },
+    {
+      "id": "U22",
+      "area": "team",
+      "question": "How deep does my upline chain go (number of ancestors above me)?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths where descendant_id=280 and depth>0",
+      "expect_any": ["5"]
+    },
+    {
+      "id": "U23",
+      "area": "commissions",
+      "question": "How many pending commission entries are recorded for me as the receiver?",
+      "ground_truth_sql": "select count(*)::text from pending_commissions where receiver_user_id=280",
+      "expect_any": ["991"]
+    },
+    {
+      "id": "U24",
+      "area": "system",
+      "question": "How many packages does the SIA platform offer in total?",
+      "ground_truth_sql": "select count(*)::text from packages",
+      "expect_any": ["13"]
+    },
+    {
+      "id": "U25",
+      "area": "system",
+      "question": "What is the price of the Digital Marketing package?",
+      "ground_truth_sql": "select price::text from packages where name='Digital Marketing'",
+      "expect_any": ["15000", "15,000"]
+    },
+    {
+      "id": "U26",
+      "area": "system",
+      "question": "What is the price of the highest tier package on SIA?",
+      "ground_truth_sql": "select price::text from packages order by price desc limit 1",
+      "expect_any": ["2300000", "23,00,000", "2,300,000"]
+    },
+    {
+      "id": "U27",
+      "area": "system",
+      "question": "How many MLM levels are configured in the system?",
+      "ground_truth_sql": "select count(*)::text from levels",
+      "expect_any": ["10"]
+    },
+    {
+      "id": "U28",
+      "area": "system",
+      "question": "What is the title of the highest level in SIA MLM?",
+      "ground_truth_sql": "select title from levels order by level desc limit 1",
+      "expect_any": ["King"]
+    },
+    {
+      "id": "U29",
+      "area": "concept",
+      "question": "Briefly explain the difference between upline and downline in SIA MLM.",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["upline", "downline", "ancestor", "descendant", "sponsor", "referrer"]
+    },
+    {
+      "id": "U30",
+      "area": "concept",
+      "question": "What are the different types of wallets in SIA MLM and what does each one represent?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["main", "spot", "team royalty", "wallet"]
+    },
+    {
+      "id": "U31",
+      "area": "concept",
+      "question": "How does direct commission get calculated when someone in my downline buys a package?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["direct", "commission", "package", "level"]
+    },
+    {
+      "id": "U32",
+      "area": "concept",
+      "question": "What is the typical end-to-end flow when I raise a withdrawal request?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["withdraw", "request", "admin", "approve", "pending"]
+    },
+    {
+      "id": "U33",
+      "area": "concept",
+      "question": "What does a P2P transfer mean and which wallet does it use?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["p2p", "transfer", "wallet"]
+    },
+    {
+      "id": "U34",
+      "area": "concept",
+      "question": "Why do I need KYC and what happens if my KYC is not approved?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["kyc", "verification", "approved", "withdraw"]
+    },
+    {
+      "id": "U35",
+      "area": "concept",
+      "question": "How can I increase my level in the SIA MLM hierarchy — what is required?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["level", "business", "team", "requirement", "leg"]
+    },
+    {
+      "id": "U36",
+      "area": "income_compound",
+      "question": "Mere 7500 wala English Speaking-III (package id 2) me pichhle 5 dino kitna SELF + GLOBAL income aaya hai?",
+      "ground_truth_sql": "select coalesce(sum(le.amount),0)::text from ledger_entries le join purchases p on p.id=le.purchase_id where le.receiver_user_id=280 and p.package_id=2 and le.commission_type in ('SELF','GLOBAL_HELPING') and le.credited_at >= now() - interval '5 days'",
+      "expect_any": ["197.50", "197.5", "197"]
+    },
+    {
+      "id": "U37",
+      "area": "income_compound",
+      "question": "Pichhle 5 dino me mera total SELF + GLOBAL income kitna hai across all packages?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and commission_type in ('SELF','GLOBAL_HELPING') and credited_at >= now() - interval '5 days'",
+      "expect_any": ["752.70", "752.7", "752"]
+    },
+    {
+      "id": "U38",
+      "area": "withdrawal_date",
+      "question": "Agla withdrawal date kab hai aur us din kaunse wallets allowed hain?",
+      "ground_truth_sql": "select 'logic_check'",
+      "expect_any": ["2026-04-30", "30", "spot", "team", "all"]
+    },
+    {
+      "id": "U39",
+      "area": "withdrawal_eligible",
+      "question": "Agle withdrawal date pe main exactly kitna amount apply / withdraw kar sakta hu?",
+      "ground_truth_sql": "select (spot_balance + other_balance + team_royalty_balance)::text from user_balances where user_id=280",
+      "expect_any": ["46208", "46,208"]
+    },
+    {
+      "id": "U40",
+      "area": "withdrawal_counts",
+      "question": "Mere ab tak kitne withdrawal requests approved aur kitne rejected hue hain?",
+      "ground_truth_sql": "select string_agg(status::text || '=' || count::text, ',') from (select status, count(*)::int as count from withdraw_requests where user_id=280 group by status) t",
+      "expect_any": ["33", "approved"]
+    },
+    {
+      "id": "U41",
+      "area": "network",
+      "question": "Mera total downline network kitna bada hai (sab depths milake)?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths where ancestor_id=280 and depth>0",
+      "expect_any": ["1893", "1,893"]
+    },
+    {
+      "id": "U42",
+      "area": "network",
+      "question": "Mere kitne direct referrals hain (level-1 wale)?",
+      "ground_truth_sql": "select count(*)::text from users where referrer_user_id=280",
+      "expect_any": ["28"]
+    },
+    {
+      "id": "U43",
+      "area": "income_compound",
+      "question": "Pichhle 30 dino me total MONTHLY recurring income kitna mila hai?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and commission_type='MONTHLY' and credited_at >= now() - interval '30 days'",
+      "expect_any": ["30312", "30,312"]
+    },
+    {
+      "id": "U44",
+      "area": "income_compound",
+      "question": "Pichhle 30 dino me total SPOT income kitni aayi?",
+      "_drift_note": "DB now 19118.75 (cron drift)",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and commission_type='SPOT' and credited_at >= now() - interval '30 days'",
+      "expect_any": ["19118", "19,118"]
+    },
+    {
+      "id": "U45",
+      "area": "income_compound",
+      "question": "Mere 2500 wale package (English Speaking Basic-I, package id 1) se ab tak total kitni income aayi hai (lifetime)?",
+      "ground_truth_sql": "select coalesce(sum(le.amount),0)::text from ledger_entries le join purchases p on p.id=le.purchase_id where le.receiver_user_id=280 and p.package_id=1",
+      "expect_any": ["7244", "7,244"]
+    },
+    {
+      "id": "U46",
+      "area": "income_compound",
+      "question": "Pichhle 7 din ka mera net income (saare types ka sum) kitna hai?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and credited_at >= now() - interval '7 days'",
+      "expect_any": ["5275", "5,275"]
+    },
+    {
+      "id": "U47",
+      "area": "income_compound",
+      "question": "Is mahine (April 2026) ki MONTHLY recurring income kitni mili hai abhi tak?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and commission_type='MONTHLY' and credited_at >= date_trunc('month', now() at time zone 'Asia/Kolkata')",
+      "expect_any": ["25588", "25,588"]
+    },
+    {
+      "id": "U48",
+      "area": "income_compound",
+      "question": "English Speaking-III (package id 2) ka mera SPOT income lifetime kitna mila hai?",
+      "ground_truth_sql": "select coalesce(sum(le.amount),0)::text from ledger_entries le join purchases p on p.id=le.purchase_id where le.receiver_user_id=280 and p.package_id=2 and le.commission_type='SPOT'",
+      "expect_any": ["8887", "8,887"]
+    }
+  ],
+  "admin": [
+    {
+      "id": "A01",
+      "area": "system_stats",
+      "question": "How many total users are registered on the SIA platform right now?",
+      "ground_truth_sql": "select count(*)::text from users",
+      "expect_any": ["2807", "2,807"]
+    },
+    {
+      "id": "A02",
+      "area": "system_stats",
+      "question": "How many active (non-blocked) users are there in the system?",
+      "ground_truth_sql": "select count(*)::text from users where status='active'",
+      "expect_any": ["2803", "2,803"]
+    },
+    {
+      "id": "A03",
+      "area": "system_stats",
+      "question": "How many users have an approved KYC status?",
+      "ground_truth_sql": "select count(*)::text from users where kyc_status='approved'",
+      "expect_any": ["1285", "1,285"]
+    },
+    {
+      "id": "A04",
+      "area": "system_stats",
+      "question": "How many MLM packages are currently configured?",
+      "ground_truth_sql": "select count(*)::text from packages",
+      "expect_any": ["13"]
+    },
+    {
+      "id": "A05",
+      "area": "system_stats",
+      "question": "How many levels are defined in the level master table?",
+      "ground_truth_sql": "select count(*)::text from levels",
+      "expect_any": ["10"]
+    },
+    {
+      "id": "A06",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests are sitting in the pending bucket right now?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where status='pending'",
+      "expect_any": ["0", "no", "none"]
+    },
+    {
+      "id": "A07",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have been approved across the platform till date?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where status='approved'",
+      "expect_any": ["5052", "5,052"]
+    },
+    {
+      "id": "A08",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have been rejected so far?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where status='rejected'",
+      "expect_any": ["73"]
+    },
+    {
+      "id": "A09",
+      "area": "purchases",
+      "question": "How many package purchases (rows in purchases) exist in the database?",
+      "ground_truth_sql": "select count(*)::text from purchases",
+      "expect_any": ["2838", "2,838"]
+    },
+    {
+      "id": "A10",
+      "area": "commissions",
+      "question": "How many pending commission entries are sitting in the system in total?",
+      "ground_truth_sql": "select count(*)::text from pending_commissions",
+      "expect_any": ["13636", "13,636"]
+    },
+    {
+      "id": "A11",
+      "area": "wallet",
+      "question": "How many wallet transaction rows exist across all users (rough magnitude is fine)?",
+      "ground_truth_sql": "select count(*)::text from wallet_transactions",
+      "expect_any": ["893336", "893,336", "893"]
+    },
+    {
+      "id": "A12",
+      "area": "user_lookup",
+      "question": "Pull profile details for SIA00299 — name, email, phone, status.",
+      "ground_truth_sql": "select display_id||'|'||coalesce(name,'')||'|'||coalesce(email,'')||'|'||coalesce(phone,'')||'|'||status from users where display_id='SIA00299'",
+      "expect_any": ["SIA00299", "RAHUL", "rahulparwatkar1983", "8605099465"]
+    },
+    {
+      "id": "A13",
+      "area": "user_lookup",
+      "question": "What is the KYC status of user SIA00299?",
+      "ground_truth_sql": "select kyc_status::text from users where display_id='SIA00299'",
+      "expect_any": ["approved"]
+    },
+    {
+      "id": "A14",
+      "area": "user_lookup",
+      "question": "How many direct referrals does SIA00299 have?",
+      "ground_truth_sql": "select count(*)::text from users where referrer_user_id=280",
+      "expect_any": ["28"]
+    },
+    {
+      "id": "A15",
+      "area": "user_lookup",
+      "question": "What is the total downline size of SIA00299 (excluding the user himself)?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths where ancestor_id=280 and depth>0",
+      "expect_any": ["1893", "1,893"]
+    },
+    {
+      "id": "A16",
+      "area": "user_lookup",
+      "question": "What is the main wallet balance of SIA00299?",
+      "ground_truth_sql": "select balance::text from user_balances where user_id=280",
+      "expect_any": ["46208", "46,208"]
+    },
+    {
+      "id": "A17",
+      "area": "user_lookup",
+      "question": "How many package purchases has SIA00299 made?",
+      "ground_truth_sql": "select count(*)::text from purchases where user_id=280",
+      "expect_any": ["4"]
+    },
+    {
+      "id": "A18",
+      "area": "user_lookup",
+      "question": "How many withdrawal requests has SIA00299 raised in total?",
+      "ground_truth_sql": "select count(*)::text from withdraw_requests where user_id=280",
+      "expect_any": ["33"]
+    },
+    {
+      "id": "A19",
+      "area": "user_lookup",
+      "question": "Has SIA00299 paid for the Graphic Designing & Video Editing package, and what is its status?",
+      "ground_truth_sql": "select status from purchases where user_id=280 and package_id=5 limit 1",
+      "expect_any": ["pending"]
+    },
+    {
+      "id": "A20",
+      "area": "packages",
+      "question": "Which package is the highest priced on SIA and what is its price?",
+      "ground_truth_sql": "select name||'|'||price::text from packages order by price desc limit 1",
+      "expect_any": ["Cyber Security & Online Safety-III", "2300000", "23,00,000", "2,300,000"]
+    },
+    {
+      "id": "A21",
+      "area": "packages",
+      "question": "Which package is the cheapest on SIA and what is its price?",
+      "ground_truth_sql": "select name||'|'||price::text from packages order by price asc limit 1",
+      "expect_any": ["English Speaking Basic", "2500", "2,500"]
+    },
+    {
+      "id": "A22",
+      "area": "packages",
+      "question": "What is the price of the Digital Marketing package?",
+      "ground_truth_sql": "select price::text from packages where name='Digital Marketing'",
+      "expect_any": ["15000", "15,000"]
+    },
+    {
+      "id": "A23",
+      "area": "levels",
+      "question": "What is the title of level 0 and level 9 in the level master?",
+      "ground_truth_sql": "select string_agg(level::text||':'||title, ', ' order by level) from levels where level in (0,9)",
+      "expect_any": ["Field Worker", "King"]
+    },
+    {
+      "id": "A24",
+      "area": "levels",
+      "question": "List the titles for levels 1 through 4 in the SIA MLM level master.",
+      "ground_truth_sql": "select string_agg(title, ', ' order by level) from levels where level between 1 and 4",
+      "expect_any": ["Company Representative", "City Manager", "Area Manager", "District Manager"]
+    },
+    {
+      "id": "A25",
+      "area": "team_metrics",
+      "question": "Who currently has the highest number of direct referrals on the platform — give their SIA ID and count?",
+      "ground_truth_sql": "select u.display_id||'|'||cnt::text from (select referrer_user_id, count(*) as cnt from users where referrer_user_id is not null group by referrer_user_id order by cnt desc limit 1) t join users u on u.id=t.referrer_user_id",
+      "expect_any": ["SIA00111", "45"]
+    },
+    {
+      "id": "A26",
+      "area": "team_metrics",
+      "question": "How big is SIA00111's downline (descendants count, excluding self)?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths utp join users u on u.id=utp.ancestor_id where u.display_id='SIA00111' and utp.depth>0",
+      "expect_any": []
+    },
+    {
+      "id": "A27",
+      "area": "concept",
+      "question": "Explain what a pending commission row in the database represents and when it gets cleared.",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["pending", "commission", "trigger", "purchase", "level"]
+    },
+    {
+      "id": "A28",
+      "area": "concept",
+      "question": "Walk me through the lifecycle of a withdrawal request from creation to approval/rejection.",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["withdraw", "pending", "approved", "rejected", "admin"]
+    },
+    {
+      "id": "A29",
+      "area": "concept",
+      "question": "What is the difference between purchases and pending_commissions tables in this system?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["purchase", "package", "commission", "pending", "level"]
+    },
+    {
+      "id": "A30",
+      "area": "concept",
+      "question": "Explain the role of the user_tree_paths closure table — what does each row mean?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["closure", "ancestor", "descendant", "depth"]
+    },
+    {
+      "id": "A31",
+      "area": "concept",
+      "question": "What types of wallets exist for each user in the system and how are they used?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["main", "spot", "team royalty", "balance"]
+    },
+    {
+      "id": "A32",
+      "area": "concept",
+      "question": "What does it mean when a user is marked as is_disqualified=true in the users table?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["disqualified", "block", "commission", "withdraw", "income"]
+    },
+    {
+      "id": "A33",
+      "area": "concept",
+      "question": "What are the cron jobs or scheduled jobs running in the SIA MLM system?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["cron", "scheduled", "monthly", "daily", "job"]
+    },
+    {
+      "id": "A34",
+      "area": "concept",
+      "question": "Explain what the legacy_activation_history and legacy_spot_history tables are used for.",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["legacy", "history", "old", "spot", "activation"]
+    },
+    {
+      "id": "A35",
+      "area": "concept",
+      "question": "Can an admin manually adjust a user's wallet, and if yes, where is that recorded?",
+      "ground_truth_sql": "select 'concept'",
+      "expect_any": ["admin", "adjust", "wallet", "ledger", "transaction"]
+    },
+    {
+      "id": "A36",
+      "area": "leaderboard",
+      "question": "Top 3 referrers kaun hain — kis user ke sabse zyada direct referrals hain?",
+      "ground_truth_sql": "select string_agg(u.display_id || '=' || t.cnt::text, ',') from (select referrer_user_id, count(*) as cnt from users where referrer_user_id is not null group by referrer_user_id order by cnt desc limit 3) t join users u on u.id=t.referrer_user_id",
+      "expect_any": ["SIA00111", "45", "SIA01430", "SIA01699"]
+    },
+    {
+      "id": "A37",
+      "area": "kyc_aggregate",
+      "question": "Total approved KYC users kitne hain abhi system me?",
+      "ground_truth_sql": "select count(*)::text from users where kyc_status='approved'",
+      "expect_any": ["1285", "1,285"]
+    },
+    {
+      "id": "A38",
+      "area": "kyc_aggregate",
+      "question": "Total pending KYC users kitne hain?",
+      "ground_truth_sql": "select count(*)::text from users where kyc_status='pending'",
+      "expect_any": ["1473", "1,473"]
+    },
+    {
+      "id": "A39",
+      "area": "withdrawal_aggregate",
+      "question": "Pichhle 30 dino me kitne approved withdrawal requests pass hue aur unka total amount kya hai?",
+      "ground_truth_sql": "select count(*)::text || '|' || coalesce(sum(amount),0)::text from withdraw_requests where status='approved' and created_at >= now() - interval '30 days'",
+      "expect_any": ["937", "5761985", "5,761,985"]
+    },
+    {
+      "id": "A40",
+      "area": "withdrawal_projection",
+      "question": "Admin POV: agle withdrawal date par mere paas approximately kitni amount ki withdrawal demand aa sakti hai (upper bound)?",
+      "ground_truth_sql": "select (sum(ub.spot_balance)+sum(ub.other_balance)+sum(ub.team_royalty_balance))::text from user_balances ub join users u on u.id=ub.user_id where u.status='active' and u.withdrawal_blocked=false and u.kyc_status='approved'",
+      "expect_any": ["7571367", "7,571,367", "7571"]
+    },
+    {
+      "id": "A41",
+      "area": "withdrawal_eligible",
+      "question": "User SIA00299 ki agle withdrawal date pe eligible withdrawal amount kya hai?",
+      "ground_truth_sql": "select (spot_balance + other_balance + team_royalty_balance)::text from user_balances where user_id=280",
+      "expect_any": ["46208", "46,208"]
+    },
+    {
+      "id": "A42",
+      "area": "network",
+      "question": "User SIA00299 ka total downline network size kitna hai?",
+      "ground_truth_sql": "select count(*)::text from user_tree_paths where ancestor_id=280 and depth>0",
+      "expect_any": ["1893", "1,893"]
+    },
+    {
+      "id": "A43",
+      "area": "network",
+      "question": "User SIA00299 ke total kitne direct referrals hain?",
+      "ground_truth_sql": "select count(*)::text from users where referrer_user_id=280",
+      "expect_any": ["28"]
+    },
+    {
+      "id": "A44",
+      "area": "income_compound",
+      "question": "User SIA00111 ka 7500 wale English Speaking-III package se SELF income lifetime kitna mila hai?",
+      "ground_truth_sql": "select coalesce(sum(le.amount),0)::text from ledger_entries le join purchases p on p.id=le.purchase_id where le.receiver_user_id=(select id from users where display_id='SIA00111') and p.package_id=2 and le.commission_type='SELF'",
+      "expect_any": ["180", "180.00"]
+    },
+    {
+      "id": "A45",
+      "area": "withdrawal_aggregate",
+      "question": "Globally rejected withdrawal requests kitne hain aur unka total amount kya hai?",
+      "ground_truth_sql": "select count(*)::text || '|' || coalesce(sum(amount),0)::text from withdraw_requests where status='rejected'",
+      "expect_any": ["73", "510544", "510,544"]
+    },
+    {
+      "id": "A46",
+      "area": "withdrawal_date",
+      "question": "Agla withdrawal date kab hai aur us din kaunse wallets opened hote hain?",
+      "ground_truth_sql": "select 'logic_check'",
+      "expect_any": ["2026-04-30", "30", "spot", "team", "all"]
+    },
+    {
+      "id": "A47",
+      "area": "income_compound",
+      "question": "User SIA00299 ka pichhle 30 dino me sirf MONTHLY recurring income type ka kitna paisa credit hua?",
+      "ground_truth_sql": "select coalesce(sum(amount),0)::text from ledger_entries where receiver_user_id=280 and commission_type='MONTHLY' and credited_at >= now() - interval '30 days'",
+      "expect_any": ["30312", "30,312"]
+    }
+  ]
+}

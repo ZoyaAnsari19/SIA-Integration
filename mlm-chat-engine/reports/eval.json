@@ -1,0 +1,2261 @@
+{
+  "summary": {
+    "total": 95,
+    "passed": 93,
+    "satisfactory_pct": 97.89,
+    "by_role": {
+      "user": {
+        "total": 48,
+        "passed": 46
+      },
+      "admin": {
+        "total": 47,
+        "passed": 47
+      }
+    },
+    "by_area": {
+      "profile": {
+        "total": 5,
+        "passed": 5
+      },
+      "wallet": {
+        "total": 5,
+        "passed": 5
+      },
+      "packages": {
+        "total": 7,
+        "passed": 6
+      },
+      "withdrawals": {
+        "total": 7,
+        "passed": 7
+      },
+      "income": {
+        "total": 2,
+        "passed": 2
+      },
+      "team": {
+        "total": 3,
+        "passed": 3
+      },
+      "commissions": {
+        "total": 2,
+        "passed": 2
+      },
+      "system": {
+        "total": 5,
+        "passed": 5
+      },
+      "concept": {
+        "total": 16,
+        "passed": 16
+      },
+      "income_compound": {
+        "total": 10,
+        "passed": 9
+      },
+      "withdrawal_date": {
+        "total": 2,
+        "passed": 2
+      },
+      "withdrawal_eligible": {
+        "total": 2,
+        "passed": 2
+      },
+      "withdrawal_counts": {
+        "total": 1,
+        "passed": 1
+      },
+      "network": {
+        "total": 4,
+        "passed": 4
+      },
+      "system_stats": {
+        "total": 5,
+        "passed": 5
+      },
+      "purchases": {
+        "total": 1,
+        "passed": 1
+      },
+      "user_lookup": {
+        "total": 8,
+        "passed": 8
+      },
+      "levels": {
+        "total": 2,
+        "passed": 2
+      },
+      "team_metrics": {
+        "total": 2,
+        "passed": 2
+      },
+      "leaderboard": {
+        "total": 1,
+        "passed": 1
+      },
+      "kyc_aggregate": {
+        "total": 2,
+        "passed": 2
+      },
+      "withdrawal_aggregate": {
+        "total": 2,
+        "passed": 2
+      },
+      "withdrawal_projection": {
+        "total": 1,
+        "passed": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "U01",
+      "role": "user",
+      "area": "profile",
+      "question": "What is my SIA ID and registered name?",
+      "expected": [
+        "SIA00299",
+        "RAHUL"
+      ],
+      "db_truth": "SIA00299|RAHUL PARWATKAR",
+      "reply_text": "Your SIA ID is **SIA00299** and your registered name is **RAHUL PARWATKAR**.",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 6354,
+      "passed": true,
+      "matched": [
+        "SIA00299",
+        "RAHUL"
+      ]
+    },
+    {
+      "id": "U02",
+      "role": "user",
+      "area": "profile",
+      "question": "What is my registered email and phone number?",
+      "expected": [
+        "rahulparwatkar1983@gmail.com",
+        "8605099465"
+      ],
+      "db_truth": "rahulparwatkar1983@gmail.com|8605099465",
+      "reply_text": "Your registered details are:\n\n*   **Email:** rahulparwatkar1983@gmail.com\n*   **Phone Number:** 8605099465",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 5915,
+      "passed": true,
+      "matched": [
+        "rahulparwatkar1983@gmail.com",
+        "8605099465"
+      ]
+    },
+    {
+      "id": "U03",
+      "role": "user",
+      "area": "profile",
+      "question": "What is my current KYC status?",
+      "expected": [
+        "approved",
+        "verified"
+      ],
+      "db_truth": "approved",
+      "reply_text": "Your current KYC status is **Approved**.",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 5515,
+      "passed": true,
+      "matched": [
+        "approved"
+      ]
+    },
+    {
+      "id": "U04",
+      "role": "user",
+      "area": "profile",
+      "question": "What is my account status \u2014 active or blocked?",
+      "expected": [
+        "active"
+      ],
+      "db_truth": "active",
+      "reply_text": "Your account status is **Active**. \n\nHere are the details of your account:\n*   **Status:** Active\n*   **Withdrawal Status:** Not blocked (You are allowed to make withdrawals)\n*   **KYC Status:** Approved\n*   **Disqualification Status:** Not disqualified\n\nYour SIA ID is **SIA00299** and you are currently at **Level 3**.",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 5794,
+      "passed": true,
+      "matched": [
+        "active"
+      ]
+    },
+    {
+      "id": "U05",
+      "role": "user",
+      "area": "profile",
+      "question": "Who is my sponsor / referrer user id?",
+      "expected": [
+        "92"
+      ],
+      "db_truth": "92",
+      "reply_text": "Your sponsor is **SHAMUAL SHANKAR GADDEKAR** (SIA ID: **SIA00111**). Their referrer user ID is **92**.",
+      "tool_calls": [
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 5113,
+      "passed": true,
+      "matched": [
+        "92"
+      ]
+    },
+    {
+      "id": "U06",
+      "role": "user",
+      "area": "wallet",
+      "question": "What is my main wallet balance right now?",
+      "expected": [
+        "46208",
+        "46,208"
+      ],
+      "db_truth": "46208.31",
+      "reply_text": "Your main wallet (other balance) currently has **\u20b94,778.24**.\n\nHere is a summary of all your balances:\n*   **Main Wallet (Other):** \u20b94,778.24\n*   **SPOT Wallet:** \u20b914,850.25\n*   **Team Royalty Wallet:** \u20b926,579.82\n*   **Total Combined Balance:** \u20b946,208.31",
+      "tool_calls": [
+        "getWalletSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 7223,
+      "passed": true,
+      "matched": [
+        "46208",
+        "46,208"
+      ]
+    },
+    {
+      "id": "U07",
+      "role": "user",
+      "area": "wallet",
+      "question": "Show me all my wallet balances \u2014 main, spot, other and team royalty.",
+      "expected": [
+        "46208",
+        "14850",
+        "4778",
+        "26579"
+      ],
+      "db_truth": "46208.31|14850.25|4778.24|26579.82",
+      "reply_text": "Sure, here are your current wallet balances:\n\n*   **Main Wallet (Other):** \u20b94,778.24\n*   **Spot Wallet:** \u20b914,850.25\n*   **Team Royalty Wallet:** \u20b926,579.82\n*   **Total Balance:** \u20b946,208.31\n\nYour total Spot and Team Royalty withdrawals used in this cycle is \u20b985,921.00. Currently, your wallet flush is inactive.",
+      "tool_calls": [
+        "getWalletSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6010,
+      "passed": true,
+      "matched": [
+        "46208",
+        "14850",
+        "4778",
+        "26579"
+      ]
+    },
+    {
+      "id": "U08",
+      "role": "user",
+      "area": "wallet",
+      "question": "What is my spot wallet balance?",
+      "expected": [
+        "14850",
+        "14,850"
+      ],
+      "db_truth": "14850.25",
+      "reply_text": "Your spot wallet balance is \u20b914,850.25.",
+      "tool_calls": [
+        "getWalletSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 5042,
+      "passed": true,
+      "matched": [
+        "14850",
+        "14,850"
+      ]
+    },
+    {
+      "id": "U09",
+      "role": "user",
+      "area": "wallet",
+      "question": "What is my team royalty wallet balance?",
+      "expected": [
+        "26579",
+        "26,579"
+      ],
+      "db_truth": "26579.82",
+      "reply_text": "Your team royalty wallet balance is \u20b926,579.82.",
+      "tool_calls": [
+        "getWalletSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6290,
+      "passed": true,
+      "matched": [
+        "26579",
+        "26,579"
+      ]
+    },
+    {
+      "id": "U10",
+      "role": "user",
+      "area": "packages",
+      "question": "How many packages have I purchased so far?",
+      "expected": [
+        "4"
+      ],
+      "db_truth": "4",
+      "reply_text": "\u0906\u092a\u0928\u0947 \u0905\u092c \u0924\u0915 \u0915\u0941\u0932 **4** \u092a\u0948\u0915\u0947\u091c \u0916\u0930\u0940\u0926\u0947 \u0939\u0948\u0902\u0964 \u0907\u0928\u0915\u093e \u0935\u093f\u0935\u0930\u0923 \u0928\u0940\u091a\u0947 \u0926\u093f\u092f\u093e \u0917\u092f\u093e \u0939\u0948:\n\n*   **Active (2):**\n    *   English Speaking-III (\u20b97,500.00)\n    *   Share Market Learning (\u20b930,000.00)\n*   **Pending (2):**\n    *   Graphic Designing & Video Editing (\u20b950,000.00)\n    *   Digital Marketing (\u20b915,000.00)",
+      "tool_calls": [
+        "getMyPurchases"
+      ],
+      "error": null,
+      "elapsed_ms": 6708,
+      "passed": true,
+      "matched": [
+        "4"
+      ]
+    },
+    {
+      "id": "U11",
+      "role": "user",
+      "area": "packages",
+      "question": "List the names of all packages I have ever purchased.",
+      "expected": [
+        "English Speaking",
+        "Digital Marketing",
+        "Share Market",
+        "Graphic Designing"
+      ],
+      "db_truth": "Digital Marketing, English Speaking-III, Graphic Designing & Video Editing, Share Market Learning",
+      "reply_text": "Aapne ab tak niche diye gaye packages purchase kiye hain:\n\n*   **English Speaking-III** (Active)\n*   **Share Market Learning** (Active)\n*   **Graphic Designing & Video Editing** (Pending)\n*   **Digital Marketing** (Pending)",
+      "tool_calls": [
+        "getMyPurchases"
+      ],
+      "error": null,
+      "elapsed_ms": 5587,
+      "passed": true,
+      "matched": [
+        "English Speaking",
+        "Digital Marketing",
+        "Share Market",
+        "Graphic Designing"
+      ]
+    },
+    {
+      "id": "U12",
+      "role": "user",
+      "area": "packages",
+      "question": "Which of my package purchases are still in pending status?",
+      "expected": [
+        "Graphic Designing",
+        "Digital Marketing"
+      ],
+      "db_truth": "Graphic Designing & Video Editing, Digital Marketing",
+      "reply_text": "You currently have no package purchase requests in pending status. All your requests have been processed.",
+      "tool_calls": [
+        "getPendingPurchaseRequests"
+      ],
+      "error": null,
+      "elapsed_ms": 6380,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "U13",
+      "role": "user",
+      "area": "packages",
+      "question": "What was the price of my Share Market Learning purchase?",
+      "expected": [
+        "30000",
+        "30,000"
+      ],
+      "db_truth": "30000.00",
+      "reply_text": "Your Share Market Learning purchase (ID: 2210) was priced at **\u20b930,000.00**. \n\nThis package was purchased on 27th February 2026 and is currently active, having earned \u20b94,474.32 in income so far.",
+      "tool_calls": [
+        "getMyPurchases"
+      ],
+      "error": null,
+      "elapsed_ms": 6421,
+      "passed": true,
+      "matched": [
+        "30000",
+        "30,000"
+      ]
+    },
+    {
+      "id": "U14",
+      "role": "user",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have I raised in total?",
+      "expected": [
+        "33"
+      ],
+      "db_truth": "33",
+      "reply_text": "Aapne total **33 withdrawal requests** raise kiye hain.\n\nYaha aapka summary hai:\n*   **Total Requests:** 33\n*   **Status:** Sabhi 33 requests **approved** ho chuke hain.\n*   **Total Amount:** \u20b93,26,090.00",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6032,
+      "passed": true,
+      "matched": [
+        "33"
+      ]
+    },
+    {
+      "id": "U15",
+      "role": "user",
+      "area": "withdrawals",
+      "question": "Do I currently have any pending withdrawal requests?",
+      "expected": [
+        "0",
+        "no",
+        "none",
+        "do not have any"
+      ],
+      "db_truth": "0",
+      "reply_text": "No, aapka koi bhi pending withdrawal request nahi hai.\n\nAapke total **33 withdrawal requests** hain aur wo sabhi **Approved** ho chuke hain.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 5642,
+      "passed": true,
+      "matched": [
+        "no"
+      ]
+    },
+    {
+      "id": "U16",
+      "role": "user",
+      "area": "withdrawals",
+      "question": "How many of my withdrawal requests have been approved so far?",
+      "expected": [
+        "33"
+      ],
+      "db_truth": "33",
+      "reply_text": "Aapke total **33** withdrawal requests approve ho chuke hain, jinka total amount **\u20b93,26,090.00** hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6229,
+      "passed": true,
+      "matched": [
+        "33"
+      ]
+    },
+    {
+      "id": "U17",
+      "role": "user",
+      "area": "withdrawals",
+      "question": "What is the total approved withdrawal amount across all my requests?",
+      "expected": [
+        "326090",
+        "326,090",
+        "3,26,090"
+      ],
+      "db_truth": "326090.00",
+      "reply_text": "Your total approved withdrawal amount across all 33 requests is **\u20b93,26,090.00**.\n\nHere is the breakdown by wallet type:\n*   **Main Wallet:** \u20b91,72,919.00 (13 requests)\n*   **Spot Wallet:** \u20b91,06,494.00 (19 requests)\n*   **Team Royalty Wallet:** \u20b946,677.00 (1 request)\n\nAll your requests have been successfully processed and approved.",
+      "tool_calls": [
+        "getUserWithdrawals"
+      ],
+      "error": null,
+      "elapsed_ms": 15122,
+      "passed": true,
+      "matched": [
+        "326090",
+        "326,090",
+        "3,26,090"
+      ]
+    },
+    {
+      "id": "U18",
+      "role": "user",
+      "area": "income",
+      "question": "What is the total credit amount I have received in my wallet so far (sum of positive wallet transactions)?",
+      "expected": [
+        "204567",
+        "204,567"
+      ],
+      "db_truth": "204567.31",
+      "reply_text": "Aapke wallet mein ab tak total \u20b92,04,567.31 credit hue hain. Ye sum aapke saare positive wallet transactions ka total hai.",
+      "tool_calls": [
+        "getWalletTransactionsSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 5874,
+      "passed": true,
+      "matched": [
+        "204567",
+        "204,567"
+      ]
+    },
+    {
+      "id": "U19",
+      "role": "user",
+      "area": "income",
+      "question": "Roughly how many wallet transactions are recorded against my account?",
+      "expected": [
+        "56714",
+        "56,714",
+        "56000",
+        "57000"
+      ],
+      "db_truth": "56714",
+      "reply_text": "Aapke account mein total **56,714** wallet transactions recorded hain. Iska summary neeche diya gaya hai:\n\n*   **Total Transactions:** 56,714\n*   **Total Credit:** \u20b92,04,567.31\n*   **Total Debit:** \u20b91,49,225.19\n*   **Net Balance Change:** \u20b955,342.12",
+      "tool_calls": [
+        "getWalletTransactionsSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6856,
+      "passed": true,
+      "matched": [
+        "56714",
+        "56,714"
+      ]
+    },
+    {
+      "id": "U20",
+      "role": "user",
+      "area": "team",
+      "question": "How many direct referrals (direct legs) do I have?",
+      "expected": [
+        "28"
+      ],
+      "db_truth": "28",
+      "reply_text": "You have 28 direct referrals (direct legs) in your network.",
+      "tool_calls": [
+        "getDirectReferralCount"
+      ],
+      "error": null,
+      "elapsed_ms": 5762,
+      "passed": true,
+      "matched": [
+        "28"
+      ]
+    },
+    {
+      "id": "U21",
+      "role": "user",
+      "area": "team",
+      "question": "What is my total downline size (across all levels, excluding myself)?",
+      "expected": [
+        "1893",
+        "1,893"
+      ],
+      "db_truth": "1893",
+      "reply_text": "Your total downline size is **1,893** members (excluding yourself).\n\nHere is a brief breakdown of your network by depth:\n*   **Level 1 (Directs):** 28 members\n*   **Level 2:** 73 members\n*   **Level 3:** 188 members\n*   **Level 4:** 345 members\n*   **Level 5:** 288 members\n\nYour network currently extends up to **15 depths** in total, and you are positioned at an upline depth of **5** within the system.",
+      "tool_calls": [
+        "getNetworkSize"
+      ],
+      "error": null,
+      "elapsed_ms": 7006,
+      "passed": true,
+      "matched": [
+        "1893",
+        "1,893"
+      ]
+    },
+    {
+      "id": "U22",
+      "role": "user",
+      "area": "team",
+      "question": "How deep does my upline chain go (number of ancestors above me)?",
+      "expected": [
+        "5"
+      ],
+      "db_truth": "5",
+      "reply_text": "Aapki upline chain total **5 levels** deep hai. Aapke upar total 5 ancestors hain:\n\n1. **SHAMUAL SHANKAR GADDEKAR** (SIA00111) - Depth 1\n2. **Pratibha Sikandar Sahare** (SIA00107) - Depth 2\n3. **SHANKAR DASHRATH GADDEKAR** (SIA00022) - Depth 3\n4. **Mariyam Naseer Sheikh** (SIA00021) - Depth 4\n5. **Admin** (SIA ID: admin) - Depth 5",
+      "tool_calls": [
+        "getUserNetwork"
+      ],
+      "error": null,
+      "elapsed_ms": 9403,
+      "passed": true,
+      "matched": [
+        "5"
+      ]
+    },
+    {
+      "id": "U23",
+      "role": "user",
+      "area": "commissions",
+      "question": "How many pending commission entries are recorded for me as the receiver?",
+      "expected": [
+        "991"
+      ],
+      "db_truth": "991",
+      "reply_text": "Aapke account mein total **991 pending commission entries** recorded hain.\n\nInka total amount **\u20b93,14,237.50** hai. Yeh saari commissions **SPOT** type ki hain aur alag-alag levels par pending hain:\n\n*   **Level 4:** 276 entries (\u20b91,02,500.00)\n*   **Level 5:** 226 entries (\u20b976,481.25)\n*   **Level 6:** 156 entries (\u20b935,968.75)\n*   **Level 7:** 186 entries (\u20b979,487.50)\n*   **Level 8:** 146 entries (\u20b919,725.00)\n*   **Level 9:** 1 entry (\u20b975.00)\n\nYeh commissions tab release hongi jab aap relevant levels ke liye qualify kar jayenge ya system eligibility criteria meet ho jayega.",
+      "tool_calls": [
+        "getPendingCommissions"
+      ],
+      "error": null,
+      "elapsed_ms": 8318,
+      "passed": true,
+      "matched": [
+        "991"
+      ]
+    },
+    {
+      "id": "U24",
+      "role": "user",
+      "area": "system",
+      "question": "How many packages does the SIA platform offer in total?",
+      "expected": [
+        "13"
+      ],
+      "db_truth": "13",
+      "reply_text": "SIA platform total **13 packages** offer karta hai. Inme se **10 packages active** hain aur **3 packages inactive** hain. \n\nYahan list di gayi hai:\n* **Active Packages (10):** English Speaking Basic-I, English Speaking-III, Digital Marketing, Share Market Learning, Graphic Designing & Video Editing, Personality Development + Financial Planning, Artificial Intelligence, Cyber Security & Online Safety (I, II, aur III).\n* **Inactive Packages (3):** English Speaking-II, Digital Marketing-II, aur Personality Development + Financial Planning-II.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 6247,
+      "passed": true,
+      "matched": [
+        "13"
+      ]
+    },
+    {
+      "id": "U25",
+      "role": "user",
+      "area": "system",
+      "question": "What is the price of the Digital Marketing package?",
+      "expected": [
+        "15000",
+        "15,000"
+      ],
+      "db_truth": "15000.00",
+      "reply_text": "Digital Marketing package ki price \u20b915,000.00 hai.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 12846,
+      "passed": true,
+      "matched": [
+        "15000",
+        "15,000"
+      ]
+    },
+    {
+      "id": "U26",
+      "role": "user",
+      "area": "system",
+      "question": "What is the price of the highest tier package on SIA?",
+      "expected": [
+        "2300000",
+        "23,00,000",
+        "2,300,000"
+      ],
+      "db_truth": "7500.00",
+      "reply_text": "The price of the highest tier package on SIA is **\u20b923,00,000.00**. This corresponds to the **Cyber Security & Online Safety-III** package, which also offers the highest monthly self ROI of 7.0%.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 6722,
+      "passed": true,
+      "matched": [
+        "2300000",
+        "23,00,000",
+        "2,300,000"
+      ]
+    },
+    {
+      "id": "U27",
+      "role": "user",
+      "area": "system",
+      "question": "How many MLM levels are configured in the system?",
+      "expected": [
+        "10"
+      ],
+      "db_truth": "10",
+      "reply_text": "The SIA MLM system has **10 levels** configured (from Level 0 to Level 9). Here is the breakdown:\n\n*   **Level 0:** Field Worker (Direct)\n*   **Level 1:** Company Representative\n*   **Level 2:** Company City Manager\n*   **Level 3:** Company Area Manager\n*   **Level 4:** Company District Manager\n*   **Level 5:** Division Manager\n*   **Level 6:** Regional Manager\n*   **Level 7:** State Manager\n*   **Level 8:** National Manager\n*   **Level 9:** King\n\nEach level has specific business requirements (like direct referrals and team business volume) and offers different rewards, ranging from T-shirts to real estate and directorship roles.",
+      "tool_calls": [
+        "getAllLevels"
+      ],
+      "error": null,
+      "elapsed_ms": 6537,
+      "passed": true,
+      "matched": [
+        "10"
+      ]
+    },
+    {
+      "id": "U28",
+      "role": "user",
+      "area": "system",
+      "question": "What is the title of the highest level in SIA MLM?",
+      "expected": [
+        "King"
+      ],
+      "db_truth": "King",
+      "reply_text": "SIA MLM mein sabse bade level (Level 9) ka title **King** hai. Is level tak pahunchne ke liye total team business \u20b92,100 Crore hona chahiye.",
+      "tool_calls": [
+        "getAllLevels"
+      ],
+      "error": null,
+      "elapsed_ms": 6239,
+      "passed": true,
+      "matched": [
+        "King"
+      ]
+    },
+    {
+      "id": "U29",
+      "role": "user",
+      "area": "concept",
+      "question": "Briefly explain the difference between upline and downline in SIA MLM.",
+      "expected": [
+        "upline",
+        "downline",
+        "ancestor",
+        "descendant",
+        "sponsor",
+        "referrer"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein **Upline** aur **Downline** ka matlab ye hai:\n\n*   **Upline:** Ye wo log hote hain jo tree mein aapse upar hain. Aapka direct sponsor aapka pehla upline (Level 0) hota hai, aur uske upar ke sponsors up to 9 levels tak aapke uplines kehlate hain. Jab aap koi package kharidte hain, toh uska commission inhi uplines ko milta hai.\n*   **Downline:** Ye wo log hote hain jo aapke niche join karte hain. Aapke direct referrals aapke pehle downline level pe hote hain, aur unki team aage chalkar aapka total downline banti hai. Aapko apne downline ki purchases par SPOT aur MONTHLY commissions milte hain.\n\nSIA mein ye relationship **user_tree_paths** (closure table) ke zariye track ki jati hai, jo 9 levels tak kaam karti hai.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 5829,
+      "passed": true,
+      "matched": [
+        "upline",
+        "downline",
+        "sponsor"
+      ]
+    },
+    {
+      "id": "U30",
+      "role": "user",
+      "area": "concept",
+      "question": "What are the different types of wallets in SIA MLM and what does each one represent?",
+      "expected": [
+        "main",
+        "spot",
+        "team royalty",
+        "wallet"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein basically ek main balance hota hai jo four sub-wallets mein divided hai:\n\n*   **Spot Wallet (`spot_balance`):** Isme aapki saari **SPOT commissions** (downline ke package purchase par milne wali one-time income) aati hai. Is wallet se withdrawal har mahine ki 10, 20, aur 30 tarikh ko kiya ja sakta hai. Dhyaan rahe ki har SPOT credit par 10-day ka hold hota hai.\n*   **Main / Other Wallet (`other_balance`):** Isme aapki **SELF income** (ROI) aur **GLOBAL_HELPING income** aati hai. Iska withdrawal sirf mahine ki 30 tarikh (Feb mein 28) ko hota hai. Agar aapne reinvestment kiya hai, toh isme 90, 150, ya 180 dino ka lock period bhi ho sakta hai.\n*   **Team Royalty Wallet (`team_royalty_balance`):** Isme aapki **MONTHLY team royalty** (level 0 se level 9 tak ki recurring income) jama hoti hai. Iska withdrawal bhi sirf 30 tarikh ko allow hota hai aur ye aapke package ke N\u00d7 capping (current 7x limit) ke andar hona chahiye.\n*   **Total Balance (`balance`):** Ye upar diye gaye teeno wallets ka total sum hota hai jo aapki overall earnings darshata hai.\n\n**Note:** Withdrawal ke liye aapka KYC approved hona zaroori hai aur har wallet ke apne withdrawal dates aur limits hote hain.",
+      "tool_calls": [
+        "explainSystemConcept"
+      ],
+      "error": null,
+      "elapsed_ms": 9930,
+      "passed": true,
+      "matched": [
+        "main",
+        "spot",
+        "team royalty",
+        "wallet"
+      ]
+    },
+    {
+      "id": "U31",
+      "role": "user",
+      "area": "concept",
+      "question": "How does direct commission get calculated when someone in my downline buys a package?",
+      "expected": [
+        "direct",
+        "commission",
+        "package",
+        "level"
+      ],
+      "db_truth": "concept",
+      "reply_text": "Direct commission (Level 0) calculate karne ke liye do main components hote hain:\n\n1.  **Direct SPOT Commission (One-time):**\n    *   Jab aapka koi direct referral package buy karta hai, toh aapko turant **5%** commission milta hai purchase amount par.\n    *   Iske liye aapka apna course active hona chahiye.\n    *   Dhyan rahe ki agar referral \"reinvestment\" kar raha hai, toh bhi Level 0 par aapka commission kam nahi hota (halved nahi hota), aapko pura 5% hi milta hai.\n\n2.  **Direct MONTHLY Royalty (Recurring):**\n    *   Yeh commission aapko rozana (daily) milta hai jab tak referral ka package active hai.\n    *   **\u20b93,00,000 tak ke packages** par yeh **0.5% per month** hota hai.\n    *   **\u20b95,00,000 aur usse bade packages** par yeh **1.0% per month** hota hai.\n    *   Daily amount calculate karne ke liye monthly value ko us mahine ke dino (days in month) se divide kiya jata hai.\n\n**Zaroori Shartein:**\n*   Aapka (Referrer) status active hona chahiye (yaani aapka koi package 2x na hua ho).\n*   Buyer ka package 2x income limit tak pahunchte hi yeh commissions band ho jate hain.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 11238,
+      "passed": true,
+      "matched": [
+        "direct",
+        "commission",
+        "package",
+        "level"
+      ]
+    },
+    {
+      "id": "U32",
+      "role": "user",
+      "area": "concept",
+      "question": "What is the typical end-to-end flow when I raise a withdrawal request?",
+      "expected": [
+        "withdraw",
+        "request",
+        "admin",
+        "approve",
+        "pending"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein withdrawal request ka end-to-end flow kuch is tarah hota hai:\n\n1.  **Request Submission:** Aap apne dashboard se withdrawal request submit karte hain jisme Amount, Payment Method (Bank/UPI), Account Details, Wallet Type aur apna **Transaction PIN** enter karna hota hai.\n2.  **Validation Gates:** System lagbhag 12 checks verify karta hai, jaise:\n    *   Aapka KYC status **Approved** hona chahiye.\n    *   Aapka account withdrawal blocked nahi hona chahiye.\n    *   Wallet mein sufficient available balance hona chahiye (SPOT 10-day hold aur reinvestment locks ko exclude karke).\n    *   Min/Max withdrawal limits aur \"One pending request per wallet\" rule follow hona chahiye.\n3.  **Pending Status:** Agar validation pass ho jata hai, toh request **Pending** state mein chali jati hai. Is stage par balance deduct nahi hota.\n4.  **Admin Review:** Admin panel se aapki request verify ki jati hai.\n5.  **Final Action:**\n    *   **Approval:** Admin offline transfer karke reference ID/UTR update karte hain. Status **Approved** hone par wallet se amount deduct hota hai aur \u20b930 processing fee lagti hai.\n    *   **Rejection:** Agar details galat hain, toh admin reason ke saath request **Reject** kar dete hain aur koi fund movement nahi hoti.\n6.  **Cancellation:** Jab tak request pending hai, aap use khud bhi cancel kar sakte hain.\n\n**Yaad rakhein:** Withdrawal window aam taur par subah **10:00 AM se shaam 5:00 PM IST** tak hoti hai aur dates (10th, 20th, 30th) wallet type par depend karti hain.",
+      "tool_calls": [
+        "explainSystemConcept"
+      ],
+      "error": null,
+      "elapsed_ms": 23522,
+      "passed": true,
+      "matched": [
+        "withdraw",
+        "request",
+        "admin",
+        "approve",
+        "pending"
+      ]
+    },
+    {
+      "id": "U33",
+      "role": "user",
+      "area": "concept",
+      "question": "What does a P2P transfer mean and which wallet does it use?",
+      "expected": [
+        "p2p",
+        "transfer",
+        "wallet"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein **P2P (Peer-to-Peer) Transfer** ka matlab hai ek user se dusre user ko paise bhejna.\n\nIske baare mein zaroori jaankari:\n*   **Wallet:** Yeh sirf **Main wallet (`other_balance`)** ka istemal karta hai. SPOT wallet se P2P transfer nahi kiya ja sakta.\n*   **Tax:** Sender par **3% tax** lagta hai (agar aap \u20b91,000 bhejte hain, toh aapke wallet se \u20b91,030 katenge aur receiver ko poore \u20b91,000 milenge).\n*   **Requirements:** Sender aur Receiver dono ka **KYC Approved** hona chahiye aur sender ke paas **Transaction PIN** hona zaroori hai.\n*   **Limits:** Iski minimum limit \u20b9100 aur maximum limit \u20b99,999.96 hai.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 32552,
+      "passed": true,
+      "matched": [
+        "p2p",
+        "transfer",
+        "wallet"
+      ]
+    },
+    {
+      "id": "U34",
+      "role": "user",
+      "area": "concept",
+      "question": "Why do I need KYC and what happens if my KYC is not approved?",
+      "expected": [
+        "kyc",
+        "verification",
+        "approved",
+        "withdraw"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein KYC (Know Your Customer) identity verification ke liye zaroori hai. Iska main purpose system ki security maintain karna aur financial regulations ko follow karna hai.\n\n**KYC kyun zaroori hai?**\n*   **Withdrawals:** Bina KYC approval ke aap apna balance bank account mein withdraw nahi kar sakte.\n*   **P2P Transfers:** Doosre users se funds receive karne ke liye KYC approved hona mandatory hai.\n*   **Verification:** Yeh ensure karta hai ki account ek genuine person ka hai.\n\n**Agar KYC approve nahi hua toh kya hoga?**\n*   Aapka withdrawal request reject ho jayega ya submit hi nahi hoga.\n*   Aap P2P transfers receive nahi kar payenge.\n*   Dashboard par status 'pending', 'submitted', ya 'rejected' dikhega. Agar reject hota hai, toh aap admin ka diya hua rejection reason dekh kar usey dobara correct kar ke submit kar sakte hain.\n\n**Kuch important rules:**\n*   KYC submit karne ki ek **\u20b950 fee** hai jo aapke SPOT wallet se deduct hoti hai.\n*   KYC submission mahine ke kuch khaas dino (1, 9, 10, 19, 20, 29, 30, 31) par **blocked** rehti hai. Aap baaki dino mein ise submit kar sakte hain.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 7926,
+      "passed": true,
+      "matched": [
+        "kyc",
+        "verification",
+        "approved",
+        "withdraw"
+      ]
+    },
+    {
+      "id": "U35",
+      "role": "user",
+      "area": "concept",
+      "question": "How can I increase my level in the SIA MLM hierarchy \u2014 what is required?",
+      "expected": [
+        "level",
+        "business",
+        "team",
+        "requirement",
+        "leg"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM hierarchy mein level badhane ke liye aapko **Leg-based business requirements** aur **Total Team Business** targets achieve karne hote hain.\n\nAapka current status aur agle level ki details neeche di gayi hain:\n\n### Aapka Current Status:\n*   **Current Level:** Level 3 \u2014 Company Area Manager\n*   **Next Target:** Level 4 \u2014 Company District Manager\n*   **Reward for Level 4:** Motorcycle \ud83c\udfcd\ufe0f\n\n### Level 4 (Company District Manager) ki Requirements:\nAgle level par pahunchne ke liye aapko ye targets pure karne honge:\n1.  **Total Team Business:** \u20b92,32,86,000 (\u20b92.32 Crore)\n2.  **Qualifying Legs:** Kam se kam **3 legs** aisi honi chahiye jinme se har ek ka business \u20b977,62,000 (\u20b977.62 Lakh) se zyada ho.\n\n### Aapki Progress vs Requirements:\nAapka total business target pehle hi pura ho chuka hai, lekin aapko ek qualifying leg ki aur zaroorat hai:\n*   **Total Business:** Aapka total team business \u20b94,38,97,500 hai, jo \u20b92.32 Crore ki requirement se kafi zyada hai. \u2705\n*   **Qualifying Legs:** Aapke paas abhi **2 qualifying legs** hain (Leg 281 aur Leg 419). Aapko **1 aur leg** ko qualify karwana hai. \u26a0\ufe0f\n\n**Pro-tip:** Aapki teesri sabse badi leg (ID: 427) ka business abhi \u20b966,10,000 hai. Agar is leg mein \u20b911,52,000 ka aur business hota hai, toh aap automatically **Level 4** par promote ho jayenge.\n\n### Hierarchy ka General Rule:\nSIA mein total 10 levels (0-9) hain. Level 1 se Level 8 tak badhne ke liye aapko apni direct legs (referrals) ki team ko grow karna hota hai:\n*   **Level 1:** 4 legs (\u20b97.5k each) + \u20b92.15 L total business.\n*   **Level 2:** 4 legs (\u20b93.75 L each) + \u20b915 L total.\n*   **Level 3:** 3 legs (\u20b925 L each) + \u20b975 L total.\n*   **Level 9 (King):** Isme koi leg constraint nahi hai, bas total team business \u20b92,100 Crore hona chahiye.\n\nAap apne dashboard ke \"Path-Rank\" section mein real-time progress dekh sakte hain.",
+      "tool_calls": [
+        "getAllLevels",
+        "getUserLevelProgress"
+      ],
+      "error": null,
+      "elapsed_ms": 17634,
+      "passed": true,
+      "matched": [
+        "level",
+        "business",
+        "team",
+        "requirement",
+        "leg"
+      ]
+    },
+    {
+      "id": "U36",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Mere 7500 wala English Speaking-III (package id 2) me pichhle 5 dino kitna SELF + GLOBAL income aaya hai?",
+      "expected": [
+        "197.50",
+        "197.5",
+        "197"
+      ],
+      "db_truth": "197.50",
+      "reply_text": "Aapke \u20b97,500 waale English Speaking-III (ID: 2) package mein pichhle 5 dino mein total **\u20b9197.50** ki income aayi hai:\n\n*   **SELF Income:** \u20b937.50 (5 entries)\n*   **GLOBAL_HELPING Income:** \u20b9160.00 (5 entries)\n\nTotal: \u20b9197.50.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 7554,
+      "passed": true,
+      "matched": [
+        "197.50",
+        "197.5",
+        "197"
+      ]
+    },
+    {
+      "id": "U37",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Pichhle 5 dino me mera total SELF + GLOBAL income kitna hai across all packages?",
+      "expected": [
+        "752.70",
+        "752.7",
+        "752"
+      ],
+      "db_truth": "752.70",
+      "reply_text": "Pichhle 5 dino mein aapka total SELF aur GLOBAL income **\u20b9752.70** hai. \n\nIska breakdown niche diya gaya hai:\n*   **SELF Income:** \u20b9237.50\n*   **GLOBAL_HELPING Income:** \u20b9515.20",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6566,
+      "passed": true,
+      "matched": [
+        "752.70",
+        "752.7",
+        "752"
+      ]
+    },
+    {
+      "id": "U38",
+      "role": "user",
+      "area": "withdrawal_date",
+      "question": "Agla withdrawal date kab hai aur us din kaunse wallets allowed hain?",
+      "expected": [
+        "2026-04-30",
+        "30",
+        "spot",
+        "team",
+        "all"
+      ],
+      "db_truth": "logic_check",
+      "reply_text": "Agla withdrawal date **30 April 2026** hai (jo ki abhi se 5 din baad hai).\n\nUs din aap in teeno wallets se withdrawal kar sakte hain:\n* **SPOT** Wallet\n* **Main (Other)** Wallet\n* **Team Royalty** Wallet\n\nSIA system ke rule ke mutabiq, mahine ki 10 aur 20 tarikh ko sirf SPOT wallet allow hota hai, lekin mahine ki aakhri tarikh (30th ya Feb mein 28th) ko saare wallets open rehte hain. Withdrawal window subah 10:00 AM se shaam 5:00 PM IST tak khuli rehti hai.",
+      "tool_calls": [
+        "getNextWithdrawalDate"
+      ],
+      "error": null,
+      "elapsed_ms": 8779,
+      "passed": true,
+      "matched": [
+        "30",
+        "spot",
+        "team",
+        "all"
+      ]
+    },
+    {
+      "id": "U39",
+      "role": "user",
+      "area": "withdrawal_eligible",
+      "question": "Agle withdrawal date pe main exactly kitna amount apply / withdraw kar sakta hu?",
+      "expected": [
+        "46208",
+        "46,208"
+      ],
+      "db_truth": "46208.31",
+      "reply_text": "Agle withdrawal date **30 April 2026** ko aap total **\u20b946,208.31** withdraw kar sakte hain.\n\nIska exact breakdown niche diya gaya hai:\n*   **Spot Wallet:** \u20b914,850.25\n*   **Main Wallet (Other):** \u20b94,778.24\n*   **Team Royalty Wallet:** \u20b926,579.82\n*   **Total Eligible Amount:** **\u20b946,208.31**\n\n**Kuch zaroori points:**\n*   **KYC Status:** Aapka KYC already **Approved** hai, isliye koi dikkat nahi hai.\n*   **Time Window:** 30 April ko withdrawal window subah **10:00 AM se shaam 5:00 PM (IST)** tak open rahegi.\n*   **Processing Fee:** Har approved withdrawal request par \u20b930 ki processing fee deduct ki jayegi.\n*   **Capping:** Aapka Spot + Team Royalty ka combined withdrawal limit ke andar hai, toh aap pura amount apply kar sakte hain.\n\nAgar 30 tarikh se pehle aapke wallet mein aur commissions add hote hain, toh aapka withdrawable amount aur badh jayega.",
+      "tool_calls": [
+        "getEligibleWithdrawalAmount",
+        "getWalletSummary",
+        "getUserProfile"
+      ],
+      "error": null,
+      "elapsed_ms": 27094,
+      "passed": true,
+      "matched": [
+        "46208",
+        "46,208"
+      ]
+    },
+    {
+      "id": "U40",
+      "role": "user",
+      "area": "withdrawal_counts",
+      "question": "Mere ab tak kitne withdrawal requests approved aur kitne rejected hue hain?",
+      "expected": [
+        "33",
+        "approved"
+      ],
+      "db_truth": "approved=33",
+      "reply_text": "Aapke ab tak ke withdrawal requests ka status niche diya gaya hai:\n\n*   **Approved:** 33 (Total raashi: \u20b93,26,090.00)\n*   **Rejected:** 0\n\nAapke sabhi 33 requests approve ho chuke hain aur abhi tak koi bhi request reject nahi hui hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6494,
+      "passed": true,
+      "matched": [
+        "33",
+        "approved"
+      ]
+    },
+    {
+      "id": "U41",
+      "role": "user",
+      "area": "network",
+      "question": "Mera total downline network kitna bada hai (sab depths milake)?",
+      "expected": [
+        "1893",
+        "1,893"
+      ],
+      "db_truth": "1893",
+      "reply_text": "Aapka total downline network **1,893** logo ka hai. \n\nDepth-wise breakdown kuch is tarah hai:\n* **Level 1 (Directs):** 28\n* **Level 2:** 73\n* **Level 3:** 188\n* **Level 4:** 345\n* **Level 5:** 288\n* **Level 6 se 15:** 771\n\nAapka network total **15 levels** tak faila hua hai.",
+      "tool_calls": [
+        "getNetworkSize"
+      ],
+      "error": null,
+      "elapsed_ms": 6219,
+      "passed": true,
+      "matched": [
+        "1893",
+        "1,893"
+      ]
+    },
+    {
+      "id": "U42",
+      "role": "user",
+      "area": "network",
+      "question": "Mere kitne direct referrals hain (level-1 wale)?",
+      "expected": [
+        "28"
+      ],
+      "db_truth": "28",
+      "reply_text": "Aapke total 28 direct referrals (Level 1) hain.",
+      "tool_calls": [
+        "getDirectReferralCount"
+      ],
+      "error": null,
+      "elapsed_ms": 4983,
+      "passed": true,
+      "matched": [
+        "28"
+      ]
+    },
+    {
+      "id": "U43",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Pichhle 30 dino me total MONTHLY recurring income kitna mila hai?",
+      "expected": [
+        "30312",
+        "30,312"
+      ],
+      "db_truth": "30312.92",
+      "reply_text": "Pichhle 30 dino me aapka total **MONTHLY (Team Royalty)** income **\u20b930,312.92** raha hai. Yeh total 13,326 entries se calculate kiya gaya hai.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 7203,
+      "passed": true,
+      "matched": [
+        "30312",
+        "30,312"
+      ]
+    },
+    {
+      "id": "U44",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Pichhle 30 dino me total SPOT income kitni aayi?",
+      "expected": [
+        "19118",
+        "19,118"
+      ],
+      "db_truth": "19118.75",
+      "reply_text": "Pichhle 30 dino me aapki total SPOT income **\u20b919,118.75** aayi hai. Isme total 30 transactions record hue hain.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 5694,
+      "passed": true,
+      "matched": [
+        "19118",
+        "19,118"
+      ]
+    },
+    {
+      "id": "U45",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Mere 2500 wale package (English Speaking Basic-I, package id 1) se ab tak total kitni income aayi hai (lifetime)?",
+      "expected": [
+        "7244",
+        "7,244"
+      ],
+      "db_truth": "7244.95",
+      "reply_text": "Aapke English Speaking Basic-I package (\u20b92,500) se ab tak total **\u20b97,244.95** ki income aayi hai.\n\nIska breakdown niche diya gaya hai:\n* **SPOT Income:** \u20b92,193.75\n* **Monthly Royalty:** \u20b95,166.14\n* **Admin Adjustments:** -\u20b9114.94\n\nAapki total lifetime income is package se **\u20b97,244.95** banti hai.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 8550,
+      "passed": true,
+      "matched": [
+        "7244",
+        "7,244"
+      ]
+    },
+    {
+      "id": "U46",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Pichhle 7 din ka mera net income (saare types ka sum) kitna hai?",
+      "expected": [
+        "5275",
+        "5,275"
+      ],
+      "db_truth": "5275.79",
+      "reply_text": "Pichhle 7 dino ka aapka total net income **\u20b95,275.79** hai. Iska detail breakdown niche diya gaya hai:\n\n*   **SELF Income:** \u20b9332.50\n*   **GLOBAL_HELPING:** \u20b9713.60\n*   **SPOT Income:** \u20b9643.75\n*   **MONTHLY (Team Royalty):** \u20b97,610.94\n*   **FEE_DEDUCTION:** -\u20b94,025.00 (Fees jo deduct hui hain)\n\n**Total Net Income: \u20b95,275.79**",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 8355,
+      "passed": true,
+      "matched": [
+        "5275",
+        "5,275"
+      ]
+    },
+    {
+      "id": "U47",
+      "role": "user",
+      "area": "income_compound",
+      "question": "Is mahine (April 2026) ki MONTHLY recurring income kitni mili hai abhi tak?",
+      "expected": [
+        "25588",
+        "25,588"
+      ],
+      "db_truth": "25588.85",
+      "reply_text": "",
+      "tool_calls": [],
+      "error": "llm_failed",
+      "elapsed_ms": 2715,
+      "passed": false,
+      "matched": []
+    },
+    {
+      "id": "U48",
+      "role": "user",
+      "area": "income_compound",
+      "question": "English Speaking-III (package id 2) ka mera SPOT income lifetime kitna mila hai?",
+      "expected": [
+        "8887",
+        "8,887"
+      ],
+      "db_truth": "8887.50",
+      "reply_text": "Aapka English Speaking-III (Package ID: 2) se lifetime total SPOT income **\u20b98,887.50** hai (total 58 entries).",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6426,
+      "passed": true,
+      "matched": [
+        "8887",
+        "8,887"
+      ]
+    },
+    {
+      "id": "A01",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many total users are registered on the SIA platform right now?",
+      "expected": [
+        "2807",
+        "2,807"
+      ],
+      "db_truth": "2807",
+      "reply_text": "Right now, there are a total of **2,807** users registered on the SIA platform. Out of these, 2,803 are currently active.",
+      "tool_calls": [
+        "getSystemStats"
+      ],
+      "error": null,
+      "elapsed_ms": 6144,
+      "passed": true,
+      "matched": [
+        "2807",
+        "2,807"
+      ]
+    },
+    {
+      "id": "A02",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many active (non-blocked) users are there in the system?",
+      "expected": [
+        "2803",
+        "2,803"
+      ],
+      "db_truth": "2803",
+      "reply_text": "System mein total **2,807 users** registered hain, jinmein se **2,803 users active** hain.\n\n*   **Total Users:** 2,807\n*   **Active Users:** 2,803\n*   **Active Purchases:** 2,141 (current running packages)",
+      "tool_calls": [
+        "getSystemStats"
+      ],
+      "error": null,
+      "elapsed_ms": 11389,
+      "passed": true,
+      "matched": [
+        "2803",
+        "2,803"
+      ]
+    },
+    {
+      "id": "A03",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many users have an approved KYC status?",
+      "expected": [
+        "1285",
+        "1,285"
+      ],
+      "db_truth": "1285",
+      "reply_text": "SIA MLM system mein total **1,285** users ka KYC status **approved** hai.",
+      "tool_calls": [
+        "getKycCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 5880,
+      "passed": true,
+      "matched": [
+        "1285",
+        "1,285"
+      ]
+    },
+    {
+      "id": "A04",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many MLM packages are currently configured?",
+      "expected": [
+        "13"
+      ],
+      "db_truth": "13",
+      "reply_text": "There are currently **13 MLM packages** configured in the system:\n\n*   **10 Active** packages (ranging from \u20b92,500 to \u20b923,00,000).\n*   **3 Inactive** packages.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 5406,
+      "passed": true,
+      "matched": [
+        "13"
+      ]
+    },
+    {
+      "id": "A05",
+      "role": "admin",
+      "area": "system_stats",
+      "question": "How many levels are defined in the level master table?",
+      "expected": [
+        "10"
+      ],
+      "db_truth": "10",
+      "reply_text": "SIA MLM system mein total **10 levels** defined hain (Level 0 se Level 9 tak). Har level ke apne requirements aur rewards hain:\n\n*   **Level 0:** Field Worker (Direct)\n*   **Level 1:** Company Representative (T-shirt aur Diary)\n*   **Level 2:** Company City Manager (5G Mobile)\n*   **Level 3:** Company Area Manager (Laptop)\n*   **Level 4:** Company District Manager (Motorcycle)\n*   **Level 5:** Division Manager (Car)\n*   **Level 6:** Regional Manager (Land in Secure City)\n*   **Level 7:** State Manager (Flat in Secure City)\n*   **Level 8:** National Manager (Company Director)\n*   **Level 9:** King (Freedom)",
+      "tool_calls": [
+        "getAllLevels"
+      ],
+      "error": null,
+      "elapsed_ms": 6288,
+      "passed": true,
+      "matched": [
+        "10"
+      ]
+    },
+    {
+      "id": "A06",
+      "role": "admin",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests are sitting in the pending bucket right now?",
+      "expected": [
+        "0",
+        "no",
+        "none"
+      ],
+      "db_truth": "0",
+      "reply_text": "Right now, there are **0 withdrawal requests** sitting in the pending bucket. \n\nBased on the system records:\n*   **Total requests:** 5,125\n*   **Approved:** 5,052\n*   **Rejected:** 73\n\nSince the approved and rejected counts account for all requests in the system, there are currently no pending or unprocessed withdrawals.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6388,
+      "passed": true,
+      "matched": [
+        "0",
+        "no"
+      ]
+    },
+    {
+      "id": "A07",
+      "role": "admin",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have been approved across the platform till date?",
+      "expected": [
+        "5052",
+        "5,052"
+      ],
+      "db_truth": "5052",
+      "reply_text": "SIA MLM system par abhi tak total **5,052** withdrawal requests approve ho chuki hain. \n\nIn approved withdrawals ki kul raashi (total amount) **\u20b93,05,34,304.83** hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 5801,
+      "passed": true,
+      "matched": [
+        "5052",
+        "5,052"
+      ]
+    },
+    {
+      "id": "A08",
+      "role": "admin",
+      "area": "withdrawals",
+      "question": "How many withdrawal requests have been rejected so far?",
+      "expected": [
+        "73"
+      ],
+      "db_truth": "73",
+      "reply_text": "Ab tak total **73** withdrawal requests reject ho chuki hain, jinki total value \u20b95,10,544.00 hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 5843,
+      "passed": true,
+      "matched": [
+        "73"
+      ]
+    },
+    {
+      "id": "A09",
+      "role": "admin",
+      "area": "purchases",
+      "question": "How many package purchases (rows in purchases) exist in the database?",
+      "expected": [
+        "2838",
+        "2,838"
+      ],
+      "db_truth": "2838",
+      "reply_text": "Database mein total **2,838** package purchases (purchases rows) exist karte hain.\n\nIska breakdown is tarah hai:\n*   **Completed:** 2,553\n*   **Pending:** 226",
+      "tool_calls": [
+        "getAdminPlatformStats"
+      ],
+      "error": null,
+      "elapsed_ms": 5825,
+      "passed": true,
+      "matched": [
+        "2838",
+        "2,838"
+      ]
+    },
+    {
+      "id": "A10",
+      "role": "admin",
+      "area": "commissions",
+      "question": "How many pending commission entries are sitting in the system in total?",
+      "expected": [
+        "13636",
+        "13,636"
+      ],
+      "db_truth": "13636",
+      "reply_text": "There are exactly 13,636 pending commission entries currently in the system.",
+      "tool_calls": [
+        "getAdminPlatformStats"
+      ],
+      "error": null,
+      "elapsed_ms": 7995,
+      "passed": true,
+      "matched": [
+        "13636",
+        "13,636"
+      ]
+    },
+    {
+      "id": "A11",
+      "role": "admin",
+      "area": "wallet",
+      "question": "How many wallet transaction rows exist across all users (rough magnitude is fine)?",
+      "expected": [
+        "893336",
+        "893,336",
+        "893"
+      ],
+      "db_truth": "893336",
+      "reply_text": "Pure system mein total **8,93,336** wallet transaction rows hain.",
+      "tool_calls": [
+        "getAdminPlatformStats"
+      ],
+      "error": null,
+      "elapsed_ms": 5375,
+      "passed": true,
+      "matched": [
+        "893336",
+        "893,336",
+        "893"
+      ]
+    },
+    {
+      "id": "A12",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "Pull profile details for SIA00299 \u2014 name, email, phone, status.",
+      "expected": [
+        "SIA00299",
+        "RAHUL",
+        "rahulparwatkar1983",
+        "8605099465"
+      ],
+      "db_truth": "SIA00299|RAHUL PARWATKAR|rahulparwatkar1983@gmail.com|8605099465|active",
+      "reply_text": "SIA00299 ki profile details ye rahi:\n\n*   **Name:** RAHUL PARWATKAR\n*   **Email:** rahulparwatkar1983@gmail.com\n*   **Phone:** 8605099465\n*   **Status:** active (KYC: approved)\n*   **Current Level:** Level 3 (Company Area Manager)\n*   **Sponsor:** SHAMUAL SHANKAR GADDEKAR (SIA00111)\n\nInka account fully qualified hai aur filhal inka total balance \u20b946,208.31 hai.",
+      "tool_calls": [
+        "getUserProfileByDisplayId"
+      ],
+      "error": null,
+      "elapsed_ms": 5528,
+      "passed": true,
+      "matched": [
+        "SIA00299",
+        "RAHUL",
+        "rahulparwatkar1983",
+        "8605099465"
+      ]
+    },
+    {
+      "id": "A13",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "What is the KYC status of user SIA00299?",
+      "expected": [
+        "approved"
+      ],
+      "db_truth": "approved",
+      "reply_text": "User SIA00299 (Rahul Parwatkar) ka KYC status **approved** hai.",
+      "tool_calls": [
+        "getUserProfileByDisplayId"
+      ],
+      "error": null,
+      "elapsed_ms": 5435,
+      "passed": true,
+      "matched": [
+        "approved"
+      ]
+    },
+    {
+      "id": "A14",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "How many direct referrals does SIA00299 have?",
+      "expected": [
+        "28"
+      ],
+      "db_truth": "28",
+      "reply_text": "User SIA00299 ke total **28 direct referrals** hain.",
+      "tool_calls": [
+        "getDirectReferralCount"
+      ],
+      "error": null,
+      "elapsed_ms": 5017,
+      "passed": true,
+      "matched": [
+        "28"
+      ]
+    },
+    {
+      "id": "A15",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "What is the total downline size of SIA00299 (excluding the user himself)?",
+      "expected": [
+        "1893",
+        "1,893"
+      ],
+      "db_truth": "1893",
+      "reply_text": "The total downline size for user **SIA00299** (excluding themselves) is **1,893**.\n\nHere is a breakdown of the team across various depths:\n*   **Direct Referrals (Depth 1):** 28 users\n*   **Depths 2\u20135:** 894 users\n*   **Depths 6\u20139:** 759 users\n*   **Depths 10 and above:** 212 users\n\nTotal network size: **1,893** users.",
+      "tool_calls": [
+        "getNetworkSize"
+      ],
+      "error": null,
+      "elapsed_ms": 6957,
+      "passed": true,
+      "matched": [
+        "1893",
+        "1,893"
+      ]
+    },
+    {
+      "id": "A16",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "What is the main wallet balance of SIA00299?",
+      "expected": [
+        "46208",
+        "46,208"
+      ],
+      "db_truth": "46208.31",
+      "reply_text": "User SIA00299 (RAHUL PARWATKAR) ka main wallet balance \u20b94,778.24 hai.\n\nYahan unka pura wallet summary diya gaya hai:\n*   **Main Wallet:** \u20b94,778.24\n*   **Spot Wallet:** \u20b914,850.25\n*   **Team Royalty Wallet:** \u20b926,579.82\n*   **Total Balance:** \u20b946,208.31",
+      "tool_calls": [
+        "getUserProfileByDisplayId"
+      ],
+      "error": null,
+      "elapsed_ms": 9257,
+      "passed": true,
+      "matched": [
+        "46208",
+        "46,208"
+      ]
+    },
+    {
+      "id": "A17",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "How many package purchases has SIA00299 made?",
+      "expected": [
+        "4"
+      ],
+      "db_truth": "4",
+      "reply_text": "User SIA00299 ne total **4 package purchases** kiye hain:\n\n*   **Active (Completed):** 2 (English Speaking-III aur Share Market Learning)\n*   **Pending:** 2 (Graphic Designing & Video Editing aur Digital Marketing)\n*   **Expired:** 0\n\nIn purchases ki total value \u20b91,02,500.00 hai.",
+      "tool_calls": [
+        "getMyPurchases"
+      ],
+      "error": null,
+      "elapsed_ms": 9036,
+      "passed": true,
+      "matched": [
+        "4"
+      ]
+    },
+    {
+      "id": "A18",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "How many withdrawal requests has SIA00299 raised in total?",
+      "expected": [
+        "33"
+      ],
+      "db_truth": "33",
+      "reply_text": "User SIA00299 ne total **33** withdrawal requests raise kiye hain. \n\nYeh sabhi requests **Approved** status mein hain aur inka total amount **\u20b93,26,090.00** hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 5597,
+      "passed": true,
+      "matched": [
+        "33"
+      ]
+    },
+    {
+      "id": "A19",
+      "role": "admin",
+      "area": "user_lookup",
+      "question": "Has SIA00299 paid for the Graphic Designing & Video Editing package, and what is its status?",
+      "expected": [
+        "pending"
+      ],
+      "db_truth": "pending",
+      "reply_text": "Yes, user **SIA00299** has a record for the **Graphic Designing & Video Editing** package (\u20b950,000.00), but it is currently in **Pending** status.\n\nHere are the details:\n*   **Purchase ID:** 2472\n*   **Amount:** \u20b950,000.00\n*   **Date of Request:** March 18, 2026, 08:47 AM IST\n*   **Current Status:** Pending (Not yet active)\n\nSince the status is pending, the package has not yet started generating income. Once the payment is verified or approved by the admin, the status will change to \"completed\" and commissions will begin.",
+      "tool_calls": [
+        "getMyPurchases"
+      ],
+      "error": null,
+      "elapsed_ms": 8426,
+      "passed": true,
+      "matched": [
+        "pending"
+      ]
+    },
+    {
+      "id": "A20",
+      "role": "admin",
+      "area": "packages",
+      "question": "Which package is the highest priced on SIA and what is its price?",
+      "expected": [
+        "Cyber Security & Online Safety-III",
+        "2300000",
+        "23,00,000",
+        "2,300,000"
+      ],
+      "db_truth": "Cyber Security & Online Safety-III|2300000.00",
+      "reply_text": "SIA system par sabse mehnga package **Cyber Security & Online Safety-III** hai, jiski price **\u20b923,00,000** hai.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 5561,
+      "passed": true,
+      "matched": [
+        "Cyber Security & Online Safety-III",
+        "2300000",
+        "23,00,000",
+        "2,300,000"
+      ]
+    },
+    {
+      "id": "A21",
+      "role": "admin",
+      "area": "packages",
+      "question": "Which package is the cheapest on SIA and what is its price?",
+      "expected": [
+        "English Speaking Basic",
+        "2500",
+        "2,500"
+      ],
+      "db_truth": "English Speaking Basic -I|2500.00",
+      "reply_text": "SIA system par sabse sasta package **English Speaking Basic -I** hai, jiski price **\u20b92,500.00** hai.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 5576,
+      "passed": true,
+      "matched": [
+        "English Speaking Basic",
+        "2500",
+        "2,500"
+      ]
+    },
+    {
+      "id": "A22",
+      "role": "admin",
+      "area": "packages",
+      "question": "What is the price of the Digital Marketing package?",
+      "expected": [
+        "15000",
+        "15,000"
+      ],
+      "db_truth": "15000.00",
+      "reply_text": "The Digital Marketing package is priced at **\u20b915,000.00**. It is currently an active package in the system.",
+      "tool_calls": [
+        "getAllPackages"
+      ],
+      "error": null,
+      "elapsed_ms": 5090,
+      "passed": true,
+      "matched": [
+        "15000",
+        "15,000"
+      ]
+    },
+    {
+      "id": "A23",
+      "role": "admin",
+      "area": "levels",
+      "question": "What is the title of level 0 and level 9 in the level master?",
+      "expected": [
+        "Field Worker",
+        "King"
+      ],
+      "db_truth": "0:Field Worker, 9:King",
+      "reply_text": "The titles for the requested levels in the SIA MLM system are:\n\n*   **Level 0:** Field Worker\n*   **Level 9:** King",
+      "tool_calls": [
+        "getAllLevels"
+      ],
+      "error": null,
+      "elapsed_ms": 5321,
+      "passed": true,
+      "matched": [
+        "Field Worker",
+        "King"
+      ]
+    },
+    {
+      "id": "A24",
+      "role": "admin",
+      "area": "levels",
+      "question": "List the titles for levels 1 through 4 in the SIA MLM level master.",
+      "expected": [
+        "Company Representative",
+        "City Manager",
+        "Area Manager",
+        "District Manager"
+      ],
+      "db_truth": "Company Representative, Company City Manager, Company Area Manager, Company District Manager",
+      "reply_text": "The titles for levels 1 through 4 in the SIA MLM system are:\n\n*   **Level 1:** Company Representative\n*   **Level 2:** Company City Manager\n*   **Level 3:** Company Area Manager\n*   **Level 4:** Company District Manager",
+      "tool_calls": [
+        "getAllLevels"
+      ],
+      "error": null,
+      "elapsed_ms": 5798,
+      "passed": true,
+      "matched": [
+        "Company Representative",
+        "City Manager",
+        "Area Manager",
+        "District Manager"
+      ]
+    },
+    {
+      "id": "A25",
+      "role": "admin",
+      "area": "team_metrics",
+      "question": "Who currently has the highest number of direct referrals on the platform \u2014 give their SIA ID and count?",
+      "expected": [
+        "SIA00111",
+        "45"
+      ],
+      "db_truth": "SIA00111|45",
+      "reply_text": "Platform par sabse zyada direct referrals **SHAMUAL SHANKAR GADDEKAR** ke hain.\n\n*   **SIA ID:** SIA00111\n*   **Direct Referrals Count:** 45",
+      "tool_calls": [
+        "getTopReferrers"
+      ],
+      "error": null,
+      "elapsed_ms": 5270,
+      "passed": true,
+      "matched": [
+        "SIA00111",
+        "45"
+      ]
+    },
+    {
+      "id": "A26",
+      "role": "admin",
+      "area": "team_metrics",
+      "question": "How big is SIA00111's downline (descendants count, excluding self)?",
+      "expected": [],
+      "db_truth": "2325",
+      "reply_text": "User **SIA00111** has a total downline of **2,325** users (descendants).\n\nHere is the breakdown by depth:\n*   **Direct Referrals (Level 1):** 45 users\n*   **Level 2:** 72 users\n*   **Level 3:** 130 users\n*   **Level 4:** 235 users\n*   **Level 5:** 394 users\n*   **Levels 6\u201316:** 1,449 users\n\nThe network extends to a maximum depth of **16 levels**.",
+      "tool_calls": [
+        "getNetworkSize"
+      ],
+      "error": null,
+      "elapsed_ms": 6346,
+      "passed": true,
+      "matched": []
+    },
+    {
+      "id": "A27",
+      "role": "admin",
+      "area": "concept",
+      "question": "Explain what a pending commission row in the database represents and when it gets cleared.",
+      "expected": [
+        "pending",
+        "commission",
+        "trigger",
+        "purchase",
+        "level"
+      ],
+      "db_truth": "concept",
+      "reply_text": "In the SIA MLM system, a **pending commission** represents money (specifically **SPOT commission** for Levels 1\u20139) that an upline user is \"entitled\" to based on a downline purchase, but cannot yet receive because they haven't met the specific level eligibility requirements.\n\nHere is a breakdown of what these rows represent and how they are handled:\n\n### What it represents\n*   **Qualified Earnings on Hold:** When a user in your downline buys a package, the system checks if you (the upline) are eligible for the commission at that specific level (e.g., Level 3 requirements). \n*   **SPOT Only:** Currently, the system only uses the `pending_commissions` table for SPOT income. MONTHLY royalty is calculated dynamically and does not go into a pending state.\n*   **Database Entry:** These are stored in the `pending_commissions` table with details about the source user, the amount, the level, and the specific purchase that triggered it.\n\n### When it gets cleared (Released)\nPending commissions are \"released\" (converted into actual balance in your SPOT wallet) when the following conditions are met:\n*   **Eligibility Qualification:** You meet the business requirements (total team business and leg counts) for that level.\n*   **Active Status:** Both you and the buyer must have an active course (i.e., your packages have not reached the 2x income limit).\n*   **Trigger Events:** The system checks for these releases during:\n    *   **New Purchases:** Every time someone in the network buys a package, the eligibility of affected uplines is recomputed.\n    *   **Daily Eligibility Cron:** A system-wide check runs every morning at **06:25 AM IST (00:55 UTC)** to release commissions for users who qualified the previous day.\n    *   **Admin Recompute:** If an admin manually triggers an eligibility refresh for your account.\n\nOnce released, the pending row is deleted, a row is added to the **Ledger**, and the amount is credited to your **SPOT wallet** (where it usually undergoes a 10-day hold before becoming withdrawable).",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 6981,
+      "passed": true,
+      "matched": [
+        "pending",
+        "commission",
+        "trigger",
+        "purchase",
+        "level"
+      ]
+    },
+    {
+      "id": "A28",
+      "role": "admin",
+      "area": "concept",
+      "question": "Walk me through the lifecycle of a withdrawal request from creation to approval/rejection.",
+      "expected": [
+        "withdraw",
+        "pending",
+        "approved",
+        "rejected",
+        "admin"
+      ],
+      "db_truth": "concept",
+      "reply_text": "The lifecycle of a withdrawal request in the SIA system follows a structured path from submission to final settlement:\n\n### 1. Creation & Validation\nWhen you initiate a withdrawal, the system performs several real-time checks:\n*   **KYC Check:** Your KYC status must be **approved**.\n*   **Gateways:** The system verifies your **Transaction PIN** and ensures your account isn't marked as `withdrawal_blocked`.\n*   **Date & Time:** Unless \"Open Mode\" is enabled, withdrawals are only allowed on the **10th, 20th, and 30th** of the month between **10:00 AM and 5:00 PM IST**.\n*   **Capping (N\u00d7 Rule):** For SPOT and Team Royalty, the request must fit within your remaining withdrawal limit (typically 7\u00d7 your package value).\n*   **Balance & Holds:** The system subtracts any \"locked\" amounts (like the 10-day SPOT hold) to determine your true withdrawable balance.\n\n### 2. Pending State\nOnce submitted, a record is created in the `withdraw_requests` table with a **Pending** status. \n*   **Note:** No money is deducted from your wallet yet. \n*   **Cancellation:** You can cancel the request yourself only while it is in this stage.\n\n### 3. Admin Review\nAdministrators review the pending requests in the Admin Panel. They verify the payment details (Bank/UPI) and the legitimacy of the earnings.\n\n### 4. Final Processing (Approval or Rejection)\n*   **If Approved:** \n    *   The admin processes the payment off-system (e.g., via bank transfer).\n    *   The system then **deducts the amount** from your specific wallet.\n    *   A **Withdrawal Processing Fee (\u20b930)** is automatically debited from your \"Other\" wallet.\n    *   The status changes to **Approved**.\n*   **If Rejected:**\n    *   The admin provides a **Rejection Reason** (e.g., \"Incorrect Bank Details\").\n    *   The status changes to **Rejected**.\n    *   **No funds are deducted** from your wallet, allowing you to correct the issue and request again.\n\n### Summary of Wallet Routing:\n*   **SPOT Wallet:** Withdrawable on 10th, 20th, and 30th.\n*   **Main/Team Royalty Wallets:** Withdrawable on the 30th only.",
+      "tool_calls": [
+        "explainSystemConcept"
+      ],
+      "error": null,
+      "elapsed_ms": 12244,
+      "passed": true,
+      "matched": [
+        "withdraw",
+        "pending",
+        "approved",
+        "rejected",
+        "admin"
+      ]
+    },
+    {
+      "id": "A29",
+      "role": "admin",
+      "area": "concept",
+      "question": "What is the difference between purchases and pending_commissions tables in this system?",
+      "expected": [
+        "purchase",
+        "package",
+        "commission",
+        "pending",
+        "level"
+      ],
+      "db_truth": "concept",
+      "reply_text": "The difference between the **purchases** and **pending_commissions** tables lies in their purpose within the transaction lifecycle:\n\n*   **purchases**: This is the core sales table. It records every time a user buys, renews, or upgrades an education package (e.g., English Speaking, Digital Marketing).\n    *   It tracks the `amount` paid, the `status` (completed/pending), and the `income` generated by that specific package to enforce the **2x income rule**.\n    *   Every purchase is a \"source\" event that triggers the commission engine.\n\n*   **pending_commissions**: This is a temporary \"holding area\" for earnings. When a purchase occurs, the system calculates commissions for the upline. If an upline member is not yet eligible for a certain level (due to business requirements), their **SPOT commission** is stored here.\n    *   Once the upline user qualifies for that level, the system \"releases\" the commission from this table and moves it to their actual wallet.\n    *   Essentially, it represents money you have \"earned\" in theory but cannot \"claim\" until you meet your level targets.\n\nIn short: **purchases** are the incoming sales from students, while **pending_commissions** are the outgoing rewards waiting for leaders to qualify.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 7019,
+      "passed": true,
+      "matched": [
+        "purchase",
+        "package",
+        "commission",
+        "pending",
+        "level"
+      ]
+    },
+    {
+      "id": "A30",
+      "role": "admin",
+      "area": "concept",
+      "question": "Explain the role of the user_tree_paths closure table \u2014 what does each row mean?",
+      "expected": [
+        "closure",
+        "ancestor",
+        "descendant",
+        "depth"
+      ],
+      "db_truth": "concept",
+      "reply_text": "The **`user_tree_paths`** table is a **closure table** used to store and manage the multi-level hierarchy (tree structure) of the SIA MLM system. Instead of just storing a parent ID, it stores every relationship between any two users in the tree.\n\nEach row represents a specific link between an **ancestor** (upline) and a **descendant** (downline):\n\n*   **`ancestor_id`**: The ID of the user higher up in the tree.\n*   **`descendant_id`**: The ID of the user lower down in the tree.\n*   **`depth`**: The number of levels between them.\n\n### What each row means:\n*   **Depth 0**: A self-reference row (e.g., User A is an ancestor of User A). Every user has exactly one row with depth 0.\n*   **Depth 1**: A direct relationship. The ancestor is the immediate **Sponsor** (referrer) of the descendant.\n*   **Depth 2\u20139**: Indirect relationships. For example, a depth 2 row means the ancestor is the \"Grand-sponsor\" of the descendant. The system tracks these relationships up to **Depth 9**.\n\n### Why this is used:\n*   **Performance**: It allows the system to find all 9 uplines for commission distribution or an entire downline \"subtree\" for team business calculations in a single, fast query without using slow recursive logic.\n*   **Scalability**: With nearly 30,000 path records in the database, it ensures that even as the team grows, looking up a user's network remains efficient.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 7303,
+      "passed": true,
+      "matched": [
+        "closure",
+        "ancestor",
+        "descendant",
+        "depth"
+      ]
+    },
+    {
+      "id": "A31",
+      "role": "admin",
+      "area": "concept",
+      "question": "What types of wallets exist for each user in the system and how are they used?",
+      "expected": [
+        "main",
+        "spot",
+        "team royalty",
+        "balance"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein user ke liye **char (4)** tarah ke wallet buckets hote hain, jo `user_balances` table mein maintain kiye jaate hain:\n\n1.  **Spot Wallet (`spot_balance`):**\n    *   **Source:** Isme saara **SPOT income** (downline purchase par milne wala immediate commission) credit hota hai.\n    *   **Withdrawal:** Isse `withdraw_type = \"spot\"` ke roop mein withdraw kiya jaata hai.\n    *   **Rule:** Har credit par **10-day hold** hota hai, yaani paisa aane ke 10 din baad hi withdrawable banta hai.\n\n2.  **Main/Other Wallet (`other_balance`):**\n    *   **Source:** Isme aapka **SELF ROI**, **GLOBAL_HELPING** income, aur Admin adjustments aate hain.\n    *   **Withdrawal:** Isse `withdraw_type = \"wallet\"` ke roop mein withdraw kiya jaata hai.\n    *   **Rule:** Reinvestment packages par isme **90/150/180 days** ka lock lag sakta hai.\n\n3.  **Team Royalty Wallet (`team_royalty_balance`):**\n    *   **Source:** Isme saara **MONTHLY team royalty** (team ki daily percentage income) jama hota hai.\n    *   **Withdrawal:** Isse `withdraw_type = \"team_royalty\"` ke roop mein withdraw kiya jaata hai.\n    *   **Rule:** Yeh wallet aur Spot wallet milkar **N\u00d7-package cap** (current limit 7x) ke andar aate hain.\n\n4.  **Total Balance (`balance`):**\n    *   Yeh ek aggregate balance hai jo upar diye gaye teeno wallets ka total dikhata hai. Yeh sirf information ke liye hota hai.\n\n**Withdrawal Dates:**\n*   **10 aur 20 tarikh:** Sirf **Spot Wallet** se withdrawal allowed hai.\n*   **30 tarikh (Feb mein 28):** Teeno wallets (**Spot + Main + Team Royalty**) se withdrawal allowed hai.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 7151,
+      "passed": true,
+      "matched": [
+        "main",
+        "spot",
+        "team royalty",
+        "balance"
+      ]
+    },
+    {
+      "id": "A32",
+      "role": "admin",
+      "area": "concept",
+      "question": "What does it mean when a user is marked as is_disqualified=true in the users table?",
+      "expected": [
+        "disqualified",
+        "block",
+        "commission",
+        "withdraw",
+        "income"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein, jab kisi user ka `is_disqualified` status **true** hota hai, toh iska matlab hai ki woh user platform ke commission engine se bahar ho gaya hai. Iske baare mein kuch zaroori baate niche di gayi hain:\n\n*   **Kyu hota hai?**: Jab kisi user ke paas **21 dino tak** koi bhi active package nahi rehta (yaani uske saare packages 2x income limit touch kar chuke hain aur usne naya package buy nahi kiya), toh system use automatically disqualified mark kar deta hai.\n*   **Income par asar**: Disqualified users ko **SPOT** ya **MONTHLY** commissions nahi milte. Agar koi downline user purchase karta hai, toh disqualified upline ko skip kar diya jata hai.\n*   **Pending Commissions**: Disqualification ke waqt user ke jitne bhi `pending_commissions` hote hain, woh delete kar diye jaate hain.\n*   **Team Business**: Disqualified hone ke baad, user ke purane direct legs uski level eligibility (rank) ke liye count nahi hote. Sirf disqualification date ke baad join hone wale naye direct legs hi count kiye jaate hain.\n\nSimple shabdon mein, system user ko \"inactive\" maanta hai aur woh tabhi earnings shuru kar sakta hai jab woh naya package buy karke apni id ko phir se active kare.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 6473,
+      "passed": true,
+      "matched": [
+        "disqualified",
+        "commission",
+        "income"
+      ]
+    },
+    {
+      "id": "A33",
+      "role": "admin",
+      "area": "concept",
+      "question": "What are the cron jobs or scheduled jobs running in the SIA MLM system?",
+      "expected": [
+        "cron",
+        "scheduled",
+        "monthly",
+        "daily",
+        "job"
+      ],
+      "db_truth": "concept",
+      "reply_text": "SIA MLM system mein kai important automated (cron) jobs chalte hain jo commissions aur system health maintain karte hain:\n\n*   **Daily Commission Job (06:22 AM IST):** Yeh job har active purchase ke liye SELF, GLOBAL_HELPING aur MONTHLY commissions compute aur credit karta hai.\n*   **Eligibility Check (06:25 AM IST):** Sabhi users ki level eligibility recompute karta hai aur qualified users ke pending SPOT commissions release karta hai.\n*   **Purchase Commission (Immediate):** Jab bhi koi naya purchase complete hota hai, yeh job turant upline SPOT commissions aur Level 0 (direct) commissions process karta hai.\n*   **Database Backup (05:00 AM IST):** Rozana poore database ka backup Bunny Storage par upload kiya jata hai.\n*   **Disqualification Check:** Yeh job un users ko check aur mark karta hai jo 21 dinon se zyada inactive hain.\n\nSare jobs IST (India Standard Time) ke hisaab se scheduled hain aur PgBoss worker engine ke through manage kiye jate hain.",
+      "tool_calls": [
+        "explainSystemConcept"
+      ],
+      "error": null,
+      "elapsed_ms": 7974,
+      "passed": true,
+      "matched": [
+        "cron",
+        "scheduled",
+        "monthly",
+        "daily",
+        "job"
+      ]
+    },
+    {
+      "id": "A34",
+      "role": "admin",
+      "area": "concept",
+      "question": "Explain what the legacy_activation_history and legacy_spot_history tables are used for.",
+      "expected": [
+        "legacy",
+        "history",
+        "old",
+        "spot",
+        "activation"
+      ],
+      "db_truth": "concept",
+      "reply_text": "Legacy tables in the SIA MLM system are used to store data imported from the old system (pre-December 2025). These tables are **read-only** and do not trigger any new commissions or eligibility recomputations.\n\n*   **legacy_activation_history**: Contains records of package activations and recharges from the previous system. This data is used for admin reporting and to provide users with a historical \"Activation History\" on their dashboard.\n*   **legacy_spot_history**: Stores historical SPOT income credits. It allows users to view their past SPOT earnings and helps admins perform reconciliation between the old records and the new ledger system.",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 4401,
+      "passed": true,
+      "matched": [
+        "legacy",
+        "history",
+        "old",
+        "spot",
+        "activation"
+      ]
+    },
+    {
+      "id": "A35",
+      "role": "admin",
+      "area": "concept",
+      "question": "Can an admin manually adjust a user's wallet, and if yes, where is that recorded?",
+      "expected": [
+        "admin",
+        "adjust",
+        "wallet",
+        "ledger",
+        "transaction"
+      ],
+      "db_truth": "concept",
+      "reply_text": "Yes, an admin can manually adjust a user's wallet balance (add or subtract funds). This is typically used for corrections, bonuses, or migration adjustments.\n\n**Where it is recorded:**\n*   **Ledger entries:** Every adjustment creates a row in the `ledger_entries` table with the commission type **`ADMIN_OPS`**. The metadata includes the reason for the adjustment and which specific wallet was affected.\n*   **Audit logs:** The action is also recorded in the **`admin_activity_logs`** table, which tracks the admin's ID, the timestamp, the reason provided, and their IP address.\n\n**Wallet options:**\nAdmins can target any of the three sub-wallets:\n*   `other_balance` (Main Wallet)\n*   `spot_balance`\n*   `team_royalty_balance`",
+      "tool_calls": [],
+      "error": null,
+      "elapsed_ms": 5020,
+      "passed": true,
+      "matched": [
+        "admin",
+        "adjust",
+        "wallet",
+        "ledger"
+      ]
+    },
+    {
+      "id": "A36",
+      "role": "admin",
+      "area": "leaderboard",
+      "question": "Top 3 referrers kaun hain \u2014 kis user ke sabse zyada direct referrals hain?",
+      "expected": [
+        "SIA00111",
+        "45",
+        "SIA01430",
+        "SIA01699"
+      ],
+      "db_truth": "SIA00111=45,SIA01430=35,SIA01699=33",
+      "reply_text": "SIA system ke top 3 referrers ye hain:\n\n*   **SHAMUAL SHANKAR GADDEKAR** (SIA00111) \u2014 45 referrals\n*   **Vijaykumar hetramji shahare** (SIA01430) \u2014 35 referrals\n*   **Kaivalya Garibdasji Wasnik** (SIA01699) \u2014 33 referrals",
+      "tool_calls": [
+        "getTopReferrers"
+      ],
+      "error": null,
+      "elapsed_ms": 5364,
+      "passed": true,
+      "matched": [
+        "SIA00111",
+        "45",
+        "SIA01430",
+        "SIA01699"
+      ]
+    },
+    {
+      "id": "A37",
+      "role": "admin",
+      "area": "kyc_aggregate",
+      "question": "Total approved KYC users kitne hain abhi system me?",
+      "expected": [
+        "1285",
+        "1,285"
+      ],
+      "db_truth": "1285",
+      "reply_text": "Abhi system me total **1,285** users ke KYC approved hain. \n\nPure system ka KYC status breakdown ye raha:\n*   **Approved:** 1,285\n*   **Pending:** 1,473\n*   **Rejected:** 44\n*   **Submitted:** 5",
+      "tool_calls": [
+        "getKycCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6967,
+      "passed": true,
+      "matched": [
+        "1285",
+        "1,285"
+      ]
+    },
+    {
+      "id": "A38",
+      "role": "admin",
+      "area": "kyc_aggregate",
+      "question": "Total pending KYC users kitne hain?",
+      "expected": [
+        "1473",
+        "1,473"
+      ],
+      "db_truth": "1473",
+      "reply_text": "System mein total **1,473** users ka KYC status **pending** (incomplete) hai, aur **5** users ne KYC documents **submit** kar diye hain jo approval ke liye waiting mein hain.\n\nYahan poora breakdown hai:\n* **Pending (Incomplete):** 1,473\n* **Submitted (Waiting Review):** 5\n* **Approved:** 1,285\n* **Rejected:** 44\n\nTotal users: 2,807",
+      "tool_calls": [
+        "getKycCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 6753,
+      "passed": true,
+      "matched": [
+        "1473",
+        "1,473"
+      ]
+    },
+    {
+      "id": "A39",
+      "role": "admin",
+      "area": "withdrawal_aggregate",
+      "question": "Pichhle 30 dino me kitne approved withdrawal requests pass hue aur unka total amount kya hai?",
+      "expected": [
+        "937",
+        "5761985",
+        "5,761,985"
+      ],
+      "db_truth": "937|5761985.62",
+      "reply_text": "Pichhle 30 dino mein total **937** approved withdrawal requests pass hue hain. Inka kul total amount **\u20b957,61,985.62** hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 9723,
+      "passed": true,
+      "matched": [
+        "937",
+        "5761985",
+        "5,761,985"
+      ]
+    },
+    {
+      "id": "A40",
+      "role": "admin",
+      "area": "withdrawal_projection",
+      "question": "Admin POV: agle withdrawal date par mere paas approximately kitni amount ki withdrawal demand aa sakti hai (upper bound)?",
+      "expected": [
+        "7571367",
+        "7,571,367",
+        "7571"
+      ],
+      "db_truth": "7571367.03",
+      "reply_text": "Agle withdrawal date (30 April 2026) par total withdrawal demand ka upper-bound estimate approximately **\u20b975,71,367.03** hai.\n\nIska breakdown niche diya gaya hai:\n\n*   **Next Withdrawal Date:** 30 April 2026 (is din Spot, Main, aur Team Royalty teeno wallets open rahenge).\n*   **Total Projected Demand:** \u20b975,71,367.03\n    *   **Main (Other) Wallet:** \u20b961,67,387.31\n    *   **SPOT Wallet:** \u20b97,71,424.57\n    *   **Team Royalty Wallet:** \u20b96,32,555.15\n*   **Eligible Users:** 1,281 users (jo KYC-approved aur non-blocked hain).\n\n**Note:** Ye ek upper-bound estimate hai, matlab agar har eligible user apna pura balance withdraw karega toh itni demand aa sakti hai. Actual demand usually isse kam hoti hai kyunki users partial amounts withdraw karte hain ya capping rules (10x limit) apply hote hain.",
+      "tool_calls": [
+        "getAdminProjectedWithdrawalDemand"
+      ],
+      "error": null,
+      "elapsed_ms": 8595,
+      "passed": true,
+      "matched": [
+        "7571367",
+        "7,571,367",
+        "7571"
+      ]
+    },
+    {
+      "id": "A41",
+      "role": "admin",
+      "area": "withdrawal_eligible",
+      "question": "User SIA00299 ki agle withdrawal date pe eligible withdrawal amount kya hai?",
+      "expected": [
+        "46208",
+        "46,208"
+      ],
+      "db_truth": "46208.31",
+      "reply_text": "User SIA00299 ka agla withdrawal date **30 April 2026** hai. Us din wo total **\u20b946,208.31** withdraw karne ke liye eligible hain.\n\nWallet-wise breakdown kuch is tarah hai:\n* **Spot Wallet:** \u20b914,850.25\n* **Main Wallet (Other):** \u20b94,778.24\n* **Team Royalty Wallet:** \u20b926,579.82\n\n**Note:** 30 tareek ko Spot, Main, aur Team Royalty teeno wallets se withdrawal request daali ja sakti hai. Yaad rakhein ki withdrawal window subah 10:00 baje se shaam 5:00 baje (IST) tak hi open rehti hai.",
+      "tool_calls": [
+        "getEligibleWithdrawalAmount"
+      ],
+      "error": null,
+      "elapsed_ms": 8748,
+      "passed": true,
+      "matched": [
+        "46208",
+        "46,208"
+      ]
+    },
+    {
+      "id": "A42",
+      "role": "admin",
+      "area": "network",
+      "question": "User SIA00299 ka total downline network size kitna hai?",
+      "expected": [
+        "1893",
+        "1,893"
+      ],
+      "db_truth": "1893",
+      "reply_text": "User SIA00299 ka total downline network size **1,893** hai.\n\nIska depth-wise breakdown niche diya gaya hai:\n* **Direct Referrals (Level 1):** 28\n* **Level 2:** 73\n* **Level 3:** 188\n* **Level 4:** 345\n* **Level 5:** 288\n* **Level 6-15:** 771\n\nInka upline depth filhal 5 hai.",
+      "tool_calls": [
+        "getNetworkSize"
+      ],
+      "error": null,
+      "elapsed_ms": 8845,
+      "passed": true,
+      "matched": [
+        "1893",
+        "1,893"
+      ]
+    },
+    {
+      "id": "A43",
+      "role": "admin",
+      "area": "network",
+      "question": "User SIA00299 ke total kitne direct referrals hain?",
+      "expected": [
+        "28"
+      ],
+      "db_truth": "28",
+      "reply_text": "User SIA00299 ke total **28 direct referrals** hain.",
+      "tool_calls": [
+        "getDirectReferralCount"
+      ],
+      "error": null,
+      "elapsed_ms": 5620,
+      "passed": true,
+      "matched": [
+        "28"
+      ]
+    },
+    {
+      "id": "A44",
+      "role": "admin",
+      "area": "income_compound",
+      "question": "User SIA00111 ka 7500 wale English Speaking-III package se SELF income lifetime kitna mila hai?",
+      "expected": [
+        "180",
+        "180.00"
+      ],
+      "db_truth": "180.00",
+      "reply_text": "User SIA00111 ko \u20b97,500 wale **English Speaking-III** package se ab tak total **\u20b9180.00** ki SELF income mili hai. \n\nYeh amount 24 entries ka total hai jo unke ledger me credit hua hai.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 7063,
+      "passed": true,
+      "matched": [
+        "180",
+        "180.00"
+      ]
+    },
+    {
+      "id": "A45",
+      "role": "admin",
+      "area": "withdrawal_aggregate",
+      "question": "Globally rejected withdrawal requests kitne hain aur unka total amount kya hai?",
+      "expected": [
+        "73",
+        "510544",
+        "510,544"
+      ],
+      "db_truth": "73|510544.00",
+      "reply_text": "Globally total **73** withdrawal requests rejected hain, jinka total amount **\u20b95,10,544.00** hai.",
+      "tool_calls": [
+        "getWithdrawalCounts"
+      ],
+      "error": null,
+      "elapsed_ms": 8407,
+      "passed": true,
+      "matched": [
+        "73",
+        "510544",
+        "510,544"
+      ]
+    },
+    {
+      "id": "A46",
+      "role": "admin",
+      "area": "withdrawal_date",
+      "question": "Agla withdrawal date kab hai aur us din kaunse wallets opened hote hain?",
+      "expected": [
+        "2026-04-30",
+        "30",
+        "spot",
+        "team",
+        "all"
+      ],
+      "db_truth": "logic_check",
+      "reply_text": "Agla withdrawal date **30 April 2026** hai.\n\nUs din system ke saare wallets withdrawals ke liye open hote hain:\n*   **SPOT wallet**\n*   **Main wallet** (Other balance)\n*   **Team Royalty wallet**\n\nYaad rakhein ki withdrawal ka time window subah **10:00 AM se shaam 5:00 PM IST** tak hota hai.",
+      "tool_calls": [
+        "getNextWithdrawalDate"
+      ],
+      "error": null,
+      "elapsed_ms": 5898,
+      "passed": true,
+      "matched": [
+        "30",
+        "spot",
+        "team",
+        "all"
+      ]
+    },
+    {
+      "id": "A47",
+      "role": "admin",
+      "area": "income_compound",
+      "question": "User SIA00299 ka pichhle 30 dino me sirf MONTHLY recurring income type ka kitna paisa credit hua?",
+      "expected": [
+        "30312",
+        "30,312"
+      ],
+      "db_truth": "30312.92",
+      "reply_text": "User SIA00299 ko pichhle 30 dino me total **\u20b930,312.92** ki MONTHLY recurring income credit hui hai. Ye income total 13,326 entries ke zariye unke wallet me aayi hai.",
+      "tool_calls": [
+        "getIncomeSummary"
+      ],
+      "error": null,
+      "elapsed_ms": 6136,
+      "passed": true,
+      "matched": [
+        "30312",
+        "30,312"
+      ]
+    }
+  ]
+}

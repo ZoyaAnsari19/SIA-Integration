@@ -1,0 +1,26 @@
+---
+description: Always append a changelog entry after every completed task
+alwaysApply: true
+---
+
+# Always update changelog after every task
+
+- After **EVERY** task (feature, fix, refactor, config, docs, experiments), append an entry to `changelog-faizan/changelog.md`.
+- Use **exactly** this format and keep it at the end of the file:
+
+```
+## [DD-MM-YYYY HH:MM] — short title
+
+**What changed:** 
+**Files touched:** 
+**API endpoints used:** 
+**Breaking change:** YES|NO 
+**Branch:** <current-branch-name> 
+
+---
+```
+
+- The timestamp must be in **IST**.
+- **Files touched** should list paths in backticks.
+- **API endpoints used** should be `None` if not applicable (otherwise list method + route).
+- **Branch** must match current git branch name.
