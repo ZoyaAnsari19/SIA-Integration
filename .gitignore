@@ -123,3 +123,5 @@ env/
 
 # --- Misc project-specific ---
 MLM-Admin-ui/../secure-pay-user/
+payment-gateway/secretKey
+**/secretKey
