@@ -1449,3 +1449,13 @@
 **Branch:** faizan-dev-contabo-setup  
 
 ---
+
+## [08-06-2026 18:28] — Fix GitHub push (remove 356MB SQL from history)
+
+**What changed:** Rewrote git history with a clean orphan commit excluding `MLM-API/db-backup/prod-backup-*.sql`, `.env.backup*` files, and `node_modules`. Push to `origin/main` succeeded. Removed `payment-gateway/secretKey` from repo and added to `.gitignore`.  
+**Files touched:** `.gitignore`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** main  
+
+---
