@@ -1459,3 +1459,63 @@
 **Branch:** main  
 
 ---
+
+## [09-06-2026 11:06] — Fix local pgAdmin DB connection timeout (5534)
+
+**What changed:** Diagnosed pgAdmin "connection timeout" on `localhost:5534` — password was correct but Postgres container `mlm-local-5534` was stopped (nothing listening on 5534). Started the container; verified `mlm_user` / `mlm_commission` accepts connections and prod data (3110 users) is reachable on port 5534. Noted separate running DB `mlm-api-v2-db-1` on port 5433 (postgres/postgres/mlm) explains API health showing `localhost:5433`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:11] — Start local MLM user-ui frontend
+
+**What changed:** Started `MLM-user-ui` Next.js dev server on port 3001. Added `MLM-user-ui/user/.env.local` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1` so the UI talks to the local API on 3000. Verified dev server ready on `http://localhost:3001`.  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:16] — Swagger UI available locally
+
+**What changed:** Verified MLM-API Swagger UI is live at `http://localhost:3000/docs` (HTTP 200). Regenerated static spec files (`swagger/openapi.json`, `swagger/openapi.yaml`) with 257 API paths via `npm run swagger:generate`.  
+**Files touched:** `MLM-API/swagger/openapi.json`, `MLM-API/swagger/openapi.yaml`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /docs`, `GET /docs/json`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:20] — Swagger on port 4005
+
+**What changed:** Started `MLM-API` dev server with `.env` `PORT=4005`. Swagger UI verified at `http://localhost:4005/docs` (HTTP 200); health returns `db: localhost:5534`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /docs`, `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:23] — Fix login 401 (wrong API port/DB)
+
+**What changed:** Diagnosed login failure for `SIA02000`: user exists in `mlm-local-5534` (`localhost:5534`) with password `123123`, but frontend called API on port 3000 which uses DB `localhost:5433` (different empty/seed DB). Login succeeds on port 4005. Updated `MLM-user-ui/user/.env.local` to `http://localhost:4005/api/v1` and restarted user-ui dev server on 3001.  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:33] — Leaderboard page API integration
+
+**What changed:** Switched `/leaderboard` page from mock data (`lib/mock/leaderboard`) to real API (`lib/api/leaderboard`). Calls `GET /leaderboard/top-earners` and `GET /leaderboard/my-position` with category/period filters; improved error handling via `getUserFriendlyError`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/leaderboard/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/leaderboard/top-earners`, `GET /api/v1/leaderboard/my-position`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
