@@ -27,7 +27,8 @@ import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import { Badge } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { getWithdrawalRequests } from "@/lib/mock/withdrawal";
+import { getWithdrawalRequests } from "@/lib/api/withdrawal";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type WithdrawStatus = "pending" | "approved" | "rejected" | "processing";
 type FilterStatus = "all" | WithdrawStatus;
@@ -235,8 +236,8 @@ export default function ListWithdrawRequestPage() {
       setWithdrawRequests(mappedData);
       setTotalItems(response.total);
       setTotalPages(response.total_pages);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to load withdrawal requests';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load withdrawal requests';
       setError(errorMessage);
       console.error('Failed to fetch withdrawal requests:', err);
     } finally {

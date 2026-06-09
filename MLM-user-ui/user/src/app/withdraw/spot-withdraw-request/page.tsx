@@ -30,9 +30,10 @@ import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import { Badge } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { getWithdrawalRequests, createWithdrawalRequest, isWithdrawalDateAllowed, isWithdrawalTimeAllowed, getWithdrawRules } from "@/lib/mock/withdrawal";
-import { getWalletBalance } from "@/lib/mock/wallet";
-import { getUserProfile } from "@/lib/mock/profile";
+import { getWithdrawalRequests, createWithdrawalRequest, isWithdrawalDateAllowed, isWithdrawalTimeAllowed, getWithdrawRules } from "@/lib/api/withdrawal";
+import { getWalletBalance } from "@/lib/api/dashboard";
+import { getUserProfile } from "@/lib/api/kyc";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type SpotWithdrawStatus = "pending" | "approved" | "rejected" | "processing";
 type FilterStatus = "all" | SpotWithdrawStatus;
@@ -289,8 +290,8 @@ export default function WithdrawRequestPage() {
       setSpotWithdrawRequests(mappedData);
       setTotalItems(response.total);
       setTotalPages(response.total_pages);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to load withdrawal requests';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load withdrawal requests';
       setError(errorMessage);
       console.error('Failed to fetch spot withdrawal requests:', err);
     } finally {
@@ -310,8 +311,8 @@ export default function WithdrawRequestPage() {
         other_balance: balance.other_balance,
         team_royalty_balance: teamRoyalty,
         balance: calculatedBalance,
-        main_locked_hold: (balance as any).main_locked_hold ?? 0,
-        available_main_balance: (balance as any).available_main_balance ?? balance.other_balance ?? 0,
+        main_locked_hold: balance.main_locked_hold ?? 0,
+        available_main_balance: balance.available_main_balance ?? balance.other_balance ?? 0,
         spot_team_withdraw_limit: balance.spot_team_withdraw_limit ?? 0,
         spot_team_withdraw_used: balance.spot_team_withdraw_used ?? 0,
         spot_team_withdraw_remaining: balance.spot_team_withdraw_remaining ?? 0,
@@ -898,8 +899,8 @@ export default function WithdrawRequestPage() {
         transactionPassword: "",
       });
       setSubmitError(null);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to submit withdrawal request';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to submit withdrawal request';
       setSubmitError(errorMessage);
       console.error('Failed to create spot withdrawal request:', err);
     } finally {

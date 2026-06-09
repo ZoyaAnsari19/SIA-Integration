@@ -19,8 +19,9 @@ import { Badge } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { InvoiceTemplate } from "@/components/invoice/InvoiceTemplate";
 import { useAppSelector } from "@/redux/hooks";
-import { getBills, getInvoiceDetails, getBondDownloadFee, authorizeBondDownload, type Bill as ApiBill, type InvoiceDetails } from "@/lib/mock/bills";
-import { getUserProfile } from "@/lib/mock/profile";
+import { getBills, getInvoiceDetails, getBondDownloadFee, authorizeBondDownload, type Bill as ApiBill, type InvoiceDetails } from "@/lib/api/bills";
+import { getUserProfile } from "@/lib/api/kyc";
+import { getUserFriendlyError } from "@/lib/api/errors";
 import { generateAndDownloadHTMLInvoice } from "@/utils/generateHTMLInvoice";
 import { generateAndDownloadBondAgreement } from "@/utils/generateBondAgreement";
 
@@ -92,9 +93,9 @@ export default function BillPage() {
         setBills(mappedBills);
         setTotalItems(response.total);
         setTotalPages(Math.ceil(response.total / itemsPerPage));
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Failed to fetch bills:', err);
-        setError(err?.message || 'Failed to load bills');
+        setError(getUserFriendlyError(err) || 'Failed to load bills');
       } finally {
         setIsLoading(false);
       }

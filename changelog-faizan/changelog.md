@@ -1529,3 +1529,13 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [09-06-2026 11:48] — Withdraw section API integration
+
+**What changed:** Switched all 5 withdraw pages from mock to real API (no backend changes). `spot-withdraw-request`: withdrawal + dashboard wallet + KYC profile. `list-withdraw-request` & `overall-withdraw`: withdrawal requests list. `payment-history`: payment history ledger API. `bill`: bills + invoice + bond + profile APIs.  
+**Files touched:** `MLM-user-ui/user/src/app/withdraw/spot-withdraw-request/page.tsx`, `MLM-user-ui/user/src/app/withdraw/list-withdraw-request/page.tsx`, `MLM-user-ui/user/src/app/withdraw/overall-withdraw/page.tsx`, `MLM-user-ui/user/src/app/withdraw/payment-history/page.tsx`, `MLM-user-ui/user/src/app/withdraw/bill/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET/POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/rules`, `GET /api/v1/dashboard/wallet`, `GET /api/v1/profile`, `GET /api/v1/payment-history`, `GET /api/v1/bills`, `GET /api/v1/invoices/{id}`, `GET/POST /api/v1/users/bond/*`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
