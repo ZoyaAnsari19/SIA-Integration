@@ -1539,3 +1539,13 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [09-06-2026 11:55] — Income history pages API integration
+
+**What changed:** Switched 5 sidebar income history pages from mock (`lib/mock/income`) to real API (`lib/api/ledger`): self-income, direct-income, team-income, global-help-income, spot-income. Improved error handling via `getUserFriendlyError`. No backend changes. Note: `/income-history/bill` (not in sidebar) still uses inline mock data.  
+**Files touched:** `MLM-user-ui/user/src/app/income-history/self-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/direct-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/team-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/global-help-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/spot-income/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/income-history/self-income`, `GET /api/v1/income-history/direct-income`, `GET /api/v1/income-history/team-income`, `GET /api/v1/income-history/global-help-income`, `GET /api/v1/income-history/spot-income`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---

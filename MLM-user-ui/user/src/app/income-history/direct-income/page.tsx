@@ -20,7 +20,8 @@ import { Pagination } from "@/components/ui/Pagination";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { StatCard } from "@/components/ui/StatCard";
 import { SortableTableHeader } from "@/components/ui/SortableTableHeader";
-import { getDirectIncome, type IncomeHistoryResponse } from "@/lib/mock/income";
+import { getDirectIncome, type IncomeHistoryResponse } from "@/lib/api/ledger";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 
@@ -50,8 +51,8 @@ export default function DirectIncomePage() {
           limit: itemsPerPage,
         });
         setIncomeData(data);
-      } catch (err: any) {
-        const errorMessage = err?.message || 'Failed to load income data';
+      } catch (err: unknown) {
+        const errorMessage = getUserFriendlyError(err) || 'Failed to load income data';
         setError(errorMessage);
         console.error('Direct monthly recurring fetch error:', err);
       } finally {
