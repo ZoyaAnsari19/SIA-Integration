@@ -72,12 +72,14 @@ export async function sendEmailOTP(email: string): Promise<{
   success: boolean;
   message: string;
   email_masked?: string;
+  dev_otp?: string;
 }> {
   try {
     const response = await apiClient.post<{
       success: boolean;
       message: string;
       email_masked?: string;
+      dev_otp?: string;
     }>('/auth/email-otp/send', { email: email.trim() });
     return response.data;
   } catch (error: any) {

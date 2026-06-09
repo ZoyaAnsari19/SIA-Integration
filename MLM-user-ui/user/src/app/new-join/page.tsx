@@ -113,6 +113,7 @@ export default function NewJoinPage() {
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [emailVerificationToken, setEmailVerificationToken] = useState("");
+  const [devOtp, setDevOtp] = useState<string | null>(null);
 
   // Fetch logged-in user's profile to set sponsor ID and name
   useEffect(() => {
@@ -259,9 +260,15 @@ export default function NewJoinPage() {
       setOtpExpiry(600); // 10 minutes
       setOtpVerified(false);
       setEmailVerificationToken("");
+      setDevOtp(result.dev_otp || null);
       setFormData((prev) => ({ ...prev, otp: "" }));
       const masked = result.email_masked || formData.email;
-      showToast(`OTP sent to ${masked}`, "success");
+      showToast(
+        result.dev_otp
+          ? `OTP sent to ${masked} (dev mode — see OTP below)`
+          : `OTP sent to ${masked}`,
+        "success",
+      );
     } catch (error: any) {
       const apiError = error?.response?.data;
       const errorMsg =
@@ -290,6 +297,7 @@ export default function NewJoinPage() {
       const result = await verifyEmailOTP(formData.email, formData.otp);
       if (result.verified) {
         setOtpVerified(true);
+        setDevOtp(null);
         setEmailVerificationToken(result.verificationToken || "");
         setRegistrationTimer(600);
         showToast("Email verified successfully", "success");
@@ -318,6 +326,7 @@ export default function NewJoinPage() {
     setOtpExpiry(0);
     setRegistrationTimer(0);
     setEmailVerificationToken("");
+    setDevOtp(null);
     setFormData((prev) => ({ ...prev, otp: "" }));
     handleGetOtp();
   };
@@ -327,6 +336,7 @@ export default function NewJoinPage() {
     setOtpVerified(false);
     setOtpExpiry(0);
     setEmailVerificationToken("");
+    setDevOtp(null);
     setFormData((prev) => ({ ...prev, otp: "" }));
     showToast("OTP expired. Please request a new one.", "warning");
   };
@@ -418,6 +428,7 @@ export default function NewJoinPage() {
         setOtpSent(false);
         setOtpVerified(false);
         setOtpExpiry(0);
+        setDevOtp(null);
         setEmailVerificationToken("");
         setErrors({});
       }, 2000);
@@ -623,6 +634,12 @@ export default function NewJoinPage() {
               {/* OTP Input */}
               {otpSent && !otpVerified && (
                 <div className="space-y-2 animate-in slide-in-from-top-2 fade-in duration-300">
+                  {devOtp && (
+                    <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-600 dark:bg-amber-950/40 dark:text-amber-100">
+                      <span className="font-medium">Dev mode OTP:</span>{" "}
+                      <span className="font-mono text-base tracking-widest">{devOtp}</span>
+                    </div>
+                  )}
                   <div className="flex flex-col sm:flex-row gap-2">
                     <div className="flex-1">
                       <Input

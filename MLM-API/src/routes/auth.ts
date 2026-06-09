@@ -750,6 +750,7 @@ export async function authRoutes(app: FastifyInstance) {
       success: true,
       message: 'OTP sent to your email address',
       email_masked: EmailService.maskEmail(body.email.trim()),
+      ...(process.env.NODE_ENV !== 'production' ? { dev_otp: otp } : {}),
     });
   });
 

@@ -1549,3 +1549,103 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [09-06-2026 15:37] — Verify local MLM-API backend running
+
+**What changed:** Verified local backend already running: `MLM-API` on port 4005 (`/health` → `db: localhost:5534`), Postgres `mlm-local-5534` up, Swagger `/docs` HTTP 200. Note: stale API instance also on port 3000 (`db: localhost:5433`) — use 4005 for prod dump DB.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`, `GET /docs`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:27] — Curl test withdraw request SIA02000
+
+**What changed:** Tested `POST /api/v1/withdraw/requests` via curl for user `SIA02000` (main wallet ₹1000, transaction pin `123456`). Login succeeded; create returned 400 `pending_withdrawal_exists` — existing pending main-wallet request id `1` (₹29999.97). Verified with `GET /api/v1/withdraw/requests?status=pending&withdraw_type=wallet`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/requests`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:44] — Spot wallet withdraw request SIA02000
+
+**What changed:** Created spot wallet withdrawal via API for `SIA02000`: ₹1000 UPI, transaction pin verified. Request id `2`, status `pending`, user_id `1898`. No prior pending spot request existed.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests` (`withdraw_type=spot`)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:39] — Start MLM Admin UI locally on port 3003
+
+**What changed:** Port 3003 was already free. Created `MLM-Admin-ui/.env.local` pointing API to `http://localhost:4005/api/v1`, installed dependencies, and started Next.js dev server on port 3003. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-Admin-ui/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:45] — Main wallet withdraw request SIA02000 ₹2000
+
+**What changed:** Created main wallet (`withdraw_type=wallet`) withdrawal via API for `SIA02000`: ₹2000 UPI. Prior pending main-wallet request was cleared; new request id `3`, status `pending`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/requests`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:58] — Fix Swagger auth on withdraw endpoints
+
+**What changed:** Added `security: bearerAuth` to all user withdraw route schemas so Swagger UI sends JWT after Authorize. Added `transaction_password` to POST body schema. Fixed bearerAuth description to `POST /api/v1/auth/login`. Regenerated `openapi.json` / `openapi.yaml`.  
+**Files touched:** `MLM-API/src/routes/withdraw.ts`, `MLM-API/src/app.ts`, `MLM-API/swagger/openapi.json`, `MLM-API/swagger/openapi.yaml`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:07] — Show dev OTP on New Join registration page
+
+**What changed:** Non-production `POST /api/v1/auth/email-otp/send` now returns `dev_otp` in response. New Join page shows amber dev-mode OTP banner after Get OTP. Updated `sendEmailOTP` client type.  
+**Files touched:** `MLM-API/src/routes/auth.ts`, `MLM-user-ui/user/src/lib/api/auth.ts`, `MLM-user-ui/user/src/app/new-join/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/email-otp/send`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:18] — Restart local MLM-API backend
+
+**What changed:** Stopped old process on port 4005 and restarted `npm run dev` in MLM-API. Server is up at `http://localhost:4005`; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:24] — Start local MLM-user-ui frontend
+
+**What changed:** Stopped hung process on port 3001 and started `npm run dev` in `MLM-user-ui/user`. User frontend is up at `http://localhost:3001` (API base: `http://localhost:4005/api/v1`).  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:32] — Fix withdraw.ts Fastify response schema TypeScript errors
+
+**What changed:** Added shared `apiErrorResponse` / `apiNotFoundResponse` schemas and declared missing HTTP status codes (400, 403, 404, 500) on withdraw route `response` blocks so `reply.code()` matches Fastify typings. Resolved all 9 TS errors in `withdraw.ts`.  
+**Files touched:** `MLM-API/src/routes/withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---

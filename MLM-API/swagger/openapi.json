@@ -11,7 +11,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "JWT token obtained from /api/v1/users/login"
+        "description": "JWT token obtained from POST /api/v1/auth/login"
       },
       "adminAuth": {
         "type": "http",
@@ -5512,6 +5512,11 @@
             "required": false
           }
         ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -5607,7 +5612,8 @@
                 "required": [
                   "amount",
                   "payment_method",
-                  "account_details"
+                  "account_details",
+                  "transaction_password"
                 ],
                 "properties": {
                   "amount": {
@@ -5633,6 +5639,11 @@
                       "team_royalty"
                     ],
                     "default": "wallet"
+                  },
+                  "transaction_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "User transaction PIN"
                   }
                 }
               }
@@ -5640,6 +5651,11 @@
           },
           "required": true
         },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "201": {
             "description": "Default Response",
@@ -5705,6 +5721,11 @@
           "Withdraw"
         ],
         "description": "Get withdrawal rules (min/max limits and charges)",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Default Response",
@@ -5755,6 +5776,11 @@
             "in": "path",
             "name": "id",
             "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
           }
         ],
         "responses": {
@@ -5829,6 +5855,11 @@
             "in": "path",
             "name": "id",
             "required": true
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
           }
         ],
         "responses": {

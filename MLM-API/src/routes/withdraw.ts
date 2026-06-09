@@ -22,6 +22,21 @@ const updateWithdrawBody = z.object({
   rejection_reason: z.string().optional(),
 });
 
+const apiErrorResponse = {
+  type: 'object' as const,
+  properties: {
+    error: { type: 'string' },
+    message: { type: 'string' },
+  },
+};
+
+const apiNotFoundResponse = {
+  type: 'object' as const,
+  properties: {
+    error: { type: 'string' },
+  },
+};
+
 export async function withdrawRoutes(app: FastifyInstance) {
   /**
    * @openapi
@@ -161,7 +176,9 @@ export async function withdrawRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: apiErrorResponse,
       },
+      security: [{ bearerAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -265,7 +282,9 @@ export async function withdrawRoutes(app: FastifyInstance) {
             withdrawal_enabled: { type: 'boolean' },
           },
         },
+        500: apiErrorResponse,
       },
+      security: [{ bearerAuth: [] }],
     },
   }, async (_req, reply) => {
     try {
@@ -370,15 +389,17 @@ export async function withdrawRoutes(app: FastifyInstance) {
       operationId: 'createWithdrawRequest',
       body: {
         type: 'object',
-        required: ['amount', 'payment_method', 'account_details'],
+        required: ['amount', 'payment_method', 'account_details', 'transaction_password'],
         properties: {
           amount: { type: 'number', minimum: 0.01 },
           payment_method: { type: 'string', minLength: 1 },
           account_details: { type: 'string', minLength: 1 },
           remarks: { type: 'string' },
           withdraw_type: { type: 'string', enum: ['wallet', 'spot', 'team_royalty'], default: 'wallet' },
+          transaction_password: { type: 'string', minLength: 1, description: 'User transaction PIN' },
         },
       },
+      security: [{ bearerAuth: [] }],
       response: {
         201: {
           type: 'object',
@@ -398,8 +419,11 @@ export async function withdrawRoutes(app: FastifyInstance) {
           properties: {
             error: { type: 'string' },
             message: { type: 'string' },
+            details: { type: 'array' },
           },
         },
+        403: apiErrorResponse,
+        500: apiErrorResponse,
       },
     },
   }, async (req, reply) => {
@@ -891,7 +915,10 @@ export async function withdrawRoutes(app: FastifyInstance) {
             created_at: { type: 'string' },
           },
         },
+        404: apiNotFoundResponse,
+        500: apiErrorResponse,
       },
+      security: [{ bearerAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -975,7 +1002,11 @@ export async function withdrawRoutes(app: FastifyInstance) {
             id: { type: 'string' },
           },
         },
+        400: apiErrorResponse,
+        404: apiNotFoundResponse,
+        500: apiErrorResponse,
       },
+      security: [{ bearerAuth: [] }],
     },
   }, async (req, reply) => {
     try {
