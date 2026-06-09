@@ -20,7 +20,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getMyPackages, getMyPackageById, getPackages } from "@/lib/mock/packages";
+import { getMyPackages, getMyPackageById, getPackages } from "@/lib/api/packages";
+import { getUserFriendlyError } from "@/lib/api/errors";
 import type { PackagePurchase, Package } from "@/lib/api/types";
 
 export default function MyPackages() {
@@ -60,8 +61,8 @@ export default function MyPackages() {
       })));
       }
       setPackages(response.items);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to load packages';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load packages';
       setError(errorMessage);
       console.error('Failed to fetch packages:', err);
     } finally {
@@ -199,8 +200,8 @@ export default function MyPackages() {
         global_ids_info: details.global_ids_info || pkg.global_ids_info,
       });
       setShowDetails(true);
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to load package details';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load package details';
       setError(errorMessage);
     }
   };

@@ -1519,3 +1519,13 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [09-06-2026 11:42] — My Packages page API integration
+
+**What changed:** Switched `/my-course` (My Packages) from mock (`lib/mock/packages`) to real API (`lib/api/packages`). Uses `GET /my-packages`, `GET /my-packages/{id}`, and `GET /packages` for list, details, and renewal/upgrade options. Improved error handling via `getUserFriendlyError`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/my-course/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/my-packages`, `GET /api/v1/my-packages/{id}`, `GET /api/v1/packages`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
