@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { getMyPermissions } from '@/lib/api/sub-admins'
+import { getMyPermissions } from '@/lib/mock/sub-admins'
 
 type SidebarItem = {
   label: string

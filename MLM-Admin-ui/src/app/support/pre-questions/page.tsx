@@ -9,7 +9,7 @@ import {
   deletePreQuestion,
   type PreQuestion,
 } from '@/lib/api/support'
-import { getMyPermissions } from '@/lib/api/sub-admins'
+import { getMyPermissions } from '@/lib/mock/sub-admins'
 
 export default function SupportPreQuestionsPage() {
   const [items, setItems] = useState<PreQuestion[]>([])

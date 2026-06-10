@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card } from '@/components/ui/Card'
 import { getAdminTickets, type AdminTicketListItem } from '@/lib/api/support'
-import { getMyPermissions } from '@/lib/api/sub-admins'
+import { getMyPermissions } from '@/lib/mock/sub-admins'
 
 function formatDate(value: string | null | undefined): string {
   if (!value) return '—'

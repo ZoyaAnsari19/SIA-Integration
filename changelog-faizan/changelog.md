@@ -1367,6 +1367,26 @@
 
 ---
 
+## [08-06-2026 17:45] — Admin UI: remove sub-admin features API integration
+
+**What changed:** Removed backend API integration for sub-admin features in admin UI. Added `mock/sub-admins.ts`, `mock/admin-pin.ts`, and `mock/activity-logs.ts` with dummy data. Updated admin-management, sub-admin-activity, sidebar permissions, PIN verification hook/modal, and pages using `getMyPermissions`. Demo runs as SUPER_ADMIN with all permissions; PIN not required. Backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/sub-admins.ts`, `MLM-Admin-ui/src/lib/mock/admin-pin.ts`, `MLM-Admin-ui/src/lib/mock/activity-logs.ts`, `MLM-Admin-ui/src/app/master/admin-management/page.tsx`, `MLM-Admin-ui/src/app/master/sub-admin-activity/page.tsx`, `MLM-Admin-ui/src/components/sidebar.tsx`, `MLM-Admin-ui/src/components/ui/PinVerificationModal.tsx`, `MLM-Admin-ui/src/hooks/usePinVerification.tsx`, `MLM-Admin-ui/src/app/dashboard/page.tsx`, `MLM-Admin-ui/src/app/ledger-logs/page.tsx`, `MLM-Admin-ui/src/app/support/pre-questions/page.tsx`, `MLM-Admin-ui/src/app/support/tickets/page.tsx`, `MLM-Admin-ui/src/app/support/tickets/[id]/page.tsx`, `MLM-Admin-ui/src/app/user-management/users-details/page.tsx`, `MLM-Admin-ui/src/app/user-management/users-wallet/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** faizan-dev-contabo-setup  
+
+---
+
+## [10-06-2026 14:30] — Admin UI: sub-admin activity mock dates for demo charts
+
+**What changed:** Confirmed `/master/sub-admin-activity` uses `mock/activity-logs` and `mock/sub-admins` (no backend calls). Updated dummy activity log dates to the last 7 days so dashboard charts and filters show sample data in demo mode.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
 
 ## [08-06-2026 16:30] — Run MLM-user-ui locally on port 3001
 

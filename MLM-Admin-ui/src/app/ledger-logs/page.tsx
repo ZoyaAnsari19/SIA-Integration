@@ -8,7 +8,7 @@ import Pagination from '../../components/ui/Pagination'
 import Button from '../../components/ui/Button'
 import { getLedgerEntries, getCommissionBreakdown, type LedgerEntryItem, type LedgerCommissionType, type CommissionBreakdownResponse } from '../../lib/api/ledger'
 import { ToastContainer, useToast } from '../../components/ui/Toast'
-import { getMyPermissions } from '../../lib/api/sub-admins'
+import { getMyPermissions } from '../../lib/mock/sub-admins'
 
 type LedgerLogRow = {
   id: string

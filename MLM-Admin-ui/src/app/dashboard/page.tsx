@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { getDashboard, type DashboardResponse } from '../../lib/api/dashboard'
 import { getPendingKYCs } from '../../lib/api/kyc'
-import { getMyPermissions } from '../../lib/api/sub-admins'
+import { getMyPermissions } from '../../lib/mock/sub-admins'
 import { getSupportSummary, type SupportSummary } from '../../lib/api/support'
 
 // Helper function to format currency

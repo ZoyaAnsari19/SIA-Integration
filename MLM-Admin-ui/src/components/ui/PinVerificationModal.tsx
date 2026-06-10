@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import Modal from './Modal'
 import Button from './Button'
-import { verifyPin, getPinStatus } from '../../lib/api/admin-pin'
+import { verifyPin, getPinStatus } from '../../lib/mock/admin-pin'
 
 interface PinVerificationModalProps {
   isOpen: boolean
