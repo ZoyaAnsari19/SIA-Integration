@@ -16,6 +16,22 @@ const activityLogsQuerySchema = z.object({
   end_date: z.string().optional(),
 });
 
+/** Swagger: admin JWT from /auth/admin/login (bearerAuth) or ADMIN_TOKEN (adminAuth) */
+const adminRouteSecurity: Array<{ [key: string]: string[] }> = [
+  { bearerAuth: [] },
+  { adminAuth: [] },
+];
+
+const activityLogsErrorResponse = {
+  type: 'object',
+  properties: {
+    error: { type: 'string' },
+    message: { type: 'string' },
+    details: {},
+  },
+  additionalProperties: true,
+};
+
 export async function adminActivityLogsRoutes(app: FastifyInstance) {
   /**
    * @openapi
@@ -83,6 +99,7 @@ export async function adminActivityLogsRoutes(app: FastifyInstance) {
       description: 'Get admin activity logs (Super Admin only)',
       tags: ['Admin Activity Logs'],
       summary: 'Get Activity Logs',
+      security: adminRouteSecurity,
       querystring: {
         type: 'object',
         properties: {
@@ -135,6 +152,8 @@ export async function adminActivityLogsRoutes(app: FastifyInstance) {
             },
           },
         },
+        400: activityLogsErrorResponse,
+        500: activityLogsErrorResponse,
       },
     },
   }, async (req, reply) => {

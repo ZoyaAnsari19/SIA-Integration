@@ -26,6 +26,12 @@ const updatePermissionsBody = z.object({
   permissions: z.array(z.string())
 });
 
+/** Swagger: admin JWT from /auth/admin/login (bearerAuth) or ADMIN_TOKEN (adminAuth) */
+const adminRouteSecurity: Array<{ [key: string]: string[] }> = [
+  { bearerAuth: [] },
+  { adminAuth: [] },
+];
+
 export async function adminSubAdminsRoutes(app: FastifyInstance) {
   /**
    * @openapi
@@ -46,6 +52,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Get all available permissions',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       response: {
         200: {
           type: 'object',
@@ -105,6 +112,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Get current admin\'s permissions',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       response: {
         200: {
           type: 'object',
@@ -197,6 +205,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'List all sub-admins',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       querystring: {
         type: 'object',
         properties: {
@@ -374,6 +383,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Create a new sub-admin (SUPER_ADMIN only)',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       body: {
         type: 'object',
         required: ['name', 'email', 'password'],
@@ -533,6 +543,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Get sub-admin by ID',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       params: {
         type: 'object',
         required: ['id'],
@@ -682,6 +693,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Update sub-admin (SUPER_ADMIN only)',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       params: {
         type: 'object',
         required: ['id'],
@@ -893,6 +905,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Update sub-admin permissions (SUPER_ADMIN only)',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       params: {
         type: 'object',
         required: ['id'],
@@ -1031,6 +1044,7 @@ export async function adminSubAdminsRoutes(app: FastifyInstance) {
     schema: {
       description: 'Deactivate sub-admin (SUPER_ADMIN only)',
       tags: ['Admin Sub-Admins'],
+      security: adminRouteSecurity,
       params: {
         type: 'object',
         required: ['id'],

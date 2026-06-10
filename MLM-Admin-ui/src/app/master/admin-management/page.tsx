@@ -22,14 +22,14 @@ import {
   PERMISSION_GROUPS,
   type CreateSubAdminRequest,
   type UpdateSubAdminRequest,
-} from '../../../lib/mock/sub-admins'
+} from '../../../lib/api/sub-admins'
 import {
   setSubAdminPin,
   resetSubAdminPin,
   getSubAdminPinInfo,
   unlockSubAdminPin,
   type PinInfo,
-} from '../../../lib/mock/admin-pin'
+} from '../../../lib/api/admin-pin'
 
 type Row = {
   id: string

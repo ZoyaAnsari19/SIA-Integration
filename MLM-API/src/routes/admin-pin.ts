@@ -24,6 +24,47 @@ const resetPinSchema = z.object({
   new_pin: z.string().length(PIN_LENGTH).regex(/^\d+$/, 'PIN must contain only digits'),
 });
 
+/** Swagger: admin JWT from /auth/admin/login (bearerAuth) or ADMIN_TOKEN (adminAuth) */
+const adminRouteSecurity: Array<{ [key: string]: string[] }> = [
+  { bearerAuth: [] },
+  { adminAuth: [] },
+];
+
+const pinMessageResponse = {
+  type: 'object',
+  properties: {
+    success: { type: 'boolean' },
+    message: { type: 'string' },
+  },
+  additionalProperties: true,
+};
+
+const pinVerifyResponse = {
+  type: 'object',
+  properties: {
+    success: { type: 'boolean' },
+    message: { type: 'string' },
+    verified: { type: 'boolean' },
+    remaining_attempts: { type: 'number' },
+    locked_until: { type: 'string', nullable: true },
+  },
+  additionalProperties: true,
+};
+
+const pinStandardErrorResponses = {
+  400: pinMessageResponse,
+  404: pinMessageResponse,
+  500: pinMessageResponse,
+};
+
+const pinVerifyErrorResponses = {
+  400: pinVerifyResponse,
+  401: pinVerifyResponse,
+  404: pinVerifyResponse,
+  423: pinVerifyResponse,
+  500: pinVerifyResponse,
+};
+
 export async function adminPinRoutes(app: FastifyInstance) {
   /**
    * Set PIN for a sub-admin (Super Admin only)
@@ -33,6 +74,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Set action PIN for a sub-admin (Super Admin only)',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Set Sub-Admin PIN',
       body: {
         type: 'object',
@@ -50,6 +92,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
             message: { type: 'string' },
           },
         },
+        ...pinStandardErrorResponses,
       },
     },
   }, async (req, reply) => {
@@ -121,6 +164,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Reset action PIN for a sub-admin (Super Admin only)',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Reset Sub-Admin PIN',
       body: {
         type: 'object',
@@ -138,6 +182,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
             message: { type: 'string' },
           },
         },
+        ...pinStandardErrorResponses,
       },
     },
   }, async (req, reply) => {
@@ -209,6 +254,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Verify action PIN before performing critical action',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Verify PIN',
       body: {
         type: 'object',
@@ -228,6 +274,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
             locked_until: { type: 'string', nullable: true },
           },
         },
+        ...pinVerifyErrorResponses,
       },
     },
   }, async (req, reply) => {
@@ -377,6 +424,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Check if current admin has action PIN set',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Check PIN Status',
       response: {
         200: {
@@ -390,6 +438,8 @@ export async function adminPinRoutes(app: FastifyInstance) {
             pin_set_at: { type: 'string', nullable: true },
           },
         },
+        404: pinMessageResponse,
+        500: pinMessageResponse,
       },
     },
   }, async (req, reply) => {
@@ -461,6 +511,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Get PIN info for a sub-admin (Super Admin only)',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Get Sub-Admin PIN Info',
       params: {
         type: 'object',
@@ -486,6 +537,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
             pin_set_by_name: { type: 'string', nullable: true },
           },
         },
+        ...pinStandardErrorResponses,
       },
     },
   }, async (req, reply) => {
@@ -566,6 +618,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
     schema: {
       description: 'Unlock PIN for a sub-admin (Super Admin only)',
       tags: ['Admin PIN'],
+      security: adminRouteSecurity,
       summary: 'Unlock Sub-Admin PIN',
       body: {
         type: 'object',
@@ -582,6 +635,7 @@ export async function adminPinRoutes(app: FastifyInstance) {
             message: { type: 'string' },
           },
         },
+        ...pinStandardErrorResponses,
       },
     },
   }, async (req, reply) => {

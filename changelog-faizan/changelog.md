@@ -1719,3 +1719,113 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [10-06-2026 14:16] — Payment pages real API integration
+
+**What changed:** Switched `pay-now` and `add-balance` from `@/lib/mock/*` to real API modules (`@/lib/api/packages`, `@/lib/api/company-bank`, `@/lib/api/courses`). Manual deposit, UTR check, payment proof upload, packages, bank details, and course lookup now hit backend. `pay-now` gateway tab fixed to use package IDs (not price) and redirects to course app checkout like `add-balance`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/packages`, GET `/my-packages`, GET `/company-bank/active`, GET `/courses/by-package/:id`, POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`, POST `/purchases/reinvestment/check`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:27] — Swagger auth for deposit endpoints
+
+**What changed:** Added `security: bearerAuth` to deposit Swagger schemas so Authorize sends JWT on `POST /deposit/payment-proof`, `POST /deposit/manual`, and `GET /deposit/check-utr`. Payment-proof now documents multipart `file` upload in Swagger UI. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:32] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:52] — Admin Management real API integration
+
+**What changed:** Switched Admin Management page from mock data to real backend API calls for sub-admin CRUD, permissions, and PIN management. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/admin-management/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/admin/permissions`, GET `/admin/sub-admins`, GET `/admin/sub-admins/:id`, POST `/admin/sub-admins`, PUT `/admin/sub-admins/:id`, DELETE `/admin/sub-admins/:id`, POST `/admin/pin/set`, POST `/admin/pin/reset`, GET `/admin/pin/info/:sub_admin_id`, POST `/admin/pin/unlock`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:05] — Swagger auth for sub-admin and PIN routes
+
+**What changed:** Added `security: [{ bearerAuth }, { adminAuth }]` to Fastify schemas for all Admin Sub-Admins and Admin PIN routes so Swagger UI sends the Authorization header after Authorize. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/admin-sub-admins.ts`, `MLM-API/src/routes/admin-pin.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None (Swagger schema only)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:12] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:18] — Fix admin-pin TypeScript schema errors
+
+**What changed:** Typed `adminRouteSecurity` for Fastify `security` and added shared error response schemas (400/401/404/423/500) to admin PIN routes so `reply.code()` calls type-check correctly.  
+**Files touched:** `MLM-API/src/routes/admin-pin.ts`, `MLM-API/src/routes/admin-sub-admins.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:28] — Sub Admin Activity real API integration
+
+**What changed:** Switched Sub Admin Activity page from mock data to real backend API calls for activity logs, sub-admin filter dropdown, and SUPER_ADMIN role check. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/sub-admin-activity/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/admin/activity-logs`, GET `/admin/sub-admins`, GET `/admin/my-permissions`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:35] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:42] — Swagger auth for activity-logs route
+
+**What changed:** Added `security: [{ bearerAuth }, { adminAuth }]` to Fastify schema for `GET /admin/activity-logs` so Swagger UI sends Authorization header after Authorize. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/admin-activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None (Swagger schema only)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:48] — Fix admin-activity-logs TypeScript schema errors
+
+**What changed:** Added shared 400/500 error response schemas to activity-logs route so `reply.code()` calls type-check correctly with Fastify.  
+**Files touched:** `MLM-API/src/routes/admin-activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---

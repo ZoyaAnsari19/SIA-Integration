@@ -19,9 +19,9 @@ import {
   getMyPackageById,
   checkUtrExists,
   checkReinvestmentAmount,
-  getActiveCompanyBankAccount,
-} from "@/lib/mock/packages";
-import { getCourseByPackageId } from "@/lib/mock/courses";
+} from "@/lib/api/packages";
+import { getActiveCompanyBankAccount } from "@/lib/api/company-bank";
+import { getCourseByPackageId } from "@/lib/api/courses";
 import type { Package, PackagePurchase, CompanyBankAccount } from "@/lib/api/types";
 import { useAppSelector } from "@/redux/hooks";
 
