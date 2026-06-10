@@ -1357,6 +1357,16 @@
 
 ---
 
+## [08-06-2026 17:30] — User UI: mock data for payment and transfer-money pages
+
+**What changed:** Removed backend API integration from pay-now, add-balance, and all transfer-money pages (p2p-transfer, self-transfer, history, fund-transfer-data). Extended `mock/wallet.ts` with transfer history, user lookup, P2P/self transfer, OTP, and rules. Payment pages use `mock/packages` and `mock/courses`. Backend untouched.  
+**Files touched:** `MLM-user-ui/user/src/lib/mock/wallet.ts`, `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/p2p-transfer/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/self-transfer/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/history/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/fund-transfer-data/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** faizan-dev-contabo-setup  
+
+---
+
 
 ## [08-06-2026 16:30] — Run MLM-user-ui locally on port 3001
 
@@ -1645,6 +1655,46 @@
 **What changed:** Added shared `apiErrorResponse` / `apiNotFoundResponse` schemas and declared missing HTTP status codes (400, 403, 404, 500) on withdraw route `response` blocks so `reply.code()` matches Fastify typings. Resolved all 9 TS errors in `withdraw.ts`.  
 **Files touched:** `MLM-API/src/routes/withdraw.ts`, `changelog-faizan/changelog.md`  
 **API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:27] — Start MLM-API backend locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:30] — Start MLM-user-ui locally
+
+**What changed:** Started `MLM-user-ui` Next.js dev server on port 3001 (`npm run dev` in `MLM-user-ui/user`). Verified homepage HTTP 200. API base URL from `.env.local`: `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:33] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` Next.js dev server on port 3003 (`npm run dev`). Verified homepage HTTP 200. API base URL from `.env.local`: `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:51] — Wire MLM-user-ui payment pages to real API
+
+**What changed:** Replaced mock imports with real API modules on `add-balance`, `pay-now`, and `wallet-history`. Manual deposit now calls `POST /deposit/manual`, payment proof upload uses `/deposit/payment-proof`, packages/bank/course data from backend. Fixed `add-balance` package dropdown to use package IDs (not price). No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/add-balance/page.tsx`, `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/wallet-history/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/packages`, GET `/my-packages`, GET `/company-bank/active`, GET `/courses/by-package/:id`, POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`, POST `/purchases/reinvestment/check`, GET `/users/:id/wallet/transactions`  
 **Breaking change:** NO  
 **Branch:** zoya-dev  
 

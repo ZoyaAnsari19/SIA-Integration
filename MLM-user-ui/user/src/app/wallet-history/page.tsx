@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector } from "@/redux/hooks";
-import { getWalletHistory } from "@/lib/mock/wallet";
+import { getWalletHistory } from "@/lib/api/wallet";
 import { H1 } from "@/components/ui/Heading";
 import { Card } from "@/components/ui/Card";
 import { Loader2, ArrowUpDown } from "lucide-react";
@@ -52,11 +52,17 @@ export default function WalletHistoryPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!user?.id) {
+        setIsLoading(false);
+        setError("Please login to view wallet history.");
+        return;
+      }
+
       setIsLoading(true);
       setError(null);
       try {
         const res = await getWalletHistory(
-          user?.id || "demo-user",
+          user.id,
           {
             page,
             limit,

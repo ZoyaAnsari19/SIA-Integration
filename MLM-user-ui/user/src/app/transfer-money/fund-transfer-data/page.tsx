@@ -19,8 +19,7 @@ import { SortableTableHeader } from "@/components/ui/SortableTableHeader";
 import { Pagination } from "@/components/ui/Pagination";
 import { Button } from "@/components/ui/Button";
 import { EnhancedStatCard } from "@/components/ui/EnhancedStatCard";
-import { getTransferHistory } from "@/lib/api/wallet";
-import { getUserFriendlyError } from "@/lib/api/errors";
+import { getTransferHistory } from "@/lib/mock/wallet";
 
 type TransferRecord = {
   id: string;
@@ -84,7 +83,7 @@ export default function FundTransferDataPage() {
       setTransferData(mappedData);
       setTotalItems(response.total);
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Failed to load transfer data';
       setError(errorMessage);
       console.error('Failed to fetch transfer history:', err);
     } finally {

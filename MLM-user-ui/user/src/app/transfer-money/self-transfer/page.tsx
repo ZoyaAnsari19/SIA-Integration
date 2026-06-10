@@ -12,8 +12,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { getWalletBalance, getUserDetails, walletTransfer } from "@/lib/api/wallet";
-import { getUserFriendlyError } from "@/lib/api/errors";
+import { getWalletBalance, getUserDetails, walletTransfer } from "@/lib/mock/wallet";
 
 export default function SelfTransferPage() {
   const [formData, setFormData] = useState({
@@ -102,7 +101,7 @@ export default function SelfTransferPage() {
       setFormData((prev) => ({ ...prev, toUserName: userDetails.name }));
       setReceiverError("");
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Request failed';
       setFormData((prev) => ({ ...prev, toUserName: "" }));
       setReceiverError(errorMessage || "User not found. Please check the ID.");
     } finally {
@@ -203,7 +202,7 @@ export default function SelfTransferPage() {
         setShowSuccessToast(false);
       }, 5000);
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Request failed';
       setErrors({ submit: errorMessage });
       console.error('Wallet transfer error:', err);
     } finally {

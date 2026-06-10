@@ -180,7 +180,9 @@ export default function PayNow() {
         remarks: formData.inactiveId ? `Inactive ID: ${formData.inactiveId}` : undefined,
       });
 
-      setSuccessMessage('Payment request submitted successfully!');
+      setSuccessMessage(
+        result.message || 'Payment request submitted successfully! Admin will review and approve.',
+      );
       
       // Reset form
       setFormData({
