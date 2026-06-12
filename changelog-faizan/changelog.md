@@ -1829,3 +1829,93 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [11-06-2026 10:25] — Start MLM-API backend locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 10:30] — Start MLM Admin UI locally on port 3003
+
+**What changed:** Created `MLM-Admin-ui/.env.local` pointing API to `http://localhost:4005/api/v1` and started Next.js dev server on port 3003. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-Admin-ui/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 10:32] — Start MLM User UI locally on port 3001
+
+**What changed:** Created `MLM-user-ui/user/.env.local` pointing API to `http://localhost:4005/api/v1` and started Next.js dev server on port 3001. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 11:15] — Swagger bearerAuth on bills endpoints
+
+**What changed:** Added `security: [{ bearerAuth: [] }]` to `GET /api/v1/bills` and `GET /api/v1/invoices/:id` so Swagger UI sends the user JWT after Authorize. Clarified in descriptions that admin login token is not valid for these routes.  
+**Files touched:** `MLM-API/src/routes/bills.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 11:45] — Fix bills route TypeScript response schema errors
+
+**What changed:** Added shared `500` error response schema to `GET /api/v1/bills` and `GET /api/v1/invoices/:id` so `reply.code(500)` type-checks with Fastify.  
+**Files touched:** `MLM-API/src/routes/bills.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:20] — Fix payment proof upload 400 on manual deposit
+
+**What changed:** Set `body: false` on `POST /api/v1/deposit/payment-proof` so Fastify skips JSON body validation for multipart uploads (fixes 400 before file handler runs). Improved Buy More error modal to show API `message` via `getUserFriendlyError` instead of generic axios text.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/deposit/payment-proof`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:35] — Fix manual-deposit route TypeScript response schemas
+
+**What changed:** Added shared `400`/`404`/`500` response schemas to deposit routes (`payment-proof`, `manual`, `check-utr`) so `reply.code()` calls type-check with Fastify.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:50] — Idempotent admin withdrawal approve (fix 500 on retry)
+
+**What changed:** Fixed `POST /api/v1/admin/withdraw/requests/:id/approve` returning 500 when ledger row already exists for `withdraw:approve:{id}` (partial prior approve). Recovery path completes approval without double wallet deduction; P2002 idempotency race handled. Admin UI shows API error message on 500 instead of generic text.  
+**Files touched:** `MLM-API/src/routes/admin-withdraw.ts`, `MLM-Admin-ui/src/lib/api/withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/admin/withdraw/requests/:id/approve`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 13:10] — Admin withdraw route TypeScript response schemas
+
+**What changed:** Finished Fastify response schema typing for all admin withdraw routes: shared `adminWithdrawErrorResponse` / `adminWithdrawServerError` on get-by-id, approve, reject, history, and wallet-transfers; removed dead `approved` branch in idempotent approve recovery (status already narrowed to `pending`). All linter errors in `admin-withdraw.ts` resolved.  
+**Files touched:** `MLM-API/src/routes/admin-withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---

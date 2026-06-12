@@ -208,7 +208,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
     } else if (response.status === 404) {
       errorMessage = 'Resource not found.';
     } else if (response.status === 500) {
-      errorMessage = 'Server error. Please try again later.';
+      errorMessage = errorData.message || errorData.error || 'Server error. Please try again later.';
     }
     
     throw new Error(errorMessage);

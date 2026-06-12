@@ -9,6 +9,21 @@ import { getMinReinvestmentAmount, getMinReinvestmentMessage } from '../utils/re
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const MAX_FILE_SIZE_MB = 10;
 
+const depositMessageResponse = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+  },
+};
+
+const checkUtrResponse = {
+  type: 'object',
+  properties: {
+    exists: { type: 'boolean' },
+    message: { type: 'string' },
+  },
+};
+
 export async function manualDepositRoutes(app: FastifyInstance) {
   // POST /api/v1/deposit/payment-proof - Upload payment proof image (does NOT update profile photo)
   app.post(
@@ -20,17 +35,8 @@ export async function manualDepositRoutes(app: FastifyInstance) {
         tags: ['Deposit'],
         security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],
-        body: {
-          type: 'object',
-          required: ['file'],
-          properties: {
-            file: {
-              type: 'string',
-              format: 'binary',
-              description: 'Payment proof image (JPG, PNG, GIF, WebP, max 10MB)',
-            },
-          },
-        },
+        // Skip JSON body validation — file is read via request.file() (same as KYC/profile photo upload)
+        body: false,
         response: {
           200: {
             type: 'object',
@@ -51,6 +57,7 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               error: { type: 'string' },
             },
           },
+          500: depositMessageResponse,
         },
       },
     },
@@ -159,6 +166,8 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               error: { type: 'string' },
             },
           },
+          404: depositMessageResponse,
+          500: depositMessageResponse,
         },
       },
     },
@@ -396,6 +405,8 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               error: { type: 'string' },
             },
           },
+          400: checkUtrResponse,
+          500: checkUtrResponse,
         },
       },
     },

@@ -2,6 +2,13 @@ import { FastifyInstance } from 'fastify';
 import { requireUser } from '../middleware/jwt.js';
 import { prisma } from '../config/prisma.js';
 
+const billsErrorResponse = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+  },
+};
+
 export async function billsRoutes(app: FastifyInstance) {
   // GET /api/v1/bills - Get bills list (purchase history)
   app.get(
@@ -9,8 +16,9 @@ export async function billsRoutes(app: FastifyInstance) {
     {
       preHandler: [requireUser],
       schema: {
-        description: 'Get bills list (purchase history)',
+        description: 'Get bills list (purchase history). Requires user JWT from POST /api/v1/auth/login (not admin token).',
         tags: ['Bills'],
+        security: [{ bearerAuth: [] }],
         querystring: {
           type: 'object',
           properties: {
@@ -49,6 +57,7 @@ export async function billsRoutes(app: FastifyInstance) {
               },
             },
           },
+          500: billsErrorResponse,
         },
       },
     },
@@ -182,8 +191,9 @@ export async function billsRoutes(app: FastifyInstance) {
     {
       preHandler: [requireUser],
       schema: {
-        description: 'Get invoice details by purchase ID',
+        description: 'Get invoice details by purchase ID. Requires user JWT from POST /api/v1/auth/login (not admin token).',
         tags: ['Bills'],
+        security: [{ bearerAuth: [] }],
         params: {
           type: 'object',
           required: ['id'],
@@ -236,6 +246,7 @@ export async function billsRoutes(app: FastifyInstance) {
               message: { type: 'string' },
             },
           },
+          500: billsErrorResponse,
         },
       },
     },

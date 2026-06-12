@@ -23,6 +23,7 @@ import {
 import { getActiveCompanyBankAccount } from "@/lib/api/company-bank";
 import { getCourseByPackageId } from "@/lib/api/courses";
 import type { Package, PackagePurchase, CompanyBankAccount } from "@/lib/api/types";
+import { getUserFriendlyError } from "@/lib/api/errors";
 import { useAppSelector } from "@/redux/hooks";
 
 export default function AddBalance() {
@@ -330,7 +331,7 @@ export default function AddBalance() {
       });
       setProofPreview(null);
     } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to submit payment';
+      const errorMessage = getUserFriendlyError(err) || 'Failed to submit payment';
       setError(errorMessage);
       console.error('Manual deposit submission error:', err);
       console.error('Error details:', {
