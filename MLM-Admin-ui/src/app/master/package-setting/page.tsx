@@ -8,7 +8,7 @@ import { EditButton, DeleteButton } from '../../../components/ui/ActionButtons'
 import Pagination from '../../../components/ui/Pagination'
 import Button from '../../../components/ui/Button'
 import Modal from '../../../components/ui/Modal'
-import { getPackages, getPackageById, createPackage, updatePackage, deletePackage, type Package } from '../../../lib/api/packages'
+import { getPackages, getPackageById, createPackage, updatePackage, deletePackage, type Package } from '../../../lib/mock/packages'
 import { exportToCsv } from '../../../lib/export'
 
 type Row = {

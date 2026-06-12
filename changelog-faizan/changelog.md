@@ -1919,3 +1919,43 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [12-06-2026 14:18] — Start MLM-API locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 14:21] — Start MLM-user-ui locally
+
+**What changed:** Freed port 3001 (was occupied by unrelated `cdpl-ui` Next.js app). Started `MLM-user-ui` dev server via `npm run dev` on port 3001; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 14:31] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` dev server via `npm run dev` on port 3003; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 15:10] — Admin UI: package-setting mock integration
+
+**What changed:** Removed backend API integration from `/master/package-setting`. Added `mock/packages.ts` with dummy packages (Starter, Growth, Premium) and local handlers for list, get, create, update, and delete. Page imports switched from `lib/api/packages` to `lib/mock/packages`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/packages.ts`, `MLM-Admin-ui/src/app/master/package-setting/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
