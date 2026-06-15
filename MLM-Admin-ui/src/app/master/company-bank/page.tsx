@@ -17,7 +17,7 @@ import {
   type CompanyBankAccount,
   type CreateCompanyBankRequest,
   type UpdateCompanyBankRequest,
-} from '../../../lib/api/companyBank'
+} from '../../../lib/mock/companyBank'
 import { exportToCsv } from '../../../lib/export'
 
 type Row = CompanyBankAccount & {

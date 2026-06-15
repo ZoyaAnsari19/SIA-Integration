@@ -1959,3 +1959,73 @@
 **Branch:** zoya-dev  
 
 ---
+
+## [15-06-2026 10:54] — Start MLM-API locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 10:57] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` dev server via `npm run dev` on port 3003; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 10:59] — Start MLM-user-ui locally
+
+**What changed:** Started `MLM-user-ui` dev server via `npm run dev` on port 3001; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:12] — Package-setting real API integration
+
+**What changed:** Wired `/master/package-setting` to real backend via `lib/api/packages` (replaced `lib/mock/packages`). List, get, create, update, and delete now call admin package endpoints with JWT auth. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/package-setting/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/packages`, `GET /api/v1/admin/packages/{id}`, `POST /api/v1/admin/packages`, `PUT /api/v1/admin/packages/{id}`, `DELETE /api/v1/admin/packages/{id}`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:25] — Admin UI: fee-rules mock integration
+
+**What changed:** Removed backend API integration from `/master/fee-rules`. Added `mock/feeRules.ts` with dummy fee rules (KYC, bond download, withdrawal, support, OTP, etc.) and local handlers for list, create, update, and delete. Page imports switched from `lib/api/feeRules` to `lib/mock/feeRules`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/feeRules.ts`, `MLM-Admin-ui/src/app/master/fee-rules/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:40] — Admin UI: company-bank mock integration
+
+**What changed:** Removed backend API integration from `/master/company-bank`. Added `mock/companyBank.ts` with dummy bank accounts (Bank Of India, HDFC) and local handlers for list, create, update, delete, and QR upload (base64 preview). Page imports switched from `lib/api/companyBank` to `lib/mock/companyBank`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/companyBank.ts`, `MLM-Admin-ui/src/app/master/company-bank/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:55] — Admin UI: levels mock integration
+
+**What changed:** Removed backend API integration from `/master/levels`. Added `mock/levels.ts` with dummy levels 0–9 (Field Worker through King) including spot/monthly commission and business requirements. Local handlers for list and update. Page imports switched from `lib/api/levels` to `lib/mock/levels`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/levels.ts`, `MLM-Admin-ui/src/app/master/levels/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
