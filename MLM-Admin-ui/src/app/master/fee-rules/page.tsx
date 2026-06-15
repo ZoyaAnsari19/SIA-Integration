@@ -16,7 +16,7 @@ import {
   type FeeRule,
   type UpdateFeeRuleRequest,
   type CreateFeeRuleRequest,
-} from '../../../lib/mock/feeRules'
+} from '../../../lib/api/feeRules'
 import { exportToCsv } from '../../../lib/export'
 
 type Row = FeeRule

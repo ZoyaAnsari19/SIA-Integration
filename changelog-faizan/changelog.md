@@ -2029,3 +2029,31 @@
 **Branch:** zoya-dev  
 
 ---
+
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 12:15] — MLM-user-ui local frontend verified running
+
+**What changed:** Verified MLM-user-ui frontend is running locally on port 3001 (`http://localhost:3001`, HTTP 200). No code changes.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 12:45] — Fee-rules real API integration
+
+**What changed:** Wired `/master/fee-rules` to real backend via `lib/api/feeRules` (replaced `lib/mock/feeRules`). List, create, update, and delete now call admin fee-rules endpoints with JWT auth. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/fee-rules/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/fees/rules`, `POST /api/v1/admin/fees/rules`, `PUT /api/v1/admin/fees/rules/{id}`, `DELETE /api/v1/admin/fees/rules/{id}`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
