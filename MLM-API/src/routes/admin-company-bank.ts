@@ -31,6 +31,22 @@ const updateCompanyBankBody = z.object({
   is_active: z.boolean().optional(),
 });
 
+const errorBodySchema = {
+  type: 'object',
+  properties: {
+    error: { type: 'string' },
+    message: { type: 'string' },
+    details: {},
+  },
+} as const;
+
+const notFoundBodySchema = {
+  type: 'object',
+  properties: {
+    error: { type: 'string' },
+  },
+} as const;
+
 export async function adminCompanyBankRoutes(app: FastifyInstance) {
   /**
    * @openapi
@@ -93,7 +109,9 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: errorBodySchema,
       },
+      security: [{ adminAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -223,7 +241,10 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
             updated_at: { type: 'string' },
           },
         },
+        400: errorBodySchema,
+        500: errorBodySchema,
       },
+      security: [{ adminAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -355,7 +376,11 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
             updated_at: { type: 'string' },
           },
         },
+        400: errorBodySchema,
+        404: notFoundBodySchema,
+        500: errorBodySchema,
       },
+      security: [{ adminAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -461,7 +486,10 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
             id: { type: 'number' },
           },
         },
+        404: notFoundBodySchema,
+        500: errorBodySchema,
       },
+      security: [{ adminAuth: [] }],
     },
   }, async (req, reply) => {
     try {
@@ -561,6 +589,12 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
             message: { type: 'string' },
           },
         },
+        500: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
       },
       security: [{ adminAuth: [] }],
     },
@@ -599,8 +633,7 @@ export async function adminCompanyBankRoutes(app: FastifyInstance) {
       const cdnUrl = await bunnyCDNService.uploadFile(
         fileBuffer,
         filename,
-        'company_bank_qr',
-        data.mimetype
+        'company_bank_qr'
       );
 
       return reply.send({

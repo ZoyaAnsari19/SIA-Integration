@@ -2057,3 +2057,29 @@
 **Branch:** zoya-dev  
 
 ---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+## [16-06-2026 11:05] — Fix admin-company-bank TypeScript errors
+
+**What changed:** Added error response schemas (400/404/500) to Fastify route definitions for typed `reply.code()` calls. Fixed `bunnyCDNService.uploadFile` call to use 3 arguments (removed invalid 4th mimetype arg).  
+**Files touched:** `MLM-API/src/routes/admin-company-bank.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
