@@ -14,7 +14,7 @@ import {
   type Level,
   type UpdateLevelRequest,
   type BusinessRequirement,
-} from '../../../lib/mock/levels'
+} from '../../../lib/api/levels'
 
 type Row = Level
 

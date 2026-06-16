@@ -51,7 +51,7 @@ export interface UpdateLevelRequest {
 export interface ApiError {
   error: string;
   message?: string;
-  details?: any;
+  details?: unknown;
 }
 
 // Helper function to handle API responses

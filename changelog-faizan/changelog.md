@@ -2074,11 +2074,15 @@
 
 ---
 
-## [16-06-2026 11:05] — Fix admin-company-bank TypeScript errors
+**Branch:** zoya-dev  
 
-**What changed:** Added error response schemas (400/404/500) to Fastify route definitions for typed `reply.code()` calls. Fixed `bunnyCDNService.uploadFile` call to use 3 arguments (removed invalid 4th mimetype arg).  
-**Files touched:** `MLM-API/src/routes/admin-company-bank.ts`, `changelog-faizan/changelog.md`  
-**API endpoints used:** None  
+---
+
+## [16-06-2026 11:15] — Levels real API integration
+
+**What changed:** Wired `/master/levels` to real backend via `lib/api/levels` (replaced `lib/mock/levels`). List and update now call admin levels endpoints with JWT auth. Fixed `ApiError.details` type in levels API client. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/levels/page.tsx`, `MLM-Admin-ui/src/lib/api/levels.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/levels`, `PUT /api/v1/admin/levels/{level}`  
 **Breaking change:** NO  
 **Branch:** zoya-dev  
 
