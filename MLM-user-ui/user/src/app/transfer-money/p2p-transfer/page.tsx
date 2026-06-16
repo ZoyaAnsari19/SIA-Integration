@@ -17,9 +17,8 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { getWalletBalance, getUserDetails, p2pTransfer, getTransferRules, sendP2PTransferOTP } from "@/lib/api/wallet";
+import { getWalletBalance, getUserDetails, p2pTransfer, getTransferRules, sendP2PTransferOTP } from "@/lib/mock/wallet";
 import { OtpCountdown } from "@/components/ui/OtpCountdown";
-import { getUserFriendlyError } from "@/lib/api/errors";
 
 export default function P2PTransferPage() {
   const [formData, setFormData] = useState({
@@ -181,7 +180,7 @@ export default function P2PTransferPage() {
         return newErrors;
       });
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Request failed';
       setFormData((prev) => ({ ...prev, receiverName: "" }));
       const finalError = errorMessage || "Receiver not found. Please check the ID.";
       setReceiverError(finalError);
@@ -296,7 +295,7 @@ export default function P2PTransferPage() {
       setOtpExpired(false);
       setOtpMaskedEmail(result.email_masked || "your registered email");
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Request failed';
       setOtpError(errorMessage || "Failed to send OTP email. Please try again.");
       setOtpSent(false);
     } finally {
@@ -379,7 +378,7 @@ export default function P2PTransferPage() {
         setShowSuccessToast(false);
       }, 5000);
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Request failed';
       setErrors({ submit: errorMessage || "Failed to process transfer. Please try again." });
       console.error("P2P transfer error:", err);
       window.scrollTo({ top: 0, behavior: "smooth" });

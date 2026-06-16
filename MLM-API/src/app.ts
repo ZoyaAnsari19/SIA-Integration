@@ -97,7 +97,7 @@ export async function buildApp() {
             type: 'http',
             scheme: 'bearer',
             bearerFormat: 'JWT',
-            description: 'JWT token obtained from /api/v1/users/login'
+            description: 'JWT token obtained from POST /api/v1/auth/login'
           },
           adminAuth: {
             type: 'http',

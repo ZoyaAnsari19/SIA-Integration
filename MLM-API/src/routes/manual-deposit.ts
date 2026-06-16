@@ -9,6 +9,21 @@ import { getMinReinvestmentAmount, getMinReinvestmentMessage } from '../utils/re
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
 const MAX_FILE_SIZE_MB = 10;
 
+const depositMessageResponse = {
+  type: 'object',
+  properties: {
+    message: { type: 'string' },
+  },
+};
+
+const checkUtrResponse = {
+  type: 'object',
+  properties: {
+    exists: { type: 'boolean' },
+    message: { type: 'string' },
+  },
+};
+
 export async function manualDepositRoutes(app: FastifyInstance) {
   // POST /api/v1/deposit/payment-proof - Upload payment proof image (does NOT update profile photo)
   app.post(
@@ -18,7 +33,10 @@ export async function manualDepositRoutes(app: FastifyInstance) {
       schema: {
         description: 'Upload payment proof image to Bunny CDN. This does NOT update profile photo.',
         tags: ['Deposit'],
+        security: [{ bearerAuth: [] }],
         consumes: ['multipart/form-data'],
+        // Skip JSON body validation — file is read via request.file() (same as KYC/profile photo upload)
+        body: false,
         response: {
           200: {
             type: 'object',
@@ -33,6 +51,13 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               message: { type: 'string' },
             },
           },
+          401: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+          500: depositMessageResponse,
         },
       },
     },
@@ -97,6 +122,7 @@ export async function manualDepositRoutes(app: FastifyInstance) {
       schema: {
         description: 'Submit manual deposit payment details for admin approval (JSON body with pre-uploaded payment proof URL)',
         tags: ['Deposit'],
+        security: [{ bearerAuth: [] }],
         body: {
           type: 'object',
           required: ['package_id', 'amount', 'request_type', 'utr_number', 'payment_proof_url'],
@@ -134,6 +160,14 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               message: { type: 'string' },
             },
           },
+          401: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+          404: depositMessageResponse,
+          500: depositMessageResponse,
         },
       },
     },
@@ -349,6 +383,7 @@ export async function manualDepositRoutes(app: FastifyInstance) {
       schema: {
         description: 'Check if UTR number is already used by any user',
         tags: ['Deposit'],
+        security: [{ bearerAuth: [] }],
         querystring: {
           type: 'object',
           required: ['utr_number'],
@@ -364,6 +399,14 @@ export async function manualDepositRoutes(app: FastifyInstance) {
               message: { type: 'string' },
             },
           },
+          401: {
+            type: 'object',
+            properties: {
+              error: { type: 'string' },
+            },
+          },
+          400: checkUtrResponse,
+          500: checkUtrResponse,
         },
       },
     },

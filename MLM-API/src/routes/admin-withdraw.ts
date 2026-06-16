@@ -17,6 +17,25 @@ const rejectWithdrawBody = z.object({
   remarks: z.string().optional(),
 });
 
+const adminWithdrawErrorResponse = {
+  type: 'object',
+  properties: {
+    error: { type: 'string' },
+    message: { type: 'string' },
+    details: {},
+  },
+  additionalProperties: true,
+};
+
+const adminWithdrawServerError = {
+  type: 'object',
+  properties: {
+    error: { type: 'string' },
+    message: { type: 'string' },
+  },
+  additionalProperties: true,
+};
+
 export async function adminWithdrawRoutes(app: FastifyInstance) {
   /**
    * @openapi
@@ -103,6 +122,7 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -402,6 +422,7 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -601,6 +622,8 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             updated_at: { type: 'string' },
           },
         },
+        404: adminWithdrawErrorResponse,
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -711,7 +734,11 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             id: { type: 'string' },
             status: { type: 'string' },
           },
+          additionalProperties: true,
         },
+        400: adminWithdrawErrorResponse,
+        404: adminWithdrawErrorResponse,
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -832,9 +859,55 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
         });
       }
 
-      try {
-        const idempotencyKey = `withdraw:approve:${request.id}`;
+      const idempotencyKey = `withdraw:approve:${request.id}`;
 
+      // Idempotent recovery: a prior approve may have deducted wallet + created ledger but failed before status update
+      const existingApprovalLedger = await prisma.ledger_entries.findUnique({
+        where: { idempotency_key: idempotencyKey },
+      });
+
+      if (existingApprovalLedger) {
+        const existingWalletTx = await prisma.wallet_transactions.findFirst({
+          where: { idempotency_key: idempotencyKey },
+        });
+        if (!existingWalletTx) {
+          await prisma.wallet_transactions.create({
+            data: {
+              receiver_user_id: request.user_id as unknown as bigint,
+              ledger_entry_id: existingApprovalLedger.id,
+              amount: -withdrawalAmount,
+              idempotency_key: idempotencyKey,
+            },
+          });
+        }
+
+        const updated = await prisma.withdraw_requests.update({
+          where: { id: requestId },
+          data: {
+            status: 'approved',
+            processed_at: new Date(),
+            processed_by: adminId,
+            remarks: body.remarks || request.remarks,
+          },
+        });
+
+        const tdsAmount = Number(request.amount) * 0.10;
+        const netPayout = Number(request.amount) - tdsAmount - withdrawalProcessingFee;
+
+        return reply.send({
+          message: 'Withdrawal approved successfully',
+          id: updated.id.toString(),
+          status: updated.status,
+          withdrawal_amount: Number(request.amount),
+          withdrawal_processing_fee: withdrawalProcessingFee,
+          tds_amount: tdsAmount,
+          net_payout: netPayout,
+          withdrawal_fee_included: true,
+          total_deducted: totalDeductible,
+        });
+      }
+
+      try {
         // Deduct from wallet using Prisma (type-safe; balance row exists per checks above)
         // For Spot/Team Royalty, also increment spot_team_withdraw_used (10x limit tracking)
         const isSpotOrTeamRoyalty = request.withdraw_type === 'spot' || request.withdraw_type === 'team_royalty';
@@ -919,6 +992,30 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             withdrawal_processing_fee: withdrawalProcessingFee,
             withdrawal_fee_included: true, // Fee is included in withdrawal amount
             total_required: totalDeductible,
+          });
+        }
+        if (error?.code === 'P2002' && String(error?.meta?.target ?? '').includes('idempotency_key')) {
+          const updated = await prisma.withdraw_requests.update({
+            where: { id: requestId },
+            data: {
+              status: 'approved',
+              processed_at: new Date(),
+              processed_by: adminId,
+              remarks: body.remarks || request.remarks,
+            },
+          });
+          const tdsAmount = Number(request.amount) * 0.10;
+          const netPayout = Number(request.amount) - tdsAmount - withdrawalProcessingFee;
+          return reply.send({
+            message: 'Withdrawal approved successfully',
+            id: updated.id.toString(),
+            status: updated.status,
+            withdrawal_amount: Number(request.amount),
+            withdrawal_processing_fee: withdrawalProcessingFee,
+            tds_amount: tdsAmount,
+            net_payout: netPayout,
+            withdrawal_fee_included: true,
+            total_deducted: totalDeductible,
           });
         }
         throw error;
@@ -1071,6 +1168,9 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             status: { type: 'string' },
           },
         },
+        400: adminWithdrawErrorResponse,
+        404: adminWithdrawErrorResponse,
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -1259,6 +1359,7 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {
@@ -1536,6 +1637,7 @@ export async function adminWithdrawRoutes(app: FastifyInstance) {
             },
           },
         },
+        500: adminWithdrawServerError,
       },
     },
   }, async (req, reply) => {

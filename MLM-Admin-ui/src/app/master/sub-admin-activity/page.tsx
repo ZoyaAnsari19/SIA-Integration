@@ -9,9 +9,8 @@ import Pagination from '../../../components/ui/Pagination'
 import Button from '../../../components/ui/Button'
 import Modal from '../../../components/ui/Modal'
 import { getActivityLogs, type ActivityLog, type ActivityLogsQuery } from '../../../lib/api/activity-logs'
-import { getSubAdmins, type SubAdmin } from '../../../lib/api/sub-admins'
+import { getSubAdmins, type SubAdmin, getMyPermissions } from '../../../lib/api/sub-admins'
 import { exportToCsv } from '../../../lib/export'
-import { getMyPermissions } from '../../../lib/api/sub-admins'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 type ActivityLogRow = {

@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, createContext, useContext, ReactNode } from 'react'
 import PinVerificationModal from '../components/ui/PinVerificationModal'
-import { getPinStatus } from '../lib/api/admin-pin'
+import { getPinStatus } from '../lib/mock/admin-pin'
 
 interface PinVerificationContextType {
   verifyPinForAction: (actionName: string) => Promise<boolean>

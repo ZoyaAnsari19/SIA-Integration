@@ -224,7 +224,6 @@ export async function deleteFeeRule(id: number): Promise<{ message: string; id: 
   const response = await fetch(`${API_BASE_URL}/fees/rules/${id}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });

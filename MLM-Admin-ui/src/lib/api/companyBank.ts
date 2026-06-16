@@ -55,7 +55,7 @@ export interface UpdateCompanyBankRequest {
 export interface ApiError {
   error: string;
   message?: string;
-  details?: any;
+  details?: unknown;
 }
 
 // Helper function to handle API responses
@@ -181,7 +181,6 @@ export async function deleteCompanyBankAccount(id: number): Promise<{ message: s
   const response = await fetch(`${API_BASE_URL}/company-bank/${id}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
   });

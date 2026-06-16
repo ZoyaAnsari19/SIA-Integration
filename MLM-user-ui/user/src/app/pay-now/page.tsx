@@ -16,8 +16,10 @@ import {
   uploadPaymentProof,
   submitManualDeposit,
   checkUtrExists,
-  getActiveCompanyBankAccount,
-} from "@/lib/mock/packages";
+  checkReinvestmentAmount,
+} from "@/lib/api/packages";
+import { getActiveCompanyBankAccount } from "@/lib/api/company-bank";
+import { getCourseByPackageId } from "@/lib/api/courses";
 import type { Package, PackagePurchase, CompanyBankAccount } from "@/lib/api/types";
 import { useAppSelector } from "@/redux/hooks";
 
@@ -26,12 +28,12 @@ export default function PayNow() {
   const [tab, setTab] = useState<"gateway" | "manual">("manual");
   const [gatewayPackage, setGatewayPackage] = useState("");
   const [showGatewayModal, setShowGatewayModal] = useState(false);
-  const [method, setMethod] = useState<
-    "upi" | "card" | "netbanking" | "wallet" | null
-  >(null);
-  
+  const [isGatewaySubmitting, setIsGatewaySubmitting] = useState(false);
+
   // Gateway payment enabled for package purchase (ICICI)
   const isGatewayDisabled = false;
+  const COURSE_APP_URL =
+    process.env.NEXT_PUBLIC_COURSE_APP_URL || "https://app.secureinfiniteassociation.com";
   const [formData, setFormData] = useState({
     inactiveId: user?.display_id || user?.id || "",
     packageSelect: "",
@@ -96,6 +98,66 @@ export default function PayNow() {
 
   const handleFileChange = (file: File | null) => {
     setFormData((prev) => ({ ...prev, proofUpload: file }));
+  };
+
+  const handleGatewayPayment = async () => {
+    if (!gatewayPackage) {
+      setError("Please select a package before proceeding to payment.");
+      return;
+    }
+
+    const selectedPackage = packages.find(
+      (pkg) => pkg.id.toString() === gatewayPackage,
+    );
+
+    if (!selectedPackage) {
+      setError("Selected package not found. Please refresh and try again.");
+      return;
+    }
+
+    setIsGatewaySubmitting(true);
+    setError(null);
+
+    try {
+      const course = await getCourseByPackageId(selectedPackage.id);
+
+      if (!course?.id) {
+        setError("Selected package is not linked to any course. Please contact support.");
+        setIsGatewaySubmitting(false);
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set("course", course.id);
+
+      if (myPackages.length > 0) {
+        const hasActivePackage = myPackages.some((pkg) => pkg.is_active === true);
+        const hasExpiredPackage = myPackages.some((pkg) => !pkg.is_active);
+
+        if (hasActivePackage) {
+          try {
+            await checkReinvestmentAmount(Number(selectedPackage.price));
+          } catch (err: any) {
+            const errorMessage =
+              err?.response?.data?.message || err?.message || "Reinvestment validation failed";
+            setError(errorMessage);
+            setShowGatewayModal(false);
+            setIsGatewaySubmitting(false);
+            return;
+          }
+          params.set("request_type", "reinvestment");
+        } else if (hasExpiredPackage) {
+          params.set("request_type", "renew");
+        }
+      }
+
+      window.location.href = `${COURSE_APP_URL}/checkout?${params.toString()}`;
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message || err?.message || "Gateway checkout failed";
+      setError(errorMessage);
+      setIsGatewaySubmitting(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,7 +242,9 @@ export default function PayNow() {
         remarks: formData.inactiveId ? `Inactive ID: ${formData.inactiveId}` : undefined,
       });
 
-      setSuccessMessage('Payment request submitted successfully!');
+      setSuccessMessage(
+        result.message || 'Payment request submitted successfully! Admin will review and approve.',
+      );
       
       // Reset form
       setFormData({
@@ -225,49 +289,6 @@ export default function PayNow() {
             1. Select Course Package
           </H3>
           <div className="mx-auto mb-5 max-w-full md:max-w-[450px]">
-            {/**
-             * TODO: MOCK DATA - Replace with actual API call
-             *
-             * Fetch Packages Endpoint: GET /api/packages/list
-             * Method: GET
-             * Headers: { Authorization: "Bearer <token>" }
-             *
-             * Response:
-             * {
-             *   "success": true,
-             *   "data": {
-             *     "packages": [
-             *       {
-             *         "id": "pkg_001",
-             *         "value": "2500.00",
-             *         "label": "₹2,500.00 - Beginner Credit + Free English & Courses",
-             *         "amount": 2500.00
-             *       }
-             *     ]
-             *   }
-             * }
-             *
-             * Gateway Payment Endpoint: POST /api/payment/gateway
-             * Method: POST
-             * Headers: { Authorization: "Bearer <token>", "Content-Type": "application/json" }
-             *
-             * Request Body:
-             * {
-             *   "packageId": "pkg_001",
-             *   "paymentMethod": "upi" | "card" | "netbanking" | "wallet",
-             *   "paymentDetails": {...}
-             * }
-             *
-             * Response:
-             * {
-             *   "success": true,
-             *   "message": "Payment initiated",
-             *   "data": {
-             *     "redirectUrl": "https://payment-gateway.com/...",
-             *     "transactionId": "TXNXXXXX"
-             *   }
-             * }
-             */}
             <select
               className="w-full rounded-lg border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text-strong)] px-4 py-3 text-sm md:text-[16px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)] focus:border-transparent transition-colors"
               value={gatewayPackage}
@@ -280,8 +301,8 @@ export default function PayNow() {
                 <option disabled>No packages available</option>
               ) : (
                 packages.map((pkg) => (
-                  <option key={pkg.id} value={pkg.price.toString()}>
-                    ₹{pkg.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {pkg.name}
+                  <option key={pkg.id} value={pkg.id.toString()}>
+                    ₹{Number(pkg.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {pkg.name}
                   </option>
                 ))
               )}
@@ -510,9 +531,14 @@ export default function PayNow() {
                   </H3>
                   <Text className="text-[var(--text-muted)] text-sm">
                     Package:{" "}
-                    {gatewayPackage
-                      ? `₹${gatewayPackage}`
-                      : "— select package —"}
+                    {(() => {
+                      const selected = packages.find(
+                        (pkg) => pkg.id.toString() === gatewayPackage,
+                      );
+                      return selected
+                        ? `${selected.name} — ₹${Number(selected.price).toLocaleString("en-IN")}`
+                        : "— select package —";
+                    })()}
                   </Text>
                 </div>
                 <button
@@ -524,143 +550,19 @@ export default function PayNow() {
                 </button>
               </div>
 
-              {/* Method selector */}
-              <div className="px-5 pt-4">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {[
-                    { key: "upi", label: "UPI" },
-                    { key: "card", label: "Card" },
-                    { key: "netbanking", label: "NetBanking" },
-                    { key: "wallet", label: "Wallets" },
-                  ].map((m) => (
-                    <button
-                      key={m.key}
-                      onClick={() => setMethod(m.key as any)}
-                      className={[
-                        "rounded-xl border px-3 py-3 text-sm font-semibold transition-all",
-                        method === (m.key as any)
-                          ? "border-[var(--brand-blue)] bg-[var(--accent-blue-bg)] text-[var(--brand-blue)]"
-                          : "border-[var(--border)] hover:border-[var(--hover-border)] text-[var(--text-strong)]",
-                      ].join(" ")}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Method content */}
               <div className="px-5 pb-5 pt-4">
-                {!method && (
-                  <div className="rounded-lg border border-dashed border-[var(--border)] p-4 text-center text-sm text-[var(--text-muted)]">
-                    Select a payment option to continue.
-                  </div>
-                )}
-
-                {method === "upi" && (
-                  <div className="grid gap-4">
-                    <div className="flex items-center justify-between rounded-xl border border-[var(--border)] p-4">
-                      <div>
-                        <p className="text-sm text-[var(--text-muted)]">
-                          Pay via UPI
-                        </p>
-                        <p className="text-[15px] font-semibold text-[var(--text-strong)]">
-                          secureinvestmentacademyinfo@bkofindcbank
-                        </p>
-                      </div>
-                      <button
-                        className="rounded-lg border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--hover-bg)] text-[var(--text-strong)]"
-                        onClick={() =>
-                          navigator.clipboard.writeText(
-                            "secureinvestmentacademyinfo@bkofindcbank",
-                          )
-                        }
-                      >
-                        Copy
-                      </button>
-                    </div>
-                    <div className="flex items-center justify-center gap-4 rounded-xl border border-[var(--border)] p-4">
-                      <div className="flex h-28 w-28 items-center justify-center rounded-lg bg-[var(--hover-bg)] text-xs text-[var(--text-muted)]">
-                        QR Code
-                      </div>
-                      <div className="text-sm text-[var(--text-body)]">
-                        Scan the QR or pay to the UPI ID above and complete on
-                        your UPI app.
-                      </div>
-                    </div>
-                    <Button className="min-h-[44px]">
-                      Continue on UPI app
-                    </Button>
-                  </div>
-                )}
-
-                {method === "card" && (
-                  <div className="grid gap-3">
-                    <div className="grid gap-2">
-                      <label className="text-sm font-medium text-[var(--text-strong)]">
-                        Card Number
-                      </label>
-                      <input
-                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text-strong)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)] focus:border-transparent"
-                        placeholder="1234 5678 9012 3456"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="text-sm font-medium text-[var(--text-strong)]">
-                          Expiry
-                        </label>
-                        <input
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text-strong)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)] focus:border-transparent"
-                          placeholder="MM/YY"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-[var(--text-strong)]">
-                          CVV
-                        </label>
-                        <input
-                          className="w-full rounded-lg border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text-strong)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)] focus:border-transparent"
-                          placeholder="***"
-                        />
-                      </div>
-                    </div>
-                    <Button className="min-h-[44px]">Pay securely</Button>
-                  </div>
-                )}
-
-                {method === "netbanking" && (
-                  <div className="grid gap-3">
-                    <label className="text-sm font-medium text-[var(--text-strong)]">
-                      Select Bank
-                    </label>
-                    <select className="w-full rounded-lg border border-[var(--border)] bg-[var(--card-bg)] text-[var(--text-strong)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--brand-blue)] focus:border-transparent">
-                      <option>State Bank of India</option>
-                      <option>HDFC Bank</option>
-                      <option>ICICI Bank</option>
-                      <option>Axis Bank</option>
-                    </select>
-                    <Button className="min-h-[44px]">Proceed to bank</Button>
-                  </div>
-                )}
-
-                {method === "wallet" && (
-                  <div className="grid gap-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      {["Paytm", "PhonePe", "Amazon Pay", "Mobikwik"].map(
-                        (w) => (
-                          <button
-                            key={w}
-                            className="rounded-xl border border-[var(--border)] px-3 py-3 text-sm hover:border-[var(--hover-border)] text-[var(--text-strong)]"
-                          >
-                            {w}
-                          </button>
-                        ),
-                      )}
-                    </div>
-                    <Button className="min-h-[44px]">Pay with wallet</Button>
-                  </div>
-                )}
+                <div className="rounded-lg border border-[var(--border)] p-4 text-sm text-[var(--text-muted)] mb-4">
+                  You&apos;ll be able to choose UPI, Card, NetBanking or Wallet on the
+                  secure payment gateway screen. Click the button below to
+                  continue to the bank&apos;s payment page.
+                </div>
+                <Button
+                  className="min-h-[44px] w-full"
+                  onClick={handleGatewayPayment}
+                  disabled={isGatewaySubmitting || !gatewayPackage}
+                >
+                  {isGatewaySubmitting ? "Processing..." : "Pay via Gateway"}
+                </Button>
               </div>
             </div>
           </div>

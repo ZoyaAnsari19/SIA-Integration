@@ -19,10 +19,11 @@ import {
   getMyPackageById,
   checkUtrExists,
   checkReinvestmentAmount,
-  getActiveCompanyBankAccount,
-} from "@/lib/mock/packages";
-import { getCourseByPackageId } from "@/lib/mock/courses";
+} from "@/lib/api/packages";
+import { getActiveCompanyBankAccount } from "@/lib/api/company-bank";
+import { getCourseByPackageId } from "@/lib/api/courses";
 import type { Package, PackagePurchase, CompanyBankAccount } from "@/lib/api/types";
+import { getUserFriendlyError } from "@/lib/api/errors";
 import { useAppSelector } from "@/redux/hooks";
 
 export default function AddBalance() {
@@ -98,13 +99,13 @@ export default function AddBalance() {
             const targetPackageId = upgradePackageId ? parseInt(upgradePackageId) : expiredPackage.package_id;
             setRenewalPackageId(targetPackageId);
             
-            // Pre-select the package
-            const packagePrice = activePackages.find(pkg => pkg.id === targetPackageId)?.price;
-            if (packagePrice) {
-              setGatewayPackage(packagePrice.toString());
+            // Pre-select the package by ID
+            const targetPackage = activePackages.find(pkg => pkg.id === targetPackageId);
+            if (targetPackage) {
+              setGatewayPackage(targetPackage.id.toString());
               setFormData(prev => ({
                 ...prev,
-                packageSelect: packagePrice.toString(),
+                packageSelect: targetPackage.id.toString(),
               }));
             }
           } catch (err: any) {
@@ -125,38 +126,6 @@ export default function AddBalance() {
     fetchData();
   }, [renewPackageId]);
 
-  // Mock packages for backward compatibility (will be replaced by API)
-  const mockPackages = [
-    {
-      value: "2500.00",
-      label: "₹2,500.00 - Beginner Credit + Free English & Courses",
-    },
-    {
-      value: "5000.00",
-      label: "₹5,000.00 - Elementary Credit + Digital Courses",
-    },
-    {
-      value: "7500.00",
-      label: "₹7,500.00 - Advanced Credit + Premium Services",
-    },
-    {
-      value: "10000.00",
-      label: "₹10,000.00 - Professional Credit + Advanced Courses",
-    },
-    {
-      value: "15000.00",
-      label: "₹15,000.00 - Intermediate Credit + Free III Digital & Courses",
-    },
-    {
-      value: "25000.00",
-      label: "₹25,000.00 - Advanced Credit + Premium Digital & Courses",
-    },
-    {
-      value: "50000.00",
-      label: "₹50,000.00 - Professional Credit + Elite Digital & Courses",
-    },
-  ];
-
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -174,12 +143,9 @@ export default function AddBalance() {
       return;
     }
 
-    // Find selected package by matching price (string value stored in gatewayPackage)
-    const selectedPackage = packages.find(pkg => {
-      const packagePrice = Number(pkg.price);
-      const selectedPrice = Number(gatewayPackage);
-      return Math.abs(packagePrice - selectedPrice) < 0.01;
-    });
+    const selectedPackage = packages.find(
+      (pkg) => pkg.id.toString() === gatewayPackage,
+    );
 
     if (!selectedPackage) {
       setError('Selected package not found. Please refresh and try again.');
@@ -213,7 +179,7 @@ export default function AddBalance() {
           // that manual deposits use. This shows the popup on the dashboard
           // itself before redirecting to the course app / gateway.
           try {
-            await checkReinvestmentAmount(Number(gatewayPackage));
+            await checkReinvestmentAmount(Number(selectedPackage.price));
           } catch (err: any) {
             const errorMessage = err?.message || 'Reinvestment validation failed';
             setError(errorMessage);
@@ -287,21 +253,12 @@ export default function AddBalance() {
       // 1. Upload payment proof first
       const uploadResult = await uploadPaymentProof(formData.proofUpload);
       
-      // 2. Find selected package
-      // formData.packageSelect contains the price as string, but we need to match it properly
       const selectedPackage = packages.find(
-        pkg => {
-          const packagePrice = Number(pkg.price);
-          const selectedPrice = Number(formData.packageSelect);
-          // Match with tolerance for floating point comparison
-          return Math.abs(packagePrice - selectedPrice) < 0.01;
-        }
+        (pkg) => pkg.id.toString() === formData.packageSelect,
       );
-      
+
       if (!selectedPackage) {
-        console.error('Available packages:', packages.map(p => ({ id: p.id, name: p.name, price: p.price })));
-        console.error('Selected value:', formData.packageSelect);
-        throw new Error(`Selected package not found. Selected: ${formData.packageSelect}`);
+        throw new Error('Selected package not found. Please refresh and try again.');
       }
 
       // 3. Determine request type based on user's purchase history
@@ -374,7 +331,7 @@ export default function AddBalance() {
       });
       setProofPreview(null);
     } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to submit payment';
+      const errorMessage = getUserFriendlyError(err) || 'Failed to submit payment';
       setError(errorMessage);
       console.error('Manual deposit submission error:', err);
       console.error('Error details:', {
@@ -469,7 +426,7 @@ export default function AddBalance() {
                   <option disabled>No packages available</option>
                 ) : (
                   packages.map((pkg) => (
-                    <option key={pkg.id} value={Number(pkg.price).toString()}>
+                    <option key={pkg.id} value={pkg.id.toString()}>
                       ₹{Number(pkg.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {pkg.name}
                     </option>
                   ))
@@ -563,7 +520,7 @@ export default function AddBalance() {
                     <option disabled>No packages available</option>
                   ) : (
                     packages.map((pkg) => (
-                      <option key={pkg.id} value={Number(pkg.price).toString()}>
+                      <option key={pkg.id} value={pkg.id.toString()}>
                         ₹{Number(pkg.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} - {pkg.name}
                       </option>
                     ))
@@ -727,9 +684,14 @@ export default function AddBalance() {
                   </H3>
                   <Text className="text-[var(--text-muted)] text-sm">
                     Package:{" "}
-                    {gatewayPackage
-                      ? `₹${gatewayPackage}`
-                      : "— select package —"}
+                    {(() => {
+                      const selected = packages.find(
+                        (pkg) => pkg.id.toString() === gatewayPackage,
+                      );
+                      return selected
+                        ? `${selected.name} — ₹${Number(selected.price).toLocaleString("en-IN")}`
+                        : "— select package —";
+                    })()}
                   </Text>
                 </div>
                 <button

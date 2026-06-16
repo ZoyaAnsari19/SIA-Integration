@@ -9,7 +9,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: JWT token obtained from /api/v1/users/login
+      description: JWT token obtained from POST /api/v1/auth/login
     adminAuth:
       type: http
       scheme: bearer
@@ -3526,6 +3526,8 @@ paths:
           in: query
           name: withdraw_type
           required: false
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Default Response
@@ -3592,6 +3594,7 @@ paths:
                 - amount
                 - payment_method
                 - account_details
+                - transaction_password
               properties:
                 amount:
                   type: number
@@ -3611,7 +3614,13 @@ paths:
                     - spot
                     - team_royalty
                   default: wallet
+                transaction_password:
+                  type: string
+                  minLength: 1
+                  description: User transaction PIN
         required: true
+      security:
+        - bearerAuth: []
       responses:
         "201":
           description: Default Response
@@ -3653,6 +3662,8 @@ paths:
       tags:
         - Withdraw
       description: Get withdrawal rules (min/max limits and charges)
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Default Response
@@ -3686,6 +3697,8 @@ paths:
           in: path
           name: id
           required: true
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Default Response
@@ -3734,6 +3747,8 @@ paths:
           in: path
           name: id
           required: true
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: Default Response
@@ -15619,7 +15634,7 @@ paths:
         "200":
           description: Default Response
 servers:
-  - url: http://localhost:3000
+  - url: http://localhost:4005
     description: Local development server
 tags:
   - name: Authentication

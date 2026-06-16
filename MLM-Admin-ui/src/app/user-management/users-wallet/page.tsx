@@ -10,7 +10,7 @@ import { EditButton } from '../../../components/ui/ActionButtons'
 import Modal from '../../../components/ui/Modal'
 import { getUsers, type User, type UsersListResponse, manualCreditWallet, manualDebitWallet, manageWallet } from '../../../lib/api/users'
 import { exportToCsv } from '../../../lib/export'
-import { getMyPermissions } from '../../../lib/api/sub-admins'
+import { getMyPermissions } from '../../../lib/mock/sub-admins'
 import { usePinVerification } from '../../../hooks/usePinVerification'
 
 type WalletRow = {

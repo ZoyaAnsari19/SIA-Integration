@@ -1357,6 +1357,36 @@
 
 ---
 
+## [08-06-2026 17:30] — User UI: mock data for payment and transfer-money pages
+
+**What changed:** Removed backend API integration from pay-now, add-balance, and all transfer-money pages (p2p-transfer, self-transfer, history, fund-transfer-data). Extended `mock/wallet.ts` with transfer history, user lookup, P2P/self transfer, OTP, and rules. Payment pages use `mock/packages` and `mock/courses`. Backend untouched.  
+**Files touched:** `MLM-user-ui/user/src/lib/mock/wallet.ts`, `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/p2p-transfer/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/self-transfer/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/history/page.tsx`, `MLM-user-ui/user/src/app/transfer-money/fund-transfer-data/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** faizan-dev-contabo-setup  
+
+---
+
+## [08-06-2026 17:45] — Admin UI: remove sub-admin features API integration
+
+**What changed:** Removed backend API integration for sub-admin features in admin UI. Added `mock/sub-admins.ts`, `mock/admin-pin.ts`, and `mock/activity-logs.ts` with dummy data. Updated admin-management, sub-admin-activity, sidebar permissions, PIN verification hook/modal, and pages using `getMyPermissions`. Demo runs as SUPER_ADMIN with all permissions; PIN not required. Backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/sub-admins.ts`, `MLM-Admin-ui/src/lib/mock/admin-pin.ts`, `MLM-Admin-ui/src/lib/mock/activity-logs.ts`, `MLM-Admin-ui/src/app/master/admin-management/page.tsx`, `MLM-Admin-ui/src/app/master/sub-admin-activity/page.tsx`, `MLM-Admin-ui/src/components/sidebar.tsx`, `MLM-Admin-ui/src/components/ui/PinVerificationModal.tsx`, `MLM-Admin-ui/src/hooks/usePinVerification.tsx`, `MLM-Admin-ui/src/app/dashboard/page.tsx`, `MLM-Admin-ui/src/app/ledger-logs/page.tsx`, `MLM-Admin-ui/src/app/support/pre-questions/page.tsx`, `MLM-Admin-ui/src/app/support/tickets/page.tsx`, `MLM-Admin-ui/src/app/support/tickets/[id]/page.tsx`, `MLM-Admin-ui/src/app/user-management/users-details/page.tsx`, `MLM-Admin-ui/src/app/user-management/users-wallet/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** faizan-dev-contabo-setup  
+
+---
+
+## [10-06-2026 14:30] — Admin UI: sub-admin activity mock dates for demo charts
+
+**What changed:** Confirmed `/master/sub-admin-activity` uses `mock/activity-logs` and `mock/sub-admins` (no backend calls). Updated dummy activity log dates to the last 7 days so dashboard charts and filters show sample data in demo mode.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
 
 ## [08-06-2026 16:30] — Run MLM-user-ui locally on port 3001
 
@@ -1457,5 +1487,603 @@
 **API endpoints used:** None  
 **Breaking change:** NO  
 **Branch:** main  
+
+---
+
+## [09-06-2026 11:06] — Fix local pgAdmin DB connection timeout (5534)
+
+**What changed:** Diagnosed pgAdmin "connection timeout" on `localhost:5534` — password was correct but Postgres container `mlm-local-5534` was stopped (nothing listening on 5534). Started the container; verified `mlm_user` / `mlm_commission` accepts connections and prod data (3110 users) is reachable on port 5534. Noted separate running DB `mlm-api-v2-db-1` on port 5433 (postgres/postgres/mlm) explains API health showing `localhost:5433`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:11] — Start local MLM user-ui frontend
+
+**What changed:** Started `MLM-user-ui` Next.js dev server on port 3001. Added `MLM-user-ui/user/.env.local` with `NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1` so the UI talks to the local API on 3000. Verified dev server ready on `http://localhost:3001`.  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:16] — Swagger UI available locally
+
+**What changed:** Verified MLM-API Swagger UI is live at `http://localhost:3000/docs` (HTTP 200). Regenerated static spec files (`swagger/openapi.json`, `swagger/openapi.yaml`) with 257 API paths via `npm run swagger:generate`.  
+**Files touched:** `MLM-API/swagger/openapi.json`, `MLM-API/swagger/openapi.yaml`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /docs`, `GET /docs/json`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:20] — Swagger on port 4005
+
+**What changed:** Started `MLM-API` dev server with `.env` `PORT=4005`. Swagger UI verified at `http://localhost:4005/docs` (HTTP 200); health returns `db: localhost:5534`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /docs`, `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:23] — Fix login 401 (wrong API port/DB)
+
+**What changed:** Diagnosed login failure for `SIA02000`: user exists in `mlm-local-5534` (`localhost:5534`) with password `123123`, but frontend called API on port 3000 which uses DB `localhost:5433` (different empty/seed DB). Login succeeds on port 4005. Updated `MLM-user-ui/user/.env.local` to `http://localhost:4005/api/v1` and restarted user-ui dev server on 3001.  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:33] — Leaderboard page API integration
+
+**What changed:** Switched `/leaderboard` page from mock data (`lib/mock/leaderboard`) to real API (`lib/api/leaderboard`). Calls `GET /leaderboard/top-earners` and `GET /leaderboard/my-position` with category/period filters; improved error handling via `getUserFriendlyError`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/leaderboard/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/leaderboard/top-earners`, `GET /api/v1/leaderboard/my-position`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:42] — My Packages page API integration
+
+**What changed:** Switched `/my-course` (My Packages) from mock (`lib/mock/packages`) to real API (`lib/api/packages`). Uses `GET /my-packages`, `GET /my-packages/{id}`, and `GET /packages` for list, details, and renewal/upgrade options. Improved error handling via `getUserFriendlyError`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/my-course/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/my-packages`, `GET /api/v1/my-packages/{id}`, `GET /api/v1/packages`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:48] — Withdraw section API integration
+
+**What changed:** Switched all 5 withdraw pages from mock to real API (no backend changes). `spot-withdraw-request`: withdrawal + dashboard wallet + KYC profile. `list-withdraw-request` & `overall-withdraw`: withdrawal requests list. `payment-history`: payment history ledger API. `bill`: bills + invoice + bond + profile APIs.  
+**Files touched:** `MLM-user-ui/user/src/app/withdraw/spot-withdraw-request/page.tsx`, `MLM-user-ui/user/src/app/withdraw/list-withdraw-request/page.tsx`, `MLM-user-ui/user/src/app/withdraw/overall-withdraw/page.tsx`, `MLM-user-ui/user/src/app/withdraw/payment-history/page.tsx`, `MLM-user-ui/user/src/app/withdraw/bill/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET/POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/rules`, `GET /api/v1/dashboard/wallet`, `GET /api/v1/profile`, `GET /api/v1/payment-history`, `GET /api/v1/bills`, `GET /api/v1/invoices/{id}`, `GET/POST /api/v1/users/bond/*`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 11:55] — Income history pages API integration
+
+**What changed:** Switched 5 sidebar income history pages from mock (`lib/mock/income`) to real API (`lib/api/ledger`): self-income, direct-income, team-income, global-help-income, spot-income. Improved error handling via `getUserFriendlyError`. No backend changes. Note: `/income-history/bill` (not in sidebar) still uses inline mock data.  
+**Files touched:** `MLM-user-ui/user/src/app/income-history/self-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/direct-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/team-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/global-help-income/page.tsx`, `MLM-user-ui/user/src/app/income-history/spot-income/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/income-history/self-income`, `GET /api/v1/income-history/direct-income`, `GET /api/v1/income-history/team-income`, `GET /api/v1/income-history/global-help-income`, `GET /api/v1/income-history/spot-income`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 15:37] — Verify local MLM-API backend running
+
+**What changed:** Verified local backend already running: `MLM-API` on port 4005 (`/health` → `db: localhost:5534`), Postgres `mlm-local-5534` up, Swagger `/docs` HTTP 200. Note: stale API instance also on port 3000 (`db: localhost:5433`) — use 4005 for prod dump DB.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`, `GET /docs`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:27] — Curl test withdraw request SIA02000
+
+**What changed:** Tested `POST /api/v1/withdraw/requests` via curl for user `SIA02000` (main wallet ₹1000, transaction pin `123456`). Login succeeded; create returned 400 `pending_withdrawal_exists` — existing pending main-wallet request id `1` (₹29999.97). Verified with `GET /api/v1/withdraw/requests?status=pending&withdraw_type=wallet`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/requests`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:44] — Spot wallet withdraw request SIA02000
+
+**What changed:** Created spot wallet withdrawal via API for `SIA02000`: ₹1000 UPI, transaction pin verified. Request id `2`, status `pending`, user_id `1898`. No prior pending spot request existed.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests` (`withdraw_type=spot`)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:39] — Start MLM Admin UI locally on port 3003
+
+**What changed:** Port 3003 was already free. Created `MLM-Admin-ui/.env.local` pointing API to `http://localhost:4005/api/v1`, installed dependencies, and started Next.js dev server on port 3003. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-Admin-ui/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:45] — Main wallet withdraw request SIA02000 ₹2000
+
+**What changed:** Created main wallet (`withdraw_type=wallet`) withdrawal via API for `SIA02000`: ₹2000 UPI. Prior pending main-wallet request was cleared; new request id `3`, status `pending`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/login`, `POST /api/v1/withdraw/requests`, `GET /api/v1/withdraw/requests`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 16:58] — Fix Swagger auth on withdraw endpoints
+
+**What changed:** Added `security: bearerAuth` to all user withdraw route schemas so Swagger UI sends JWT after Authorize. Added `transaction_password` to POST body schema. Fixed bearerAuth description to `POST /api/v1/auth/login`. Regenerated `openapi.json` / `openapi.yaml`.  
+**Files touched:** `MLM-API/src/routes/withdraw.ts`, `MLM-API/src/app.ts`, `MLM-API/swagger/openapi.json`, `MLM-API/swagger/openapi.yaml`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:07] — Show dev OTP on New Join registration page
+
+**What changed:** Non-production `POST /api/v1/auth/email-otp/send` now returns `dev_otp` in response. New Join page shows amber dev-mode OTP banner after Get OTP. Updated `sendEmailOTP` client type.  
+**Files touched:** `MLM-API/src/routes/auth.ts`, `MLM-user-ui/user/src/lib/api/auth.ts`, `MLM-user-ui/user/src/app/new-join/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/auth/email-otp/send`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:18] — Restart local MLM-API backend
+
+**What changed:** Stopped old process on port 4005 and restarted `npm run dev` in MLM-API. Server is up at `http://localhost:4005`; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:24] — Start local MLM-user-ui frontend
+
+**What changed:** Stopped hung process on port 3001 and started `npm run dev` in `MLM-user-ui/user`. User frontend is up at `http://localhost:3001` (API base: `http://localhost:4005/api/v1`).  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [09-06-2026 17:32] — Fix withdraw.ts Fastify response schema TypeScript errors
+
+**What changed:** Added shared `apiErrorResponse` / `apiNotFoundResponse` schemas and declared missing HTTP status codes (400, 403, 404, 500) on withdraw route `response` blocks so `reply.code()` matches Fastify typings. Resolved all 9 TS errors in `withdraw.ts`.  
+**Files touched:** `MLM-API/src/routes/withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:27] — Start MLM-API backend locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:30] — Start MLM-user-ui locally
+
+**What changed:** Started `MLM-user-ui` Next.js dev server on port 3001 (`npm run dev` in `MLM-user-ui/user`). Verified homepage HTTP 200. API base URL from `.env.local`: `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:33] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` Next.js dev server on port 3003 (`npm run dev`). Verified homepage HTTP 200. API base URL from `.env.local`: `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 10:51] — Wire MLM-user-ui payment pages to real API
+
+**What changed:** Replaced mock imports with real API modules on `add-balance`, `pay-now`, and `wallet-history`. Manual deposit now calls `POST /deposit/manual`, payment proof upload uses `/deposit/payment-proof`, packages/bank/course data from backend. Fixed `add-balance` package dropdown to use package IDs (not price). No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/add-balance/page.tsx`, `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/wallet-history/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/packages`, GET `/my-packages`, GET `/company-bank/active`, GET `/courses/by-package/:id`, POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`, POST `/purchases/reinvestment/check`, GET `/users/:id/wallet/transactions`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 14:16] — Payment pages real API integration
+
+**What changed:** Switched `pay-now` and `add-balance` from `@/lib/mock/*` to real API modules (`@/lib/api/packages`, `@/lib/api/company-bank`, `@/lib/api/courses`). Manual deposit, UTR check, payment proof upload, packages, bank details, and course lookup now hit backend. `pay-now` gateway tab fixed to use package IDs (not price) and redirects to course app checkout like `add-balance`. No backend changes.  
+**Files touched:** `MLM-user-ui/user/src/app/pay-now/page.tsx`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/packages`, GET `/my-packages`, GET `/company-bank/active`, GET `/courses/by-package/:id`, POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`, POST `/purchases/reinvestment/check`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:27] — Swagger auth for deposit endpoints
+
+**What changed:** Added `security: bearerAuth` to deposit Swagger schemas so Authorize sends JWT on `POST /deposit/payment-proof`, `POST /deposit/manual`, and `GET /deposit/check-utr`. Payment-proof now documents multipart `file` upload in Swagger UI. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** POST `/deposit/payment-proof`, POST `/deposit/manual`, GET `/deposit/check-utr`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:32] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 15:52] — Admin Management real API integration
+
+**What changed:** Switched Admin Management page from mock data to real backend API calls for sub-admin CRUD, permissions, and PIN management. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/admin-management/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/admin/permissions`, GET `/admin/sub-admins`, GET `/admin/sub-admins/:id`, POST `/admin/sub-admins`, PUT `/admin/sub-admins/:id`, DELETE `/admin/sub-admins/:id`, POST `/admin/pin/set`, POST `/admin/pin/reset`, GET `/admin/pin/info/:sub_admin_id`, POST `/admin/pin/unlock`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:05] — Swagger auth for sub-admin and PIN routes
+
+**What changed:** Added `security: [{ bearerAuth }, { adminAuth }]` to Fastify schemas for all Admin Sub-Admins and Admin PIN routes so Swagger UI sends the Authorization header after Authorize. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/admin-sub-admins.ts`, `MLM-API/src/routes/admin-pin.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None (Swagger schema only)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:12] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:18] — Fix admin-pin TypeScript schema errors
+
+**What changed:** Typed `adminRouteSecurity` for Fastify `security` and added shared error response schemas (400/401/404/423/500) to admin PIN routes so `reply.code()` calls type-check correctly.  
+**Files touched:** `MLM-API/src/routes/admin-pin.ts`, `MLM-API/src/routes/admin-sub-admins.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:28] — Sub Admin Activity real API integration
+
+**What changed:** Switched Sub Admin Activity page from mock data to real backend API calls for activity logs, sub-admin filter dropdown, and SUPER_ADMIN role check. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/sub-admin-activity/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** GET `/admin/activity-logs`, GET `/admin/sub-admins`, GET `/admin/my-permissions`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:35] — Restart MLM-API locally
+
+**What changed:** Stopped prior API process on port 4005 and restarted `npm run dev` in `MLM-API`. Verified server listening at `http://localhost:4005` and Swagger `/docs` returns HTTP 200.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:42] — Swagger auth for activity-logs route
+
+**What changed:** Added `security: [{ bearerAuth }, { adminAuth }]` to Fastify schema for `GET /admin/activity-logs` so Swagger UI sends Authorization header after Authorize. No runtime API behavior change.  
+**Files touched:** `MLM-API/src/routes/admin-activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None (Swagger schema only)  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [10-06-2026 16:48] — Fix admin-activity-logs TypeScript schema errors
+
+**What changed:** Added shared 400/500 error response schemas to activity-logs route so `reply.code()` calls type-check correctly with Fastify.  
+**Files touched:** `MLM-API/src/routes/admin-activity-logs.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 10:25] — Start MLM-API backend locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 10:30] — Start MLM Admin UI locally on port 3003
+
+**What changed:** Created `MLM-Admin-ui/.env.local` pointing API to `http://localhost:4005/api/v1` and started Next.js dev server on port 3003. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-Admin-ui/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 10:32] — Start MLM User UI locally on port 3001
+
+**What changed:** Created `MLM-user-ui/user/.env.local` pointing API to `http://localhost:4005/api/v1` and started Next.js dev server on port 3001. Homepage verified (HTTP 200).  
+**Files touched:** `MLM-user-ui/user/.env.local`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 11:15] — Swagger bearerAuth on bills endpoints
+
+**What changed:** Added `security: [{ bearerAuth: [] }]` to `GET /api/v1/bills` and `GET /api/v1/invoices/:id` so Swagger UI sends the user JWT after Authorize. Clarified in descriptions that admin login token is not valid for these routes.  
+**Files touched:** `MLM-API/src/routes/bills.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 11:45] — Fix bills route TypeScript response schema errors
+
+**What changed:** Added shared `500` error response schema to `GET /api/v1/bills` and `GET /api/v1/invoices/:id` so `reply.code(500)` type-checks with Fastify.  
+**Files touched:** `MLM-API/src/routes/bills.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:20] — Fix payment proof upload 400 on manual deposit
+
+**What changed:** Set `body: false` on `POST /api/v1/deposit/payment-proof` so Fastify skips JSON body validation for multipart uploads (fixes 400 before file handler runs). Improved Buy More error modal to show API `message` via `getUserFriendlyError` instead of generic axios text.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `MLM-user-ui/user/src/app/add-balance/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/deposit/payment-proof`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:35] — Fix manual-deposit route TypeScript response schemas
+
+**What changed:** Added shared `400`/`404`/`500` response schemas to deposit routes (`payment-proof`, `manual`, `check-utr`) so `reply.code()` calls type-check with Fastify.  
+**Files touched:** `MLM-API/src/routes/manual-deposit.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 12:50] — Idempotent admin withdrawal approve (fix 500 on retry)
+
+**What changed:** Fixed `POST /api/v1/admin/withdraw/requests/:id/approve` returning 500 when ledger row already exists for `withdraw:approve:{id}` (partial prior approve). Recovery path completes approval without double wallet deduction; P2002 idempotency race handled. Admin UI shows API error message on 500 instead of generic text.  
+**Files touched:** `MLM-API/src/routes/admin-withdraw.ts`, `MLM-Admin-ui/src/lib/api/withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `POST /api/v1/admin/withdraw/requests/:id/approve`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [11-06-2026 13:10] — Admin withdraw route TypeScript response schemas
+
+**What changed:** Finished Fastify response schema typing for all admin withdraw routes: shared `adminWithdrawErrorResponse` / `adminWithdrawServerError` on get-by-id, approve, reject, history, and wallet-transfers; removed dead `approved` branch in idempotent approve recovery (status already narrowed to `pending`). All linter errors in `admin-withdraw.ts` resolved.  
+**Files touched:** `MLM-API/src/routes/admin-withdraw.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 14:18] — Start MLM-API locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 14:21] — Start MLM-user-ui locally
+
+**What changed:** Freed port 3001 (was occupied by unrelated `cdpl-ui` Next.js app). Started `MLM-user-ui` dev server via `npm run dev` on port 3001; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 14:31] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` dev server via `npm run dev` on port 3003; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [12-06-2026 15:10] — Admin UI: package-setting mock integration
+
+**What changed:** Removed backend API integration from `/master/package-setting`. Added `mock/packages.ts` with dummy packages (Starter, Growth, Premium) and local handlers for list, get, create, update, and delete. Page imports switched from `lib/api/packages` to `lib/mock/packages`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/packages.ts`, `MLM-Admin-ui/src/app/master/package-setting/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 10:54] — Start MLM-API locally
+
+**What changed:** Started Docker Desktop and Postgres container `mlm-local-5534` (port 5534). Launched `MLM-API` dev server via `npm run dev` on port 4005; health check returns `{ status: "ok", db: "localhost:5534" }`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /health`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 10:57] — Start MLM-Admin-ui locally
+
+**What changed:** Started `MLM-Admin-ui` dev server via `npm run dev` on port 3003; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 10:59] — Start MLM-user-ui locally
+
+**What changed:** Started `MLM-user-ui` dev server via `npm run dev` on port 3001; verified HTTP 200 on `/`. API base URL in `.env.local` points to `http://localhost:4005/api/v1`.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:12] — Package-setting real API integration
+
+**What changed:** Wired `/master/package-setting` to real backend via `lib/api/packages` (replaced `lib/mock/packages`). List, get, create, update, and delete now call admin package endpoints with JWT auth. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/package-setting/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/packages`, `GET /api/v1/admin/packages/{id}`, `POST /api/v1/admin/packages`, `PUT /api/v1/admin/packages/{id}`, `DELETE /api/v1/admin/packages/{id}`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:25] — Admin UI: fee-rules mock integration
+
+**What changed:** Removed backend API integration from `/master/fee-rules`. Added `mock/feeRules.ts` with dummy fee rules (KYC, bond download, withdrawal, support, OTP, etc.) and local handlers for list, create, update, and delete. Page imports switched from `lib/api/feeRules` to `lib/mock/feeRules`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/feeRules.ts`, `MLM-Admin-ui/src/app/master/fee-rules/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:40] — Admin UI: company-bank mock integration
+
+**What changed:** Removed backend API integration from `/master/company-bank`. Added `mock/companyBank.ts` with dummy bank accounts (Bank Of India, HDFC) and local handlers for list, create, update, delete, and QR upload (base64 preview). Page imports switched from `lib/api/companyBank` to `lib/mock/companyBank`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/companyBank.ts`, `MLM-Admin-ui/src/app/master/company-bank/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 11:55] — Admin UI: levels mock integration
+
+**What changed:** Removed backend API integration from `/master/levels`. Added `mock/levels.ts` with dummy levels 0–9 (Field Worker through King) including spot/monthly commission and business requirements. Local handlers for list and update. Page imports switched from `lib/api/levels` to `lib/mock/levels`. UI unchanged; backend untouched.  
+**Files touched:** `MLM-Admin-ui/src/lib/mock/levels.ts`, `MLM-Admin-ui/src/app/master/levels/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 12:15] — MLM-user-ui local frontend verified running
+
+**What changed:** Verified MLM-user-ui frontend is running locally on port 3001 (`http://localhost:3001`, HTTP 200). No code changes.  
+**Files touched:** `changelog-faizan/changelog.md`  
+**API endpoints used:** None  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+## [15-06-2026 12:45] — Fee-rules real API integration
+
+**What changed:** Wired `/master/fee-rules` to real backend via `lib/api/feeRules` (replaced `lib/mock/feeRules`). List, create, update, and delete now call admin fee-rules endpoints with JWT auth. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/fee-rules/page.tsx`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/fees/rules`, `POST /api/v1/admin/fees/rules`, `PUT /api/v1/admin/fees/rules/{id}`, `DELETE /api/v1/admin/fees/rules/{id}`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+**Branch:** zoya-dev  
+
+---
+
+## [16-06-2026 11:15] — Levels real API integration
+
+**What changed:** Wired `/master/levels` to real backend via `lib/api/levels` (replaced `lib/mock/levels`). List and update now call admin levels endpoints with JWT auth. Fixed `ApiError.details` type in levels API client. No backend changes.  
+**Files touched:** `MLM-Admin-ui/src/app/master/levels/page.tsx`, `MLM-Admin-ui/src/lib/api/levels.ts`, `changelog-faizan/changelog.md`  
+**API endpoints used:** `GET /api/v1/admin/levels`, `PUT /api/v1/admin/levels/{level}`  
+**Breaking change:** NO  
+**Branch:** zoya-dev  
 
 ---

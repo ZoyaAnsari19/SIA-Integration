@@ -12,7 +12,7 @@ import { getUsers, getUserById, updateUser, uploadDisplayTitleIcon, activateUser
 import { getPackages, assignPackageToUser, type Package } from '../../../lib/api/packages'
 import UserSummaryModal from '../../../components/UserSummaryModal'
 import { exportToCsv } from '../../../lib/export'
-import { getMyPermissions } from '../../../lib/api/sub-admins'
+import { getMyPermissions } from '../../../lib/mock/sub-admins'
 import { usePinVerification } from '../../../hooks/usePinVerification'
 
 type UserDetailsRow = {

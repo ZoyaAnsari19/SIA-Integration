@@ -28,7 +28,8 @@ import Button from "@/components/ui/Button";
 import { InvoiceTemplate } from "@/components/invoice/InvoiceTemplate";
 import { useAppSelector } from "@/redux/hooks";
 import { Eye } from "lucide-react";
-import { getPaymentHistory } from "@/lib/mock/income";
+import { getPaymentHistory } from "@/lib/api/ledger";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type PaymentStatus = "successful" | "failed" | "pending";
 type FilterStatus = "all" | PaymentStatus;
@@ -135,10 +136,9 @@ export default function PaymentHistoryPage() {
       setPaymentRecords(mappedRecords);
       setTotalItems(response.total);
       setTotalPages(response.total_pages);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[Payment History] ❌ Failed to fetch payment history:', err);
-      console.error('[Payment History] Error details:', err?.response?.data || err?.message);
-      const errorMessage = err?.message || 'Failed to load payment history';
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load payment history';
       setError(errorMessage);
       setPaymentRecords([]);
     } finally {

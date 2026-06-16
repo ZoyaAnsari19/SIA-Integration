@@ -21,7 +21,8 @@ import { H1 } from "@/components/ui/Heading";
 import { Card } from "@/components/ui/Card";
 import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import Button from "@/components/ui/Button";
-import { getSpotIncome, type IncomeHistoryResponse } from "@/lib/mock/income";
+import { getSpotIncome, type IncomeHistoryResponse } from "@/lib/api/ledger";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
 type PeriodFilter = "daily" | "weekly" | "monthly" | "all";
@@ -50,8 +51,8 @@ export default function SpotIncomePage() {
           limit: itemsPerPage,
         });
         setIncomeData(data);
-      } catch (err: any) {
-        const errorMessage = err?.message || 'Failed to load income data';
+      } catch (err: unknown) {
+        const errorMessage = getUserFriendlyError(err) || 'Failed to load income data';
         setError(errorMessage);
         console.error('Spot income fetch error:', err);
       } finally {

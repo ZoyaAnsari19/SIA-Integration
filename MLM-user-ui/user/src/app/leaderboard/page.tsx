@@ -20,7 +20,8 @@ import { Card } from "@/components/ui/Card";
 import { H1, H2, H3, Text } from "@/components/ui/Heading";
 import { TD, TH, THead, TR, Table } from "@/components/ui/Table";
 import { Tabs } from "@/components/ui/Tabs";
-import { getTopEarners, getMyPosition, type LeaderboardItem } from "@/lib/mock/leaderboard";
+import { getTopEarners, getMyPosition, type LeaderboardItem, type UserPosition } from "@/lib/api/leaderboard";
+import { getUserFriendlyError } from "@/lib/api/errors";
 
 type SortConfig = {
   key: string;
@@ -35,7 +36,7 @@ export default function Leaderboard() {
   
   // API states
   const [leaderboardItems, setLeaderboardItems] = useState<LeaderboardItem[]>([]);
-  const [userPosition, setUserPosition] = useState<any>(null);
+  const [userPosition, setUserPosition] = useState<UserPosition | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const dataLoadedRef = useRef(false); // Track if data has been successfully loaded
@@ -69,8 +70,8 @@ export default function Leaderboard() {
       if (myPos) {
         setUserPosition(myPos);
       }
-    } catch (err: any) {
-      const errorMessage = err?.message || 'Failed to load leaderboard';
+    } catch (err: unknown) {
+      const errorMessage = getUserFriendlyError(err) || 'Failed to load leaderboard';
       setError(errorMessage);
       console.error('Failed to fetch leaderboard:', err);
     } finally {

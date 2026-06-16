@@ -14,7 +14,7 @@ import {
   closeAdminTicket,
   type AdminTicketThread,
 } from '@/lib/api/support'
-import { getMyPermissions } from '@/lib/api/sub-admins'
+import { getMyPermissions } from '@/lib/mock/sub-admins'
 
 interface PendingAttachment {
   url: string

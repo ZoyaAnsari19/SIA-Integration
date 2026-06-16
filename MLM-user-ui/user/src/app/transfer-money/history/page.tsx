@@ -22,8 +22,7 @@ import { Card } from "@/components/ui/Card";
 import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import { Badge } from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import { getTransferHistory } from "@/lib/api/wallet";
-import { getUserFriendlyError } from "@/lib/api/errors";
+import { getTransferHistory } from "@/lib/mock/wallet";
 
 type TransferType = "sent" | "received" | "all";
 type SortConfig = { key: string; direction: "asc" | "desc" } | null;
@@ -75,7 +74,7 @@ export default function TransferHistoryPage() {
       setTotalItems(response.total);
       setTotalPages(Math.ceil(response.total / itemsPerPage));
     } catch (err: any) {
-      const errorMessage = getUserFriendlyError(err);
+      const errorMessage = err?.message || 'Failed to load transfer history';
       setError(errorMessage);
       setTransferRecords([]);
     } finally {
